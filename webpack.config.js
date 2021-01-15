@@ -14,6 +14,7 @@ const config = {
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
     port: 5500,
+    writeToDisk: true,
   },
   module: {
     rules: [
