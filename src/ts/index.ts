@@ -1,4 +1,6 @@
-console.log('hello');
+import 'normalize.css';
+import '../css/style.css';
+
 async function getData(query: string) {
   const key = 'c1e288c0';
   const url = `http://www.omdbapi.com//?apikey=${key}&s=${query}`;
@@ -9,4 +11,3 @@ async function getData(query: string) {
 }
 
 getData('tenet');
-console.log('pipka');
