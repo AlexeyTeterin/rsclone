@@ -7,6 +7,7 @@ import {
 } from './movieData';
 
 const searchBtn = document.querySelector('.search-button')!;
+const input = <HTMLInputElement>document.querySelector('#movie-search');
 const slider = document.querySelector('.slider')!;
 const menu = document.querySelector('nav')!;
 const tabs = Array.from(document.querySelectorAll('.tab-pane'));
@@ -53,11 +54,10 @@ const addMovieToLocalStorage = (data: MovieData) => {
 };
 
 const handleSearchClick = () => {
-  const input = <HTMLInputElement>document.querySelector('#movie-search');
   searchMovies(input.value)
     .then((res) => {
       clearSlider();
-      res.Search!.forEach(async (movie: SearchResult) => {
+      res.Search?.forEach(async (movie: SearchResult) => {
         const card = createCard(movie);
         slider.append(card);
 
@@ -68,6 +68,8 @@ const handleSearchClick = () => {
         addMovieToLocalStorage(data);
         if (imdbRating) card.querySelector('.card__rating')!.textContent = `IMDB: ${imdbRating.Value}`;
       });
+      document.querySelector('#movies')!
+        .dispatchEvent(new Event('click', { bubbles: true }));
     });
 };
 
