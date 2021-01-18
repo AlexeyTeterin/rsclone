@@ -2,12 +2,14 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const config = {
   entry: './src/ts/index.ts',
   mode: 'development',
   output: {
     path: path.resolve(__dirname, 'dist'),
+    publicPath: '',
     filename: 'bundle.js',
   },
   devServer: {
@@ -20,14 +22,13 @@ const config = {
       {
         test: /\.css$/,
         use: [
-          'style-loader',
+          MiniCssExtractPlugin.loader,
           'css-loader',
         ],
       },
       {
         test: /\.scss$/,
         use: [
-          'style-loader',
           'css-loader',
           'sass-loader',
         ],
@@ -59,6 +60,7 @@ const config = {
       template: './src/index.html',
     }),
     new CleanWebpackPlugin(),
+    new MiniCssExtractPlugin(),
   ],
   resolve: {
     extensions: [
