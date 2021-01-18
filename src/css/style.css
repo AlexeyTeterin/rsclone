@@ -114,3 +114,7 @@ footer {
   outline: none;
   border: none;
 }
+
+.card .card__fav.isFav {
+  background-image: url(../assets/img/star-gold.svg);
+}

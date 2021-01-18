@@ -116,5 +116,9 @@ footer {
     background-position: 50%;
     outline: none;
     border: none;
+    
+    &.isFav {
+      background-image: url(../assets/img/star-gold.svg);
+    }
   }
 }

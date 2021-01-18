@@ -30,16 +30,20 @@ const clearSlider = () => {
 };
 
 const createCard = (data: SearchResult) => {
+  const storage = JSON.parse(localStorage.VideoBox);
   const card = createElement('div', 'card');
   const cardTitle = createElement('div', 'card__title');
   const cardPoster = createElement('div', 'card__poster');
-  // const cardYear = createElement('div', 'card__year');
   const cardRating = createElement('div', 'card__rating');
   const cardFavButton = createElement('button', 'card__fav');
+  const cardIsFav = Object.keys(storage.Favorites)
+    .findIndex((el: string) => el === data.imdbID) >= 0;
 
   card.id = data.imdbID;
   cardTitle.textContent = `${data.Title}, ${data.Year}`;
   cardPoster.style.setProperty('background-image', `url(${data.Poster})`);
+  cardFavButton.classList.toggle('isFav', cardIsFav);
+
   card.append(cardTitle, cardPoster, cardRating, cardFavButton);
   return card;
 };
@@ -63,7 +67,6 @@ const handleSearchClick = () => {
         const data = await getMovieData(movie.imdbID);
         const imdbRating = data.Ratings
           .find((r: RatingsArray) => r.Source === 'Internet Movie Database');
-
         addMovieToLocalStorage(data);
         if (imdbRating) card.querySelector('.card__rating')!.textContent = `IMDB: ${imdbRating.Value}`;
       });
@@ -97,9 +100,25 @@ const handleEnterPress = (event: KeyboardEvent) => {
   searchBtn.dispatchEvent(new Event('click', { bubbles: true }));
 };
 
+const handleFavClick = (event: Event) => {
+  const target = event.target as HTMLElement;
+  if (!target.classList.contains('card__fav')) return;
+  const id = target.parentElement!.id!;
+  const storage = JSON.parse(localStorage.VideoBox);
+  const cardIsFav = Object.keys(storage.Favorites)
+    .find((el: string) => el === id);
+
+  if (cardIsFav) delete storage.Favorites[id];
+  if (!cardIsFav) storage.Favorites[id] = storage.Movies[id];
+
+  target.classList.toggle('isFav', !cardIsFav);
+  localStorage.VideoBox = JSON.stringify(storage);
+};
+
 initStorage();
 input.focus();
 searchBtn.addEventListener('click', handleSearchClick);
 slider.addEventListener('click', handlePosterClick);
 menu.addEventListener('click', handleMenuClick);
 input.addEventListener('keypress', handleEnterPress);
+document.addEventListener('click', handleFavClick);
