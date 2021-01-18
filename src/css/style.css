@@ -96,17 +96,17 @@ footer {
   background-position: 50% 0;
 }
 
-.card .card__year {
-  height: 2rem;
-  line-height: 2rem;
+.card .card__rating {
+  height: 3rem;
+  line-height: 3rem;
 }
 
 .card .card__fav {
   position: absolute;
   bottom: 1rem;
   right: 1rem;
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 1.25rem;
+  height: 1.25rem;
   background-image: url(../assets/img/star-empty.svg);
   background-color: transparent;
   background-repeat: no-repeat;

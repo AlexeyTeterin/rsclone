@@ -33,15 +33,14 @@ const createCard = (data: SearchResult) => {
   const card = createElement('div', 'card');
   const cardTitle = createElement('div', 'card__title');
   const cardPoster = createElement('div', 'card__poster');
-  const cardYear = createElement('div', 'card__year');
+  // const cardYear = createElement('div', 'card__year');
   const cardRating = createElement('div', 'card__rating');
   const cardFavButton = createElement('button', 'card__fav');
 
   card.id = data.imdbID;
-  cardTitle.textContent = data.Title;
-  cardYear.textContent = data.Year;
+  cardTitle.textContent = `${data.Title}, ${data.Year}`;
   cardPoster.style.setProperty('background-image', `url(${data.Poster})`);
-  card.append(cardTitle, cardPoster, cardYear, cardRating, cardFavButton);
+  card.append(cardTitle, cardPoster, cardRating, cardFavButton);
   return card;
 };
 
@@ -99,6 +98,7 @@ const handleEnterPress = (event: KeyboardEvent) => {
 };
 
 initStorage();
+input.focus();
 searchBtn.addEventListener('click', handleSearchClick);
 slider.addEventListener('click', handlePosterClick);
 menu.addEventListener('click', handleMenuClick);
