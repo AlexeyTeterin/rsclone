@@ -56,6 +56,25 @@ const addMovieToLocalStorage = (data: MovieData) => {
   }
 };
 
+const addRatingToCard = (card: HTMLElement, data: MovieData) => {
+  const imdbRating = data.Ratings
+    .find((r: RatingsArray) => r.Source === 'Internet Movie Database');
+  const cardRating = card.querySelector('.card__rating')!;
+  cardRating.textContent = imdbRating ? `IMDB: ${imdbRating.Value}` : 'n/a';
+};
+
+const loadFavorites = () => {
+  const storage = JSON.parse(localStorage.VideoBox);
+  const favSlider = document.querySelector('.slider.favorites')!;
+
+  favSlider.innerHTML = '';
+  Object.values(storage.Favorites).forEach((movie) => {
+    const card = createCard(movie as SearchResult);
+    addRatingToCard(card, movie as MovieData);
+    favSlider.appendChild(card);
+  });
+};
+
 const handleSearchClick = () => {
   searchMovies(input.value)
     .then((res) => {
@@ -65,10 +84,9 @@ const handleSearchClick = () => {
         slider.append(card);
 
         const data = await getMovieData(movie.imdbID);
-        const imdbRating = data.Ratings
-          .find((r: RatingsArray) => r.Source === 'Internet Movie Database');
         addMovieToLocalStorage(data);
-        if (imdbRating) card.querySelector('.card__rating')!.textContent = `IMDB: ${imdbRating.Value}`;
+
+        addRatingToCard(card, data);
       });
       document.querySelector('#movies')!
         .dispatchEvent(new Event('click', { bubbles: true }));
@@ -100,6 +118,14 @@ const handleEnterPress = (event: KeyboardEvent) => {
   searchBtn.dispatchEvent(new Event('click', { bubbles: true }));
 };
 
+const toggleCardFavButton = (id: string) => {
+  const storage = JSON.parse(localStorage.VideoBox);
+  const card = Array.from(slider.children).find((el) => el.id === id);
+  const isFav = Object.keys(storage.Favorites)
+    .findIndex((el) => el === id) >= 0;
+  card?.querySelector('.card__fav')!.classList.toggle('isFav', isFav);
+};
+
 const handleFavClick = (event: Event) => {
   const target = event.target as HTMLElement;
   if (!target.classList.contains('card__fav')) return;
@@ -113,9 +139,13 @@ const handleFavClick = (event: Event) => {
 
   target.classList.toggle('isFav', !cardIsFav);
   localStorage.VideoBox = JSON.stringify(storage);
+
+  loadFavorites();
+  toggleCardFavButton(id);
 };
 
 initStorage();
+loadFavorites();
 input.focus();
 searchBtn.addEventListener('click', handleSearchClick);
 slider.addEventListener('click', handlePosterClick);

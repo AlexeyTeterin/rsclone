@@ -14,16 +14,17 @@ export async function getMovieData(id: string) {
   return data;
 }
 
+export type RatingsArray = {
+  Source: string,
+  Value: string,
+}
+
 export type SearchResult = {
   Title: string;
   Year: string;
   Poster: string;
   imdbID: string;
-}
-
-export type RatingsArray = {
-  Source: string,
-  Value: string,
+  Ratings: Array<RatingsArray>;
 }
 
 export type MovieData = {
