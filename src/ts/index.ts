@@ -93,7 +93,13 @@ const handleMenuClick = (event: Event) => {
   targetTab!.classList.add('show', 'active');
 };
 
+const handleEnterPress = (event: KeyboardEvent) => {
+  if (event.key !== 'Enter') return;
+  searchBtn.dispatchEvent(new Event('click', { bubbles: true }));
+};
+
 initStorage();
 searchBtn.addEventListener('click', handleSearchClick);
 slider.addEventListener('click', handlePosterClick);
 menu.addEventListener('click', handleMenuClick);
+input.addEventListener('keypress', handleEnterPress);
