@@ -13,30 +13,41 @@
 
     <nav class="nav">
       <a class="nav-link disabled" href="#" id="movies">Movies</a>
-      <a class="nav-link" href="#" id="favorites" >Favorites</a>
-      <a class="nav-link" href="#" id="top250" >Top 250</a>
+      <a class="nav-link" href="#" id="favorites">Favorites</a>
+      <a class="nav-link" href="#" id="top250">Top 250</a>
     </nav>
-    
+
     <div class="search__container">
       <input type="search" name="" id="movie-search" placeholder="..." class="form-control">
       <button type="button" class="search-button btn btn-outline-danger">Search</button>
     </div>
   </header>
-  
+
   <main>
     <div class="tab-content">
       <div class="tab-pane fade show active" role="tabpanel" data-id="movies">
-        <div class="slider movies">
+
+        <div class="swiper-container movies">
+          <div class="swiper-wrapper"></div>
+          <div class="swiper-pagination"></div>
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
         </div>
+
       </div>
+
       <div class="tab-pane fade" role="tabpanel" data-id="favorites">
-        <div class="slider favorites">
+        <div class="swiper-container favorites">
+          <div class="swiper-wrapper"></div>
+          <div class="swiper-pagination"></div>
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
         </div>
       </div>
       <div class="tab-pane fade" role="tabpanel" data-id="top250">Top 250</div>
     </div>
-
   </main>
+  
   <footer>
     by Alexey Teterin
   </footer>

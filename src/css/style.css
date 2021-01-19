@@ -65,11 +65,11 @@ footer {
 
 .card {
   position: relative;
-  margin: 8px;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 240px;
+  height: 440px;
 }
 
 .card:nth-child(n+5) {
@@ -117,4 +117,17 @@ footer {
 
 .card .card__fav.isFav {
   background-image: url(../assets/img/star-gold.svg);
+}
+
+.swiper-container {
+  width: auto;
+  display: flex;
+  justify-content: center;
+  height: 490px;
+  max-width: 1280px;
+}
+
+.swiper-slide {
+  display: flex;
+  justify-content: center;
 }

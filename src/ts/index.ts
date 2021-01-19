@@ -1,6 +1,10 @@
 import 'normalize.css';
 import * as bootstrap from 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import {
+  Swiper, SwiperOptions, Navigation, Pagination,
+} from 'swiper';
+import 'swiper/swiper-bundle.css';
 import '../css/style.css';
 import {
   getMovieData, searchMovies, MovieData, SearchResult, RatingsArray,
@@ -8,9 +12,50 @@ import {
 
 const searchBtn = document.querySelector('.search-button')!;
 const input = <HTMLInputElement>document.querySelector('#movie-search');
-const slider = document.querySelector('.slider')!;
 const menu = document.querySelector('nav')!;
 const tabs = Array.from(document.querySelectorAll('.tab-pane'));
+
+Swiper.use([Navigation, Pagination]);
+const swiperParams: SwiperOptions = {
+  direction: 'horizontal',
+  loop: false,
+  slidesPerView: 1,
+  spaceBetween: -50,
+  centerInsufficientSlides: true,
+  effect: 'coverflow',
+  coverflowEffect: {
+    rotate: 30,
+    slideShadows: false,
+  },
+  pagination: {
+    el: '.swiper-pagination',
+    clickable: true,
+  },
+  navigation: {
+    nextEl: '.swiper-button-next',
+    prevEl: '.swiper-button-prev',
+  },
+  scrollbar: {
+    el: '.swiper-scrollbar',
+    draggable: true,
+  },
+  observer: true,
+  observeParents: true,
+  observeSlideChildren: true,
+  breakpoints: {
+    568: {
+      slidesPerView: 2,
+    },
+    850: {
+      slidesPerView: 3,
+    },
+    1150: {
+      slidesPerView: 4,
+    },
+  },
+};
+const moviesSwiper = new Swiper('.swiper-container.movies', swiperParams);
+const favoritesSwiper = new Swiper('.swiper-container.favorites', swiperParams);
 
 const initStorage = () => {
   if (!localStorage.VideoBox) {
@@ -25,12 +70,9 @@ const createElement = (tag: string, className: string) => {
   return element;
 };
 
-const clearSlider = () => {
-  slider.innerHTML = '';
-};
-
 const createCard = (data: SearchResult) => {
   const storage = JSON.parse(localStorage.VideoBox);
+  const slide = createElement('div', 'swiper-slide');
   const card = createElement('div', 'card');
   const cardTitle = createElement('div', 'card__title');
   const cardPoster = createElement('div', 'card__poster');
@@ -43,9 +85,9 @@ const createCard = (data: SearchResult) => {
   cardTitle.textContent = `${data.Title}, ${data.Year}`;
   cardPoster.style.setProperty('background-image', `url(${data.Poster})`);
   cardFavButton.classList.toggle('isFav', cardIsFav);
-
   card.append(cardTitle, cardPoster, cardRating, cardFavButton);
-  return card;
+  slide.append(card);
+  return slide;
 };
 
 const addMovieToLocalStorage = (data: MovieData) => {
@@ -65,23 +107,22 @@ const addRatingToCard = (card: HTMLElement, data: MovieData) => {
 
 const loadFavorites = () => {
   const storage = JSON.parse(localStorage.VideoBox);
-  const favSlider = document.querySelector('.slider.favorites')!;
-
-  favSlider.innerHTML = '';
+  favoritesSwiper.removeAllSlides();
   Object.values(storage.Favorites).forEach((movie) => {
     const card = createCard(movie as SearchResult);
     addRatingToCard(card, movie as MovieData);
-    favSlider.appendChild(card);
+    favoritesSwiper.appendSlide(card);
+    favoritesSwiper.updateSlides();
   });
 };
 
 const handleSearchClick = () => {
   searchMovies(input.value)
     .then((res) => {
-      clearSlider();
-      res.Search?.forEach(async (movie: SearchResult) => {
+      moviesSwiper.removeAllSlides();
+      res.Search!.forEach(async (movie: SearchResult) => {
         const card = createCard(movie);
-        slider.append(card);
+        moviesSwiper.appendSlide(card);
 
         const data = await getMovieData(movie.imdbID);
         addMovieToLocalStorage(data);
@@ -91,14 +132,6 @@ const handleSearchClick = () => {
       document.querySelector('#movies')!
         .dispatchEvent(new Event('click', { bubbles: true }));
     });
-};
-
-const handlePosterClick = async (event: Event) => {
-  const card = event.target! as HTMLElement;
-  if (!card.classList.contains('card__poster')) return;
-  const { id } = card.parentElement!;
-  const data: MovieData = await getMovieData(id);
-  addMovieToLocalStorage(data);
 };
 
 const handleMenuClick = (event: Event) => {
@@ -120,7 +153,7 @@ const handleEnterPress = (event: KeyboardEvent) => {
 
 const toggleCardFavButton = (id: string) => {
   const storage = JSON.parse(localStorage.VideoBox);
-  const card = Array.from(slider.children).find((el) => el.id === id);
+  const card = Array.from(moviesSwiper.slides).find((el) => el.querySelector('.card')?.id === id);
   const isFav = Object.keys(storage.Favorites)
     .findIndex((el) => el === id) >= 0;
   card?.querySelector('.card__fav')!.classList.toggle('isFav', isFav);
@@ -148,7 +181,6 @@ initStorage();
 loadFavorites();
 input.focus();
 searchBtn.addEventListener('click', handleSearchClick);
-slider.addEventListener('click', handlePosterClick);
 menu.addEventListener('click', handleMenuClick);
 input.addEventListener('keypress', handleEnterPress);
 document.addEventListener('click', handleFavClick);
