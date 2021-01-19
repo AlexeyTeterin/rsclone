@@ -7,7 +7,8 @@ import {
 import 'swiper/swiper-bundle.css';
 import '../css/style.css';
 import {
-  getMovieData, searchMovies, MovieData, SearchResult, RatingsArray,
+  getOMDBdata, searchMoviesOMDB, MovieData, SearchResult, RatingsArray,
+  getUpcomingTMDB, getTMDBdata,
 } from './movieData';
 
 const searchBtn = document.querySelector('.search-button')!;
@@ -116,19 +117,19 @@ const loadFavorites = () => {
   });
 };
 
+const createSlide = async (movie: SearchResult) => {
+  const card = createCard(movie);
+  const omdb = await getOMDBdata(movie.imdbID);
+  moviesSwiper.appendSlide(card);
+  addMovieToLocalStorage(omdb);
+  addRatingToCard(card, omdb);
+};
+
 const handleSearchClick = () => {
-  searchMovies(input.value)
+  searchMoviesOMDB(input.value)
     .then((res) => {
       moviesSwiper.removeAllSlides();
-      res.Search!.forEach(async (movie: SearchResult) => {
-        const card = createCard(movie);
-        moviesSwiper.appendSlide(card);
-
-        const data = await getMovieData(movie.imdbID);
-        addMovieToLocalStorage(data);
-
-        addRatingToCard(card, data);
-      });
+      res.Search!.forEach(async (movie: SearchResult) => createSlide(movie));
       document.querySelector('#movies')!
         .dispatchEvent(new Event('click', { bubbles: true }));
     });
@@ -180,6 +181,14 @@ const handleFavClick = (event: Event) => {
 initStorage();
 loadFavorites();
 input.focus();
+getUpcomingTMDB()
+  .then((res) => {
+    res.results?.slice(0, 10).forEach(async (movie: any) => {
+      const tmdb = await getTMDBdata(movie.id);
+      const omdb = await getOMDBdata(tmdb.imdb_id);
+      createSlide(omdb);
+    });
+  });
 searchBtn.addEventListener('click', handleSearchClick);
 menu.addEventListener('click', handleMenuClick);
 input.addEventListener('keypress', handleEnterPress);

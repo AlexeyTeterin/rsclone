@@ -70,10 +70,12 @@ footer {
   align-items: center;
   width: 240px;
   height: 440px;
+  margin-top: 1rem;
+  transition: box-shadow 0.2s;
 }
 
-.card:nth-child(n+5) {
-  display: none;
+.card:hover {
+  box-shadow: 0px 0px 1rem 0px rgba(0, 0, 0, 0.5);
 }
 
 .card .card__title {
@@ -123,7 +125,7 @@ footer {
   width: auto;
   display: flex;
   justify-content: center;
-  height: 490px;
+  height: 510px;
   max-width: 1280px;
 }
 
