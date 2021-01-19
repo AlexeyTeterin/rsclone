@@ -13,7 +13,7 @@ import {
 
 const searchBtn = document.querySelector('.search-button')!;
 const input = <HTMLInputElement>document.querySelector('#movie-search');
-const menu = document.querySelector('nav')!;
+const menu = document.querySelector('div.nav')!;
 const tabs = Array.from(document.querySelectorAll('.tab-pane'));
 
 Swiper.use([Navigation, Pagination]);
@@ -135,16 +135,29 @@ const handleSearchClick = () => {
     });
 };
 
+const animateTabChange = (current: Element | undefined, target: Element | undefined) => {
+  current?.classList.remove('show');
+  setTimeout(() => {
+    current?.classList.remove('active');
+    target?.classList.add('active');
+  }, 150);
+  setTimeout(() => {
+    target?.classList.add('show');
+  }, 200);
+};
+
 const handleMenuClick = (event: Event) => {
   const target = event.target! as HTMLElement;
   if (!target.classList.contains('nav-link')) return;
   const targetTab = tabs
-    .find((tab) => tab instanceof HTMLElement && tab.dataset.id === target.id);
+    .find((tab) => tab instanceof HTMLElement && target.id.indexOf(tab.dataset.id!) >= 0);
+  const currentTab = tabs
+    .find((tab) => tab instanceof HTMLElement && tab.classList.contains('active'));
+
   Array.from(menu.children)
     .forEach((link) => link.classList.remove('disabled'));
-  tabs.forEach((tab) => tab.classList.remove('show', 'active'));
   target.classList.add('disabled');
-  targetTab!.classList.add('show', 'active');
+  animateTabChange(currentTab, targetTab);
 };
 
 const handleEnterPress = (event: KeyboardEvent) => {
