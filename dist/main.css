@@ -1004,10 +1004,19 @@ footer {
   background-position: 50%;
   outline: none;
   border: none;
+  transition: transform 0.15s;
 }
 
 .card .card__fav.isFav {
   background-image: url(2462f0e7e90ec1cd5ece4d057723add3.svg);
+}
+
+.card .card__fav:hover {
+  transform: scale(1.2);
+}
+
+.card .card__fav:active {
+  transform: scale(1.1);
 }
 
 .swiper-container {

@@ -115,10 +115,19 @@ footer {
   background-position: 50%;
   outline: none;
   border: none;
+  transition: transform 0.15s;
 }
 
 .card .card__fav.isFav {
   background-image: url(../assets/img/star-gold.svg);
+}
+
+.card .card__fav:hover {
+  transform: scale(1.2);
+}
+
+.card .card__fav:active {
+  transform: scale(1.1);
 }
 
 .swiper-container {

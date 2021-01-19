@@ -125,16 +125,6 @@ const createSlide = async (movie: SearchResult) => {
   addRatingToCard(card, omdb);
 };
 
-const handleSearchClick = () => {
-  searchMoviesOMDB(input.value)
-    .then((res) => {
-      moviesSwiper.removeAllSlides();
-      res.Search!.forEach(async (movie: SearchResult) => createSlide(movie));
-      document.querySelector('#movies')!
-        .dispatchEvent(new Event('click', { bubbles: true }));
-    });
-};
-
 const animateTabChange = (current: Element | undefined, target: Element | undefined) => {
   current?.classList.remove('show');
   setTimeout(() => {
@@ -144,6 +134,16 @@ const animateTabChange = (current: Element | undefined, target: Element | undefi
   setTimeout(() => {
     target?.classList.add('show');
   }, 200);
+};
+
+const handleSearchClick = () => {
+  searchMoviesOMDB(input.value)
+    .then((res) => {
+      moviesSwiper.removeAllSlides();
+      res.Search?.forEach(async (movie: SearchResult) => createSlide(movie));
+      document.querySelector('#movies')!
+        .dispatchEvent(new Event('click', { bubbles: true }));
+    });
 };
 
 const handleMenuClick = (event: Event) => {
