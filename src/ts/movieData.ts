@@ -1,6 +1,6 @@
 export async function searchMoviesOMDB(query:string) {
   const key = 'c1e288c0';
-  const url = `http://www.omdbapi.com//?apikey=${key}&s=${query}`;
+  const url = `https://www.omdbapi.com//?apikey=${key}&s=${query}`;
   const response = await fetch(url);
   const data = await response.json();
   return data;
@@ -8,7 +8,7 @@ export async function searchMoviesOMDB(query:string) {
 
 export async function getOMDBdata(id: string) {
   const key = 'c1e288c0';
-  const url = `http://www.omdbapi.com//?apikey=${key}&i=${id}`;
+  const url = `https://www.omdbapi.com//?apikey=${key}&i=${id}`;
   const responce = await fetch(url);
   const data = await responce.json();
   return data;
