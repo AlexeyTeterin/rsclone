@@ -36,6 +36,10 @@ header .film {
   }
 }
 
+header .film.invert {
+  filter: invert(1);
+}
+
 .form-switch {
   position: absolute;
   left: 1rem;

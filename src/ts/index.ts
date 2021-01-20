@@ -24,12 +24,38 @@ const input = <HTMLInputElement>document.querySelector('#movie-search');
 const menu = document.querySelector('div.nav')!;
 const tabs = Array.from(document.querySelectorAll('.tab-pane'));
 const nightSwitch = document.querySelector('#nightSwitch') as HTMLInputElement;
+let nightSwitchTooltip = new bootstrap.Tooltip(nightSwitch);
 
 const wait = (ms: number) => new Promise((resolve: any) => setTimeout(() => resolve(), ms));
+
+const toggleNightMode = () => {
+  if (nightSwitch.checked) {
+    nightSwitch.title = 'Turn on the light';
+  }
+  if (!nightSwitch.checked) {
+    nightSwitch.title = 'Turn off the lights';
+  }
+  document.body.classList.toggle('bg-dark');
+  document.querySelector('header>h1')?.classList.toggle('text-light');
+  document.querySelectorAll('.card').forEach((card) => card.classList.toggle('bg-light'));
+  document.querySelector('.film')?.classList.toggle('invert');
+  nightSwitchTooltip.dispose();
+  nightSwitchTooltip = new bootstrap.Tooltip(nightSwitch);
+
+  const storage = JSON.parse(localStorage.VideoBox);
+  storage.darkMode = nightSwitch.checked;
+  localStorage.VideoBox = JSON.stringify(storage);
+};
 
 const initStorage = () => {
   if (!localStorage.VideoBox) {
     localStorage.setItem('VideoBox', JSON.stringify({ Movies: {}, Favorites: {} }));
+  } else {
+    const storage = JSON.parse(localStorage.VideoBox);
+    if (storage.darkMode) {
+      nightSwitch.checked = !nightSwitch.checked;
+      toggleNightMode();
+    }
   }
 };
 
@@ -166,8 +192,6 @@ const handleFavClick = (event: Event) => {
   toggleCardFavButton(id);
 };
 
-let nightSwitchTooltip = new bootstrap.Tooltip(nightSwitch);
-
 initStorage();
 loadFavorites();
 input.focus();
@@ -185,17 +209,6 @@ getUpcomingTMDB()
   })
   .then(() => wait(150))
   .then(() => document.querySelector('#movies')?.classList.add('show'));
-
-const toggleNightMode = () => {
-  if (nightSwitch.checked) {
-    nightSwitch.title = 'Turn on the light';
-  }
-  if (!nightSwitch.checked) {
-    nightSwitch.title = 'Turn off the lights';
-  }
-  nightSwitchTooltip.dispose();
-  nightSwitchTooltip = new bootstrap.Tooltip(nightSwitch);
-};
 
 searchBtn.addEventListener('click', handleSearchClick);
 menu.addEventListener('click', handleMenuClick);

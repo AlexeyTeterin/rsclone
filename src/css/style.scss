@@ -39,6 +39,10 @@ header {
         transform: rotate(360deg);
       }
     }
+    
+    &.invert {
+      filter: invert(1);
+    }
   }
 }
 
