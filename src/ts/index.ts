@@ -55,9 +55,10 @@ const initStorage = () => {
   } else {
     const storage = JSON.parse(localStorage.VideoBox);
     if (storage.darkMode) {
-      nightSwitch.checked = !nightSwitch.checked;
+      nightSwitch.checked = false;
       toggleNightMode();
-    }
+    } else nightSwitch.checked = true;
+    wait(500).then(() => nightSwitch.parentElement?.classList.add('visible'));
   }
 };
 

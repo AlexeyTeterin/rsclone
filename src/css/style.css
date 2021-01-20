@@ -47,6 +47,11 @@ header .film.invert {
 .form-switch {
   position: absolute;
   left: 1rem;
+  top: -100%;
+  transition: top 0.25s;
+}
+
+.form-switch.visible {
   top: 0.5rem;
 }
 

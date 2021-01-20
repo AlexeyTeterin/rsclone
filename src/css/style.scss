@@ -51,7 +51,12 @@ header {
 .form-switch {
   position: absolute;
   left: 1rem;
-  top: 0.5rem;
+  top: -100%;
+  transition: top 0.25s;
+  
+  &.visible {
+    top: 0.5rem;
+  }
 }
 
 main {
