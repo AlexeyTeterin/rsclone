@@ -5,8 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script>
-    const storage = JSON.parse(localStorage.VideoBox);
-    if (!storage | !storage.darkMode) document.querySelector('html').classList.remove('bg-dark');
+    const storage = JSON.parse(localStorage.VideoBox || null);
+    if (!storage || !storage.darkMode) document.querySelector('html').classList.remove('bg-dark');
   </script>
   <title>VideoBox</title>
 <link href="main.css" rel="stylesheet"></head>
