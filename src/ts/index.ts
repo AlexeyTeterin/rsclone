@@ -23,6 +23,7 @@ const searchBtn = document.querySelector('.search-button')!;
 const input = <HTMLInputElement>document.querySelector('#movie-search');
 const menu = document.querySelector('div.nav')!;
 const tabs = Array.from(document.querySelectorAll('.tab-pane'));
+const nightSwitch = document.querySelector('#nightSwitch') as HTMLInputElement;
 
 const wait = (ms: number) => new Promise((resolve: any) => setTimeout(() => resolve(), ms));
 
@@ -165,6 +166,8 @@ const handleFavClick = (event: Event) => {
   toggleCardFavButton(id);
 };
 
+let nightSwitchTooltip = new bootstrap.Tooltip(nightSwitch);
+
 initStorage();
 loadFavorites();
 input.focus();
@@ -183,21 +186,19 @@ getUpcomingTMDB()
   .then(() => wait(150))
   .then(() => document.querySelector('#movies')?.classList.add('show'));
 
-const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-const tooltipList = tooltipTriggerList
-  .map((tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
-
-// const triggerTabList = [].slice.call(document.querySelectorAll('#nav-tab a'));
-// triggerTabList.forEach((triggerEl: HTMLElement) => {
-//   const tabTrigger = new bootstrap.Tab(triggerEl);
-
-//   triggerEl.addEventListener('click', (event) => {
-//     event.preventDefault();
-//     tabTrigger.show();
-//   });
-// });
+const toggleNightMode = () => {
+  if (nightSwitch.checked) {
+    nightSwitch.title = 'Turn on the light';
+  }
+  if (!nightSwitch.checked) {
+    nightSwitch.title = 'Turn off the lights';
+  }
+  nightSwitchTooltip.dispose();
+  nightSwitchTooltip = new bootstrap.Tooltip(nightSwitch);
+};
 
 searchBtn.addEventListener('click', handleSearchClick);
 menu.addEventListener('click', handleMenuClick);
 input.addEventListener('keypress', handleEnterPress);
 document.addEventListener('click', handleFavClick);
+nightSwitch.addEventListener('click', toggleNightMode);
