@@ -30,12 +30,12 @@ const wait = (ms: number) => new Promise((resolve: any) => setTimeout(() => reso
 
 const toggleNightMode = () => {
   if (nightSwitch.checked) {
-    nightSwitch.title = 'Turn on the light';
-  }
-  if (!nightSwitch.checked) {
     nightSwitch.title = 'Turn off the lights';
   }
-  document.body.classList.toggle('bg-dark');
+  if (!nightSwitch.checked) {
+    nightSwitch.title = 'Turn on the light';
+  }
+  document.querySelector('html')?.classList.toggle('bg-dark', !nightSwitch.checked);
   document.querySelector('header>h1')?.classList.toggle('text-light');
   document.querySelectorAll('.card').forEach((card) => card.classList.toggle('bg-light'));
   document.querySelector('.film')?.classList.toggle('invert');
@@ -43,13 +43,15 @@ const toggleNightMode = () => {
   nightSwitchTooltip = new bootstrap.Tooltip(nightSwitch);
 
   const storage = JSON.parse(localStorage.VideoBox);
-  storage.darkMode = nightSwitch.checked;
+  storage.darkMode = !nightSwitch.checked;
   localStorage.VideoBox = JSON.stringify(storage);
 };
 
 const initStorage = () => {
   if (!localStorage.VideoBox) {
-    localStorage.setItem('VideoBox', JSON.stringify({ Movies: {}, Favorites: {} }));
+    localStorage.setItem('VideoBox', JSON.stringify({
+      Movies: {}, Favorites: {}, darkMode: false,
+    }));
   } else {
     const storage = JSON.parse(localStorage.VideoBox);
     if (storage.darkMode) {

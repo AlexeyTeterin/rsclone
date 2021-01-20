@@ -1,9 +1,13 @@
 // @import "custom";
+
+
 html,
 body {
   height: 100%;
   display: flex;
   flex-direction: column;
+  background: transparent;
+  transition: background 0.25s;
 }
 
 header {
@@ -12,12 +16,10 @@ header {
   justify-content: center;
   flex-direction: column;
   align-items: center;
-
+  
   h1 {
     font-weight: bold;
-    // background: linear-gradient(to right, #7927b2, #fb3182);
-    // -webkit-background-clip: text;
-    // -webkit-text-fill-color: transparent;
+    transition: color 0.25s;
   }
 
   .film {
@@ -27,7 +29,7 @@ header {
     margin-left: 8px;
     background-image: url(../assets/img/film.svg);
     background-repeat: no-repeat;
-
+    transition: filter 0.25s;
     animation: spin 8s linear infinite;
 
     @keyframes spin {
@@ -50,10 +52,6 @@ header {
   position: absolute;
   left: 1rem;
   top: 0.5rem;
-}
-
-#nightSwitch {
-  // transform: rotate(90deg);
 }
 
 main {
