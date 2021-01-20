@@ -6,6 +6,7 @@ body {
 }
 
 header {
+  position: relative;
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -33,6 +34,12 @@ header .film {
   to {
     transform: rotate(360deg);
   }
+}
+
+.form-switch {
+  position: absolute;
+  left: 1rem;
+  top: 0.5rem;
 }
 
 main {

@@ -182,6 +182,21 @@ getUpcomingTMDB()
   })
   .then(() => wait(150))
   .then(() => document.querySelector('#movies')?.classList.add('show'));
+
+const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+const tooltipList = tooltipTriggerList
+  .map((tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
+
+// const triggerTabList = [].slice.call(document.querySelectorAll('#nav-tab a'));
+// triggerTabList.forEach((triggerEl: HTMLElement) => {
+//   const tabTrigger = new bootstrap.Tab(triggerEl);
+
+//   triggerEl.addEventListener('click', (event) => {
+//     event.preventDefault();
+//     tabTrigger.show();
+//   });
+// });
+
 searchBtn.addEventListener('click', handleSearchClick);
 menu.addEventListener('click', handleMenuClick);
 input.addEventListener('keypress', handleEnterPress);
