@@ -78,6 +78,7 @@ const createCard = (data: SearchResult) => {
   const cardTitle = createElement('div', 'card__title');
   const cardPoster = createElement('div', 'card__poster');
   const cardRating = createElement('div', 'card__rating');
+  cardRating.classList.add('badge', 'bg-warning', 'text-dark');
   const cardFavButton = createElement('button', 'card__fav');
   const cardIsFav = Object.keys(storage.Favorites)
     .findIndex((el: string) => el === data.imdbID) >= 0;
@@ -86,7 +87,8 @@ const createCard = (data: SearchResult) => {
   cardTitle.textContent = `${data.Title}, ${data.Year}`;
   cardPoster.style.setProperty('background-image', `url(${data.Poster})`);
   cardFavButton.classList.toggle('isFav', cardIsFav);
-  card.append(cardTitle, cardPoster, cardRating, cardFavButton);
+  cardPoster.append(cardRating, cardFavButton);
+  card.append(cardTitle, cardPoster);
   slide.append(card);
   return slide;
 };
@@ -103,7 +105,7 @@ const addRatingToCard = (card: HTMLElement, data: MovieData) => {
   const imdbRating = data.Ratings
     .find((r: RatingsArray) => r.Source === 'Internet Movie Database');
   const cardRating = card.querySelector('.card__rating')!;
-  cardRating.textContent = imdbRating ? `IMDB: ${imdbRating.Value}` : 'n/a';
+  cardRating.textContent = imdbRating ? `${imdbRating.Value.slice(0, -3)}` : 'n/a';
 };
 
 const loadFavorites = () => {
@@ -114,6 +116,7 @@ const loadFavorites = () => {
     addRatingToCard(card, movie as MovieData);
     favoritesSwiper.appendSlide(card);
     favoritesSwiper.updateSlides();
+    favoritesSwiper.update();
   });
 };
 
@@ -158,6 +161,9 @@ const handleMenuClick = (event: Event) => {
     .forEach((link) => link.classList.remove('disabled'));
   target.classList.add('disabled');
   animateTabChange(currentTab, targetTab);
+
+  favoritesSwiper.updateSlides();
+  favoritesSwiper.update();
 };
 
 const handleEnterPress = (event: KeyboardEvent) => {
@@ -176,7 +182,7 @@ const toggleCardFavButton = (id: string) => {
 const handleFavClick = (event: Event) => {
   const target = event.target as HTMLElement;
   if (!target.classList.contains('card__fav')) return;
-  const id = target.parentElement!.id!;
+  const id = target.parentElement?.parentElement?.id!;
   const storage = JSON.parse(localStorage.VideoBox);
   const cardIsFav = Object.keys(storage.Favorites)
     .find((el: string) => el === id);

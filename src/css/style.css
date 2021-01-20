@@ -69,7 +69,7 @@ footer {
   flex-direction: column;
   align-items: center;
   width: 240px;
-  height: 440px;
+  height: 400px;
   margin-top: 1rem;
   transition: box-shadow 0.2s;
 }
@@ -89,6 +89,7 @@ footer {
 }
 
 .card .card__poster {
+  position: relative;
   display: flex;
   justify-content: center;
   width: 228px;
@@ -96,25 +97,30 @@ footer {
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: 50% 0;
+  border-radius: 4px;
 }
 
 .card .card__rating {
-  height: 3rem;
-  line-height: 3rem;
+  position: absolute;
+  top: .25rem;
+  right: .25rem;
+  height: 1.35rem;
 }
 
 .card .card__fav {
   position: absolute;
-  bottom: 1rem;
-  right: 1rem;
+  top: 4px;
+  left: 4px;
   width: 1.25rem;
   height: 1.25rem;
   background-image: url(../assets/img/star-empty.svg);
   background-color: transparent;
   background-repeat: no-repeat;
   background-position: 50%;
+  background-size: contain;
   outline: none;
   border: none;
+  filter: drop-shadow(0 0 2px white);
   transition: transform 0.15s;
 }
 
