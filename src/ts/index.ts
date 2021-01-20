@@ -1,67 +1,34 @@
 import 'normalize.css';
 import * as bootstrap from 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {
-  Swiper, SwiperOptions, Navigation, Pagination,
-} from 'swiper';
+import { Swiper, Navigation, Pagination } from 'swiper';
+import swiperParams from './swiperParams';
 import 'swiper/swiper-bundle.css';
 import '../css/style.css';
 import {
-  getOMDBdata, searchMoviesOMDB, MovieData, SearchResult, RatingsArray,
-  getUpcomingTMDB, getTMDBdata,
+  getOMDBdata,
+  searchMoviesOMDB,
+  MovieData,
+  SearchResult,
+  RatingsArray,
+  getUpcomingTMDB,
+  getTMDBdata,
 } from './movieData';
+
+Swiper.use([Navigation, Pagination]);
+const moviesSwiper = new Swiper('.swiper-container.movies', swiperParams);
+const favoritesSwiper = new Swiper('.swiper-container.favorites', swiperParams);
 
 const searchBtn = document.querySelector('.search-button')!;
 const input = <HTMLInputElement>document.querySelector('#movie-search');
 const menu = document.querySelector('div.nav')!;
 const tabs = Array.from(document.querySelectorAll('.tab-pane'));
 
-Swiper.use([Navigation, Pagination]);
-const swiperParams: SwiperOptions = {
-  direction: 'horizontal',
-  loop: false,
-  slidesPerView: 1,
-  spaceBetween: -50,
-  centerInsufficientSlides: true,
-  effect: 'coverflow',
-  coverflowEffect: {
-    rotate: 30,
-    slideShadows: false,
-  },
-  pagination: {
-    el: '.swiper-pagination',
-    clickable: true,
-  },
-  navigation: {
-    nextEl: '.swiper-button-next',
-    prevEl: '.swiper-button-prev',
-  },
-  scrollbar: {
-    el: '.swiper-scrollbar',
-    draggable: true,
-  },
-  observer: true,
-  observeParents: true,
-  observeSlideChildren: true,
-  breakpoints: {
-    568: {
-      slidesPerView: 2,
-    },
-    850: {
-      slidesPerView: 3,
-    },
-    1150: {
-      slidesPerView: 4,
-    },
-  },
-};
-const moviesSwiper = new Swiper('.swiper-container.movies', swiperParams);
-const favoritesSwiper = new Swiper('.swiper-container.favorites', swiperParams);
+const wait = (ms: number) => new Promise((resolve: any) => setTimeout(() => resolve(), ms));
 
 const initStorage = () => {
   if (!localStorage.VideoBox) {
-    localStorage
-      .setItem('VideoBox', JSON.stringify({ Movies: {}, Favorites: {} }));
+    localStorage.setItem('VideoBox', JSON.stringify({ Movies: {}, Favorites: {} }));
   }
 };
 
@@ -71,21 +38,22 @@ const createElement = (tag: string, className: string) => {
   return element;
 };
 
-const createCard = (data: SearchResult) => {
+const createSlide = (data: SearchResult) => {
   const storage = JSON.parse(localStorage.VideoBox);
   const slide = createElement('div', 'swiper-slide');
   const card = createElement('div', 'card');
   const cardTitle = createElement('div', 'card__title');
   const cardPoster = createElement('div', 'card__poster');
   const cardRating = createElement('div', 'card__rating');
-  cardRating.classList.add('badge', 'bg-warning', 'text-dark');
   const cardFavButton = createElement('button', 'card__fav');
+
   const cardIsFav = Object.keys(storage.Favorites)
     .findIndex((el: string) => el === data.imdbID) >= 0;
 
   card.id = data.imdbID;
   cardTitle.textContent = `${data.Title}, ${data.Year}`;
   cardPoster.style.setProperty('background-image', `url(${data.Poster})`);
+  cardRating.classList.add('badge', 'bg-warning', 'text-dark');
   cardFavButton.classList.toggle('isFav', cardIsFav);
   cardPoster.append(cardRating, cardFavButton);
   card.append(cardTitle, cardPoster);
@@ -101,7 +69,7 @@ const addMovieToLocalStorage = (data: MovieData) => {
   }
 };
 
-const addRatingToCard = (card: HTMLElement, data: MovieData) => {
+const addRatingToSlide = (card: HTMLElement, data: MovieData) => {
   const imdbRating = data.Ratings
     .find((r: RatingsArray) => r.Source === 'Internet Movie Database');
   const cardRating = card.querySelector('.card__rating')!;
@@ -112,41 +80,38 @@ const loadFavorites = () => {
   const storage = JSON.parse(localStorage.VideoBox);
   favoritesSwiper.removeAllSlides();
   Object.values(storage.Favorites).forEach((movie) => {
-    const card = createCard(movie as SearchResult);
-    addRatingToCard(card, movie as MovieData);
-    favoritesSwiper.appendSlide(card);
+    const slide = createSlide(movie as SearchResult);
+    addRatingToSlide(slide, movie as MovieData);
+    favoritesSwiper.appendSlide(slide);
     favoritesSwiper.updateSlides();
     favoritesSwiper.update();
   });
 };
 
-const createSlide = async (movie: SearchResult) => {
-  const card = createCard(movie);
-  const omdb = await getOMDBdata(movie.imdbID);
-  moviesSwiper.appendSlide(card);
-  addMovieToLocalStorage(omdb);
-  addRatingToCard(card, omdb);
-};
-
 const animateTabChange = (current: Element | undefined, target: Element | undefined) => {
   current?.classList.remove('show');
-  setTimeout(() => {
+  wait(150).then(() => {
     current?.classList.remove('active');
     target?.classList.add('active');
-  }, 150);
-  setTimeout(() => {
-    target?.classList.add('show');
-  }, 200);
+  });
+  wait(200).then(() => target?.classList.add('show'));
 };
 
 const handleSearchClick = () => {
-  searchMoviesOMDB(input.value)
+  document.querySelector('#movies')?.classList.remove('show');
+  wait(150)
+    .then(() => searchMoviesOMDB(input.value))
     .then((res) => {
       moviesSwiper.removeAllSlides();
-      res.Search?.forEach(async (movie: SearchResult) => createSlide(movie));
-      document.querySelector('#movies')!
-        .dispatchEvent(new Event('click', { bubbles: true }));
-    });
+      res.Search?.forEach(async (movie: SearchResult) => {
+        const omdb = await getOMDBdata(movie.imdbID);
+        const slide = createSlide(omdb);
+        moviesSwiper.appendSlide(slide);
+        addMovieToLocalStorage(omdb);
+        addRatingToSlide(slide, omdb);
+      });
+    })
+    .then(() => document.querySelector('#movies-tab')?.dispatchEvent(new Event('click', { bubbles: true })));
 };
 
 const handleMenuClick = (event: Event) => {
@@ -157,8 +122,7 @@ const handleMenuClick = (event: Event) => {
   const currentTab = tabs
     .find((tab) => tab instanceof HTMLElement && tab.classList.contains('active'));
 
-  Array.from(menu.children)
-    .forEach((link) => link.classList.remove('disabled'));
+  Array.from(menu.children).forEach((link) => link.classList.remove('disabled'));
   target.classList.add('disabled');
   animateTabChange(currentTab, targetTab);
 
@@ -173,7 +137,8 @@ const handleEnterPress = (event: KeyboardEvent) => {
 
 const toggleCardFavButton = (id: string) => {
   const storage = JSON.parse(localStorage.VideoBox);
-  const card = Array.from(moviesSwiper.slides).find((el) => el.querySelector('.card')?.id === id);
+  const card = Array.from(moviesSwiper.slides)
+    .find((el) => el.querySelector('.card')?.id === id);
   const isFav = Object.keys(storage.Favorites)
     .findIndex((el) => el === id) >= 0;
   card?.querySelector('.card__fav')!.classList.toggle('isFav', isFav);
@@ -184,8 +149,7 @@ const handleFavClick = (event: Event) => {
   if (!target.classList.contains('card__fav')) return;
   const id = target.parentElement?.parentElement?.id!;
   const storage = JSON.parse(localStorage.VideoBox);
-  const cardIsFav = Object.keys(storage.Favorites)
-    .find((el: string) => el === id);
+  const cardIsFav = Object.keys(storage.Favorites).find((el: string) => el === id);
 
   if (cardIsFav) delete storage.Favorites[id];
   if (!cardIsFav) storage.Favorites[id] = storage.Movies[id];
@@ -202,12 +166,18 @@ loadFavorites();
 input.focus();
 getUpcomingTMDB()
   .then((res) => {
-    res.results?.slice(0, 10).forEach(async (movie: any) => {
-      const tmdb = await getTMDBdata(movie.id);
-      const omdb = await getOMDBdata(tmdb.imdb_id);
-      createSlide(omdb);
-    });
-  });
+    res.results?.slice(0, 10)
+      .forEach(async (movie: any) => {
+        const tmdb = await getTMDBdata(movie.id);
+        const omdb = await getOMDBdata(tmdb.imdb_id);
+        const slide = createSlide(omdb);
+        moviesSwiper.appendSlide(slide);
+        addMovieToLocalStorage(omdb);
+        addRatingToSlide(slide, omdb);
+      });
+  })
+  .then(() => wait(150))
+  .then(() => document.querySelector('#movies')?.classList.add('show'));
 searchBtn.addEventListener('click', handleSearchClick);
 menu.addEventListener('click', handleMenuClick);
 input.addEventListener('keypress', handleEnterPress);
