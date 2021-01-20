@@ -46,9 +46,10 @@ const createSlide = (data: SearchResult) => {
   const cardPoster = createElement('div', 'card__poster');
   const cardRating = createElement('div', 'card__rating');
   const cardFavButton = createElement('button', 'card__fav');
-
   const cardIsFav = Object.keys(storage.Favorites)
     .findIndex((el: string) => el === data.imdbID) >= 0;
+  const cardInfo = createElement('div', 'card__info');
+  const cardInfoButton = createElement('button', 'card__info-button');
 
   card.id = data.imdbID;
   cardTitle.textContent = `${data.Title}, ${data.Year}`;
@@ -56,7 +57,10 @@ const createSlide = (data: SearchResult) => {
   cardRating.classList.add('badge', 'bg-warning', 'text-dark');
   cardFavButton.classList.toggle('isFav', cardIsFav);
   cardPoster.append(cardRating, cardFavButton);
-  card.append(cardTitle, cardPoster);
+  cardInfoButton.textContent = 'Learn more';
+  cardInfoButton.classList.add('btn', 'btn-warning');
+  cardInfo.append(cardInfoButton);
+  card.append(cardTitle, cardPoster, cardInfo);
   slide.append(card);
   return slide;
 };
