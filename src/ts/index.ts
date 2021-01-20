@@ -13,7 +13,9 @@ import {
   RatingsArray,
   getUpcomingTMDB,
   getTMDBdata,
+  getTop100TMDB,
 } from './movieData';
+import { Obj } from '@popperjs/core';
 
 Swiper.use([Navigation, Pagination]);
 const moviesSwiper = new Swiper('.swiper-container.movies', swiperParams);
@@ -39,6 +41,7 @@ const toggleNightMode = () => {
   document.querySelector('header>h1')?.classList.toggle('text-light');
   document.querySelectorAll('.card').forEach((card) => card.classList.toggle('bg-light'));
   document.querySelector('.film')?.classList.toggle('invert');
+  document.querySelector('footer')?.classList.toggle('text-light');
   nightSwitchTooltip.dispose();
   nightSwitchTooltip = new bootstrap.Tooltip(nightSwitch);
 
@@ -218,3 +221,5 @@ menu.addEventListener('click', handleMenuClick);
 input.addEventListener('keypress', handleEnterPress);
 document.addEventListener('click', handleFavClick);
 nightSwitch.addEventListener('click', toggleNightMode);
+
+getTop100TMDB().then((res) => console.log(res));

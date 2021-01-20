@@ -1,4 +1,4 @@
-export async function searchMoviesOMDB(query:string) {
+export async function searchMoviesOMDB(query: string) {
   const key = 'c1e288c0';
   const url = `https://www.omdbapi.com//?apikey=${key}&s=${query}`;
   const response = await fetch(url);
@@ -20,6 +20,33 @@ export async function getUpcomingTMDB() {
   const responce = await fetch(url);
   const data = await responce.json();
   return data;
+}
+
+export async function getTopRatedTMDB(n: number) {
+  const page = n;
+  const result = [];
+  const key = 'c37ec6b736685a1db9bc20250a85960a';
+  async function getPartResult() {
+    const url = `https://api.themoviedb.org/3/movie/top_rated?api_key=${key}&page=${page}`;
+    const responce = await fetch(url);
+    const data = await responce.json();
+    return data.results.filter((movie: any) => movie.vote_count > 10000);
+  }
+  const partResult = await getPartResult();
+  result.push(...partResult);
+  return result;
+}
+
+export async function getTop100TMDB(n: number = 1, top100: Array<Object> = []) {
+  let page = n;
+  getTopRatedTMDB(page)
+    .then((res) => top100.push(...res))
+    .then(() => {
+      // if (top100.length > 100) top100.length = 100;
+      if (top100.length < 100) getTop100TMDB(page += 1, top100);
+    })
+    .then((res) => res);
+  return top100;
 }
 
 export async function getTMDBdata(id: string) {
