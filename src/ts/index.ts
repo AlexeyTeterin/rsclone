@@ -14,8 +14,8 @@ import {
   getUpcomingTMDB,
   getTMDBdata,
   getTop100TMDB,
+  OMDBSearchResponce,
 } from './movieData';
-import { Obj } from '@popperjs/core';
 
 Swiper.use([Navigation, Pagination]);
 const moviesSwiper = new Swiper('.swiper-container.movies', swiperParams);
@@ -152,21 +152,39 @@ const toggleSearchSpinner = () => {
   searchText?.classList.toggle('visually-hidden');
 };
 
+const setAlertMessage = (res: OMDBSearchResponce) => {
+  const request = input.value;
+  const alert = document.querySelector('#movies>.alert')!;
+  alert.classList.remove('alert-success', 'alert-danger');
+  const { totalResults } = res;
+  if (!totalResults) {
+    alert.textContent = res.Error;
+    alert.classList.add('alert-danger');
+  } else {
+    alert.textContent = `${totalResults} movies found on request '${request}'`;
+    if (totalResults > 10) alert.textContent += ', showing first 10:';
+    alert.classList.add('alert-success');
+  }
+  alert.classList.remove('visually-hidden');
+};
+
 const handleSearchClick = () => {
   toggleSearchSpinner();
+
   document.querySelector('#movies')?.classList.remove('show');
 
   wait(150)
-    .then(() => searchMoviesOMDB(input.value))
-    .then((res) => {
+    .then(() => searchMoviesOMDB(input.value.trim()))
+    .then(async (res) => {
       moviesSwiper.removeAllSlides();
-      res.Search?.forEach(async (movie: SearchResult) => {
+      await res.Search?.forEach(async (movie: SearchResult) => {
         const omdb = await getOMDBdata(movie.imdbID);
         const slide = createSlide(omdb);
         moviesSwiper.appendSlide(slide);
         addMovieToLocalStorage(omdb);
         addRatingToSlide(slide, omdb);
       });
+      setAlertMessage(res);
     })
     .then(() => document.querySelector('#movies-tab')?.dispatchEvent(new Event('click', { bubbles: true })))
     .then(toggleSearchSpinner);

@@ -97,3 +97,10 @@ export type MovieData = {
   imdbRating: string;
   imdbVotes: string;
 }
+
+export type OMDBSearchResponce = {
+  Responce: string;
+  Search: Array<Object>;
+  totalResults: number;
+  Error: string;
+}

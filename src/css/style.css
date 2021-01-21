@@ -18,6 +18,18 @@ header {
 header h1 {
   font-weight: bold;
   transition: color 0.25s;
+  cursor: pointer;
+}
+
+header h1 a {
+  all: unset;
+  color: unset;
+  transition: all 0.5s;
+}
+
+header h1 a:hover {
+  all: unset;
+  color: unset;
 }
 
 header .film {
@@ -200,6 +212,11 @@ main {
 .swiper-slide {
   display: flex;
   justify-content: center;
+}
+
+#movies .alert {
+  margin: 0 auto;
+  width: fit-content;
 }
 
 footer {

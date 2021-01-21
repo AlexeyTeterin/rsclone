@@ -17,11 +17,11 @@
       <input class="form-check-input" type="checkbox" id="nightSwitch" data-bs-toggle="tooltip" data-bs-trigger="hover" title="Turn off the lights">
       <label class="form-check-label" for="nightSwitch"></label>
     </div>
-    <h1>VideoBox<span class="film"></span></h1>
+    <h1><a href=".">VideoBox<span class="film"></span></a></h1>
     <div class="nav" id="nav" role="tablist">
-      <a class="nav-link disabled" role="tab" aria-controls="movies" aria-selected="true" href="#" id="movies-tab">Movies</a>
-      <a class="nav-link" role="tab" aria-controls="favorites" aria-selected="false" href="#" id="favorites-tab">Favorites</a>
-      <a class="nav-link" role="tab" aria-controls="top250" aria-selected="false" href="#" id="top250-tab">Top 250</a>
+      <a class="nav-link fw-bold disabled" role="tab" aria-controls="movies" aria-selected="true" href="#" id="movies-tab">Movies</a>
+      <a class="nav-link fw-bold" role="tab" aria-controls="favorites" aria-selected="false" href="#" id="favorites-tab">Favorites</a>
+      <a class="nav-link fw-bold" role="tab" aria-controls="top250" aria-selected="false" href="#" id="top250-tab">Top 101</a>
     </div>
 
     <div class="search__container">
@@ -35,8 +35,11 @@
 
   <main>
     <div class="tab-content">
+      
       <div class="tab-pane fade active" role="tabpanel" aria-labelledby="movies-tab" data-id="movies" data-bs-toggle="tab" id="movies">
-
+        <div class="alert alert-primary p-1" role="alert">
+          Today's upcoming movies:
+        </div>
         <div class="swiper-container movies">
           <div class="swiper-wrapper"></div>
           <div class="swiper-pagination"></div>
@@ -56,6 +59,7 @@
       </div>
 
       <div class="tab-pane fade" role="tabpanel" aria-labelledby="top250-tab" data-id="top250" data-bs-toggle="tab" id="top250">Top 250</div>
+      
     </div>
   </main>
 
