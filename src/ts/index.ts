@@ -145,8 +145,17 @@ const animateTabChange = (current: Element | undefined, target: Element | undefi
   wait(200).then(() => target?.classList.add('show'));
 };
 
+const toggleSearchSpinner = () => {
+  const spinner = document.querySelector('button>span.spinner-border');
+  const searchText = document.querySelector('button>span.search-text');
+  spinner?.classList.toggle('visually-hidden');
+  searchText?.classList.toggle('visually-hidden');
+};
+
 const handleSearchClick = () => {
+  toggleSearchSpinner();
   document.querySelector('#movies')?.classList.remove('show');
+
   wait(150)
     .then(() => searchMoviesOMDB(input.value))
     .then((res) => {
@@ -159,7 +168,8 @@ const handleSearchClick = () => {
         addRatingToSlide(slide, omdb);
       });
     })
-    .then(() => document.querySelector('#movies-tab')?.dispatchEvent(new Event('click', { bubbles: true })));
+    .then(() => document.querySelector('#movies-tab')?.dispatchEvent(new Event('click', { bubbles: true })))
+    .then(toggleSearchSpinner);
 };
 
 const handleMenuClick = (event: Event) => {

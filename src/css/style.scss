@@ -76,6 +76,10 @@ main {
 
   .search-button {
     margin-left: 6px;
+    min-width: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
 
@@ -127,6 +131,7 @@ main {
     background-repeat: no-repeat;
     background-position: 50% 0;
     border-radius: 4px;
+    transition: background-size 0.25s, background-position 0.25s;
     
     &.no-image {
       background-image: url(../assets/img/sad.svg);
@@ -137,17 +142,17 @@ main {
 
   .card__rating {
     position: absolute;
-    top: .25rem;
-    right: .25rem;
+    top: 6px;
+    left: 6px;
     height: 1.35rem;
   }
 
   .card__fav {
     position: absolute;
-    top: 4px;
-    left: 4px;
-    width: 1.25rem;
-    height: 1.25rem;
+    top: 6px;
+    right: 6px;
+    width: 1.35rem;
+    height: 1.35rem;
     background-image: url(../assets/img/star-empty.svg);
     background-color: transparent;
     background-repeat: no-repeat;
