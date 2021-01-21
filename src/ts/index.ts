@@ -86,7 +86,18 @@ const createSlide = (data: SearchResult) => {
 
   card.id = data.imdbID;
   cardTitle.textContent = `${data.Title}, ${data.Year}`;
-  cardPoster.style.setProperty('background-image', `url(${data.Poster})`);
+
+  const img = document.createElement('img');
+  img.src = data.Poster;
+  img.onload = () => {
+    cardPoster.style.setProperty('background-image', `url(${img.src})`);
+    card.style.setProperty('opacity', '1');
+  };
+  img.onerror = () => {
+    cardPoster.classList.add('no-image');
+    card.style.setProperty('opacity', '1');
+  };
+
   cardRating.classList.add('badge', 'bg-warning', 'text-dark');
   cardFavButton.classList.toggle('isFav', cardIsFav);
   cardPoster.append(cardRating, cardFavButton);
@@ -203,7 +214,7 @@ loadFavorites();
 input.focus();
 getUpcomingTMDB()
   .then((res) => {
-    res.results?.slice(0, 10)
+    res.results
       .forEach(async (movie: any) => {
         const tmdb = await getTMDBdata(movie.id);
         const omdb = await getOMDBdata(tmdb.imdb_id);

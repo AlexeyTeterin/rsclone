@@ -986,6 +986,8 @@ footer {
   margin-top: 1rem;
   transition: box-shadow 0.2s;
   overflow: hidden;
+  opacity: 0;
+  transition: opacity 1s;
 }
 
 .card:hover {
@@ -1010,12 +1012,19 @@ footer {
   position: relative;
   display: flex;
   justify-content: center;
+  align-items: center;
   width: 228px;
   height: 340px;
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: 50% 0;
   border-radius: 4px;
+}
+
+.card .card__poster.no-image {
+  background-image: url(a70a1e3679de80df38aa11322b400354.svg);
+  background-size: 50%;
+  background-position: 50% 40%;
 }
 
 .card .card__rating {
