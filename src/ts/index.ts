@@ -284,7 +284,7 @@ document.addEventListener('click', handleFavClick);
 nightSwitch.addEventListener('click', toggleNightMode);
 moviesSwiper.on('activeIndexChange', () => {
   const { activeIndex, slides } = moviesSwiper;
-  if (slides.length - activeIndex === 5 && state.request) {
+  if (slides.length - activeIndex === 6 && state.request) {
     state.page += 1;
     loadNextSearchPage();
   }

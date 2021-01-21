@@ -1,5 +1,5 @@
 export async function searchMoviesOMDB(query: string, page: number = 1) {
-  const key = 'c1e288c0';
+  const key = 'd8e35ecc';
   const url = `https://www.omdbapi.com//?apikey=${key}&s=${query}&page=${page}`;
   const response = await fetch(url);
   const data = await response.json();
@@ -7,7 +7,7 @@ export async function searchMoviesOMDB(query: string, page: number = 1) {
 }
 
 export async function getOMDBdata(id: string) {
-  const key = 'c1e288c0';
+  const key = 'd8e35ecc';
   const url = `https://www.omdbapi.com//?apikey=${key}&i=${id}`;
   const responce = await fetch(url);
   const data = await responce.json();
