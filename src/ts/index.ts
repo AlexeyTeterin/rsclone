@@ -17,7 +17,7 @@ import {
   OMDBSearchResponce,
 } from './movieData';
 
-export const state = {
+const state = {
   page: 0,
   request: '',
 };
@@ -170,23 +170,31 @@ const setAlertMessage = (res: OMDBSearchResponce) => {
   alert.classList.remove('visually-hidden');
 };
 
+const loadSlides = (res: any) => {
+  res.Search.forEach(async (movie: SearchResult) => {
+    const omdb = await getOMDBdata(movie.imdbID);
+    const slide = createSlide(omdb);
+    moviesSwiper.appendSlide(slide);
+    addMovieToLocalStorage(omdb);
+    addRatingToSlide(slide, omdb);
+  });
+};
+
 const handleSearchClick = () => {
   toggleSearchSpinner();
   document.querySelector('#movies')?.classList.remove('show');
   state.page = 1;
-  state.request = input.value;
+  state.request = input.value.trim();
 
   wait(150)
-    .then(() => searchMoviesOMDB(input.value.trim(), state.page))
-    .then(async (res) => {
+    .then(() => searchMoviesOMDB(state.request, state.page))
+    .then((res) => {
       moviesSwiper.removeAllSlides();
-      await res.Search?.forEach(async (movie: SearchResult) => {
-        const omdb = await getOMDBdata(movie.imdbID);
-        const slide = createSlide(omdb);
-        moviesSwiper.appendSlide(slide);
-        addMovieToLocalStorage(omdb);
-        addRatingToSlide(slide, omdb);
-      });
+      if (res.Error) {
+        setAlertMessage(res);
+        return;
+      }
+      loadSlides(res);
       setAlertMessage(res);
     })
     .then(() => document.querySelector('#movies-tab')?.dispatchEvent(new Event('click', { bubbles: true })))
@@ -194,17 +202,13 @@ const handleSearchClick = () => {
 };
 
 const loadNextSearchPage = () => {
-  const { activeIndex } = moviesSwiper;
-  searchMoviesOMDB(input.value.trim(), state.page)
+  searchMoviesOMDB(state.request, state.page)
     .then((res) => {
-      res.Search?.forEach(async (movie: SearchResult) => {
-        const omdb = await getOMDBdata(movie.imdbID);
-        const slide = createSlide(omdb);
-        moviesSwiper.slideTo(activeIndex);
-        moviesSwiper.appendSlide(slide);
-        addMovieToLocalStorage(omdb);
-        addRatingToSlide(slide, omdb);
-      });
+      if (res.Error) {
+        setAlertMessage(res);
+        return;
+      }
+      loadSlides(res);
     });
 };
 
@@ -278,9 +282,12 @@ menu.addEventListener('click', handleMenuClick);
 input.addEventListener('keypress', handleEnterPress);
 document.addEventListener('click', handleFavClick);
 nightSwitch.addEventListener('click', toggleNightMode);
-moviesSwiper.on('reachEnd', () => {
-  if (state.page > 1 && state.request) loadNextSearchPage();
-  state.page += 1;
+moviesSwiper.on('activeIndexChange', () => {
+  const { activeIndex, slides } = moviesSwiper;
+  if (slides.length - activeIndex === 5 && state.request) {
+    state.page += 1;
+    loadNextSearchPage();
+  }
 });
 
 getTop100TMDB().then((res) => console.log(res));

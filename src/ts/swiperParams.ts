@@ -13,7 +13,7 @@ const swiperParams: SwiperOptions = {
   },
   pagination: {
     el: '.swiper-pagination',
-    type: 'bullets',
+    type: 'fraction',
     clickable: true,
     dynamicBullets: true,
     dynamicMainBullets: 5,
