@@ -16,7 +16,7 @@ const swiperParams: SwiperOptions = {
     type: 'bullets',
     clickable: true,
     dynamicBullets: true,
-    dynamicMainBullets: 3,
+    dynamicMainBullets: 5,
   },
   navigation: {
     nextEl: '.swiper-button-next',

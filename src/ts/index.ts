@@ -170,7 +170,7 @@ const setAlertMessage = (res: OMDBSearchResponce) => {
   alert.classList.remove('visually-hidden');
 };
 
-export const handleSearchClick = () => {
+const handleSearchClick = () => {
   toggleSearchSpinner();
   document.querySelector('#movies')?.classList.remove('show');
   state.page = 1;
@@ -194,13 +194,13 @@ export const handleSearchClick = () => {
 };
 
 const loadNextSearchPage = () => {
-  console.log('page', state.page);
+  const { activeIndex } = moviesSwiper;
   searchMoviesOMDB(input.value.trim(), state.page)
-    .then(async (res) => {
-      await res.Search?.forEach(async (movie: SearchResult) => {
+    .then((res) => {
+      res.Search?.forEach(async (movie: SearchResult) => {
         const omdb = await getOMDBdata(movie.imdbID);
         const slide = createSlide(omdb);
-        moviesSwiper.slideTo(state.page * 10 - 22);
+        moviesSwiper.slideTo(activeIndex);
         moviesSwiper.appendSlide(slide);
         addMovieToLocalStorage(omdb);
         addRatingToSlide(slide, omdb);
