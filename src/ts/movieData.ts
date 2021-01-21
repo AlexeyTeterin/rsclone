@@ -1,6 +1,6 @@
-export async function searchMoviesOMDB(query: string) {
+export async function searchMoviesOMDB(query: string, page: number = 1) {
   const key = 'c1e288c0';
-  const url = `https://www.omdbapi.com//?apikey=${key}&s=${query}`;
+  const url = `https://www.omdbapi.com//?apikey=${key}&s=${query}&page=${page}`;
   const response = await fetch(url);
   const data = await response.json();
   return data;
@@ -42,7 +42,6 @@ export async function getTop100TMDB(n: number = 1, top100: Array<Object> = []) {
   getTopRatedTMDB(page)
     .then((res) => top100.push(...res))
     .then(() => {
-      // if (top100.length > 100) top100.length = 100;
       if (top100.length < 100) getTop100TMDB(page += 1, top100);
     })
     .then((res) => res);

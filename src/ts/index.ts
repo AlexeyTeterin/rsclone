@@ -1,7 +1,7 @@
 import 'normalize.css';
 import * as bootstrap from 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Swiper, Navigation, Pagination } from 'swiper';
+import Swiper from 'swiper/bundle';
 import swiperParams from './swiperParams';
 import 'swiper/swiper-bundle.css';
 import '../css/style.css';
@@ -17,10 +17,13 @@ import {
   OMDBSearchResponce,
 } from './movieData';
 
-Swiper.use([Navigation, Pagination]);
+export const state = {
+  page: 0,
+  request: '',
+};
+
 const moviesSwiper = new Swiper('.swiper-container.movies', swiperParams);
 const favoritesSwiper = new Swiper('.swiper-container.favorites', swiperParams);
-
 const searchBtn = document.querySelector('.search-button')!;
 const input = <HTMLInputElement>document.querySelector('#movie-search');
 const menu = document.querySelector('div.nav')!;
@@ -29,6 +32,12 @@ const nightSwitch = document.querySelector('#nightSwitch') as HTMLInputElement;
 let nightSwitchTooltip = new bootstrap.Tooltip(nightSwitch);
 
 const wait = (ms: number) => new Promise((resolve: any) => setTimeout(() => resolve(), ms));
+
+const createElement = (tag: string, className: string) => {
+  const element = document.createElement(tag);
+  element.classList.add(className);
+  return element;
+};
 
 const toggleNightMode = () => {
   if (nightSwitch.checked) {
@@ -63,12 +72,6 @@ const initStorage = () => {
     } else nightSwitch.checked = true;
     wait(500).then(() => nightSwitch.parentElement?.classList.add('visible'));
   }
-};
-
-const createElement = (tag: string, className: string) => {
-  const element = document.createElement(tag);
-  element.classList.add(className);
-  return element;
 };
 
 const createSlide = (data: SearchResult) => {
@@ -162,19 +165,19 @@ const setAlertMessage = (res: OMDBSearchResponce) => {
     alert.classList.add('alert-danger');
   } else {
     alert.textContent = `${totalResults} movies found on request '${request}'`;
-    if (totalResults > 10) alert.textContent += ', showing first 10:';
     alert.classList.add('alert-success');
   }
   alert.classList.remove('visually-hidden');
 };
 
-const handleSearchClick = () => {
+export const handleSearchClick = () => {
   toggleSearchSpinner();
-
   document.querySelector('#movies')?.classList.remove('show');
+  state.page = 1;
+  state.request = input.value;
 
   wait(150)
-    .then(() => searchMoviesOMDB(input.value.trim()))
+    .then(() => searchMoviesOMDB(input.value.trim(), state.page))
     .then(async (res) => {
       moviesSwiper.removeAllSlides();
       await res.Search?.forEach(async (movie: SearchResult) => {
@@ -188,6 +191,21 @@ const handleSearchClick = () => {
     })
     .then(() => document.querySelector('#movies-tab')?.dispatchEvent(new Event('click', { bubbles: true })))
     .then(toggleSearchSpinner);
+};
+
+const loadNextSearchPage = () => {
+  console.log('page', state.page);
+  searchMoviesOMDB(input.value.trim(), state.page)
+    .then(async (res) => {
+      await res.Search?.forEach(async (movie: SearchResult) => {
+        const omdb = await getOMDBdata(movie.imdbID);
+        const slide = createSlide(omdb);
+        moviesSwiper.slideTo(state.page * 10 - 22);
+        moviesSwiper.appendSlide(slide);
+        addMovieToLocalStorage(omdb);
+        addRatingToSlide(slide, omdb);
+      });
+    });
 };
 
 const handleMenuClick = (event: Event) => {
@@ -260,5 +278,9 @@ menu.addEventListener('click', handleMenuClick);
 input.addEventListener('keypress', handleEnterPress);
 document.addEventListener('click', handleFavClick);
 nightSwitch.addEventListener('click', toggleNightMode);
+moviesSwiper.on('reachEnd', () => {
+  if (state.page > 1 && state.request) loadNextSearchPage();
+  state.page += 1;
+});
 
 getTop100TMDB().then((res) => console.log(res));

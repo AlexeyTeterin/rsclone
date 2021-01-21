@@ -8,19 +8,21 @@ const swiperParams: SwiperOptions = {
   centerInsufficientSlides: true,
   effect: 'coverflow',
   coverflowEffect: {
-    rotate: 30,
+    rotate: 15,
     slideShadows: false,
   },
   pagination: {
     el: '.swiper-pagination',
+    type: 'bullets',
     clickable: true,
+    dynamicBullets: true,
+    dynamicMainBullets: 3,
   },
   navigation: {
     nextEl: '.swiper-button-next',
     prevEl: '.swiper-button-prev',
   },
   scrollbar: {
-    el: '.swiper-scrollbar',
     draggable: true,
   },
   observer: true,
@@ -37,6 +39,11 @@ const swiperParams: SwiperOptions = {
       slidesPerView: 4,
     },
   },
+  mousewheel: {
+    invert: false,
+    sensitivity: 10,
+  },
+  keyboard: true,
 };
 
 export default swiperParams;
