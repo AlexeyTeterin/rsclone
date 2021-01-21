@@ -67,13 +67,6 @@ main {
 
 }
 
-footer {
-  display: flex;
-  justify-content: center;
-  flex: 0 0 auto;
-  height: 36px;
-}
-
 .search__container {
   margin: 0 auto;
   padding: 1rem;
@@ -207,4 +200,30 @@ footer {
 .swiper-slide {
   display: flex;
   justify-content: center;
+}
+
+footer {
+  display: flex;
+  justify-content: center;
+  flex: 0 0 auto;
+  margin-bottom: 4px;
+
+  a.rsschool {
+    display: block;
+    margin-right: 5px;
+    width: 64px;
+    height: 24px;
+    background-image: url(../assets/img/rs_school.svg);
+    background-repeat: no-repeat;
+    background-size: contain;
+    opacity: 0.55;
+    
+    &:hover {
+      opacity: 0.7;
+    }
+    
+    &.invert {
+      filter: invert(1);
+    }
+  }
 }

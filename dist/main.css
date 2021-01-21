@@ -951,13 +951,6 @@ main {
   flex: 1 0 auto;
 }
 
-footer {
-  display: flex;
-  justify-content: center;
-  flex: 0 0 auto;
-  height: 36px;
-}
-
 .search__container {
   margin: 0 auto;
   padding: 1rem;
@@ -1091,5 +1084,31 @@ footer {
 .swiper-slide {
   display: flex;
   justify-content: center;
+}
+
+footer {
+  display: flex;
+  justify-content: center;
+  flex: 0 0 auto;
+  margin-bottom: 4px;
+}
+
+footer a.rsschool {
+  display: block;
+  margin-right: 5px;
+  width: 64px;
+  height: 24px;
+  background-image: url(ad178c0df28bc133be34b982d62f431d.svg);
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0.55;
+}
+
+footer a.rsschool:hover {
+  opacity: 0.7;
+}
+
+footer a.rsschool.invert {
+  filter: invert(1);
 }
 

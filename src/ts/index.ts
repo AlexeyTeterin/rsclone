@@ -41,7 +41,7 @@ const toggleNightMode = () => {
   document.querySelector('header>h1')?.classList.toggle('text-light');
   document.querySelectorAll('.card').forEach((card) => card.classList.toggle('bg-light'));
   document.querySelector('.film')?.classList.toggle('invert');
-  document.querySelector('footer')?.classList.toggle('text-light');
+  document.querySelector('footer .rsschool')?.classList.toggle('invert');
   nightSwitchTooltip.dispose();
   nightSwitchTooltip = new bootstrap.Tooltip(nightSwitch);
 
