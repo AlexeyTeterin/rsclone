@@ -37,17 +37,6 @@ export async function getTopRatedTMDB(n: number) {
   return result;
 }
 
-export async function getTop100TMDB(n: number = 1, top100: Array<Object> = []) {
-  let page = n;
-  getTopRatedTMDB(page)
-    .then((res) => top100.push(...res))
-    .then(() => {
-      if (top100.length < 100) getTop100TMDB(page += 1, top100);
-    })
-    .then((res) => res);
-  return top100;
-}
-
 export async function getTMDBdata(id: string) {
   const key = 'c37ec6b736685a1db9bc20250a85960a';
   const url = `https://api.themoviedb.org/3/movie/${id}?api_key=${key}`;

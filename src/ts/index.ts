@@ -13,13 +13,14 @@ import {
   RatingsArray,
   getUpcomingTMDB,
   getTMDBdata,
-  getTop100TMDB,
   OMDBSearchResponce,
+  getTopRatedTMDB,
 } from './movieData';
 
 const state = {
   page: 0,
   request: '',
+  top101page: 1,
 };
 
 const moviesSwiper = new Swiper('.swiper-container.movies', swiperParams);
@@ -28,6 +29,7 @@ const searchBtn = document.querySelector('.search-button')!;
 const input = <HTMLInputElement>document.querySelector('#movie-search');
 const menu = document.querySelector('div.nav')!;
 const tabs = Array.from(document.querySelectorAll('.tab-pane'));
+const top101 = document.querySelector('#top101');
 const nightSwitch = document.querySelector('#nightSwitch') as HTMLInputElement;
 let nightSwitchTooltip = new bootstrap.Tooltip(nightSwitch);
 
@@ -48,6 +50,7 @@ const toggleNightMode = () => {
   }
   document.querySelector('html')?.classList.toggle('bg-dark', !nightSwitch.checked);
   document.querySelector('header>h1')?.classList.toggle('text-light');
+  top101?.classList.toggle('text-light');
   document.querySelectorAll('.card').forEach((card) => card.classList.toggle('bg-light'));
   document.querySelector('.film')?.classList.toggle('invert');
   document.querySelector('footer .rsschool')?.classList.toggle('invert');
@@ -220,10 +223,14 @@ const handleMenuClick = (event: Event) => {
   const currentTab = tabs
     .find((tab) => tab instanceof HTMLElement && tab.classList.contains('active'));
 
-  Array.from(menu.children).forEach((link) => link.classList.remove('disabled'));
+  Array.from(menu.children).forEach((link) => {
+    link.classList.remove('disabled');
+  });
   target.classList.add('disabled');
   animateTabChange(currentTab, targetTab);
 
+  if (currentTab?.id === 'top101') currentTab?.classList.add('visually-hidden');
+  if (targetTab?.id === 'top101') targetTab?.classList.remove('visually-hidden');
   favoritesSwiper.updateSlides();
   favoritesSwiper.update();
 };
@@ -259,6 +266,55 @@ const handleFavClick = (event: Event) => {
   toggleCardFavButton(id);
 };
 
+const createTop101Element = async (movie: any) => {
+  console.log(movie);
+  const row = createElement('div', 'top101-row');
+  const position = createElement('div', 'row__position');
+  const title = createElement('div', 'row__title');
+  const poster = createElement('div', 'row__poster');
+  const rating = createElement('div', 'row__rating');
+  rating.classList.add('badge', 'bg-warning', 'text-dark');
+  const infoButton = createElement('button', 'row__info-button');
+  // const favButton = createElement('button', 'card__fav');
+  
+  position.textContent = `${top101?.children.length! + 1}`;
+  title.textContent = `${movie.title}`;
+  infoButton.textContent = 'Learn more';
+  infoButton.classList.add('btn', 'btn-warning');
+  poster.append(rating);
+  row.append(position, poster, title, infoButton);
+  top101?.append(row);
+  
+  const tmdbData = await getTMDBdata(movie.id);
+  const omdbData: MovieData = await getOMDBdata(tmdbData.imdb_id);
+  console.log(omdbData);
+  row.dataset.id = omdbData.imdbID;
+  title.textContent += `, ${omdbData.Year}`;
+  rating.textContent = `${movie.vote_average}`;
+  poster.style.setProperty('background-image', `url(${omdbData.Poster})`);
+};
+
+const appendTop101NextPage = async () => {
+  const getTop101Page = async (page: number = 1) => {
+    const top = await getTopRatedTMDB(page);
+    return top;
+  };
+  const movies = await getTop101Page(state.top101page);
+  if (!movies.length) {
+    top101?.classList.add('top101');
+  }
+  movies.forEach((movie) => createTop101Element(movie));
+};
+
+const top101observer = new MutationObserver(() => {
+  if (top101?.children.length! < 100) {
+    state.top101page += 1;
+    appendTop101NextPage();
+  } else {
+    console.log('done', top101?.children.length);
+  }
+});
+
 initStorage();
 loadFavorites();
 input.focus();
@@ -289,5 +345,7 @@ moviesSwiper.on('activeIndexChange', () => {
     loadNextSearchPage();
   }
 });
-
-getTop100TMDB().then((res) => console.log(res));
+top101observer.observe(top101 as Node, {
+  childList: true,
+  attributes: true,
+});

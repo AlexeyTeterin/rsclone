@@ -219,11 +219,75 @@ main {
   width: fit-content;
 }
 
+#top101 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0.5rem 0;
+}
+
+.top101-row {
+  margin: 0.25rem 0;
+  position: relative;
+  padding: 0.5rem;
+  height: 106px;
+  max-width: 600px;
+  width: 40%;
+  min-width: 320px;
+  display: flex;
+  box-sizing: border-box;
+  border-radius: 4px;
+  border: transparent 1px solid;
+  overflow: hidden;
+  transition: transform 0.5s;
+}
+
+.top101-row:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.3);
+}
+
+.top101-row .row__position {
+  width: 2rem;
+  min-width: 2rem;
+}
+
+.top101-row .row__poster {
+  position: relative;
+  height: 90px;
+  width: 60px;
+  min-width: 60px;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.top101-row .row__poster .row__rating {
+  position: absolute;
+  top: 3px;
+  left: -3px;
+}
+
+.top101-row .row__title {
+  padding-left: 1rem;
+}
+
+.top101-row .row__info-button {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 1rem;
+  transform: translateX(calc(100% + 1.25rem));
+  transition: transform 0.25s ease-out;
+}
+
+.top101-row:hover .row__info-button {
+  transform: translateX(0%);
+}
+
 footer {
   display: flex;
   justify-content: center;
   flex: 0 0 auto;
-  margin-bottom: 4px;
+  padding-bottom: 4px;
 }
 
 footer a.rsschool {
