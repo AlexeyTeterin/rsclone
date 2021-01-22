@@ -16,20 +16,20 @@ header {
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  
+
   h1 {
     font-weight: bold;
     transition: color 0.25s;
     cursor: pointer;
-    
+
     a {
       all: unset;
       color: unset;
       transition: all 0.5s;
-      
+
       &:hover {
         all: unset;
-        color: unset; 
+        color: unset;
       }
     }
   }
@@ -53,7 +53,7 @@ header {
         transform: rotate(360deg);
       }
     }
-    
+
     &.invert {
       filter: invert(1);
     }
@@ -65,7 +65,7 @@ header {
   left: 1rem;
   top: -100%;
   transition: top 0.25s;
-  
+
   &.visible {
     top: 0.5rem;
   }
@@ -112,12 +112,12 @@ main {
   transition: box-shadow 0.2s;
   overflow: hidden;
   opacity: 0;
-  transition: opacity 1s;
+  transition: opacity 1s, box-shadow 0.25s;
 
   &:hover {
-    box-shadow: 0px 0px 1rem 0px rgba(0, 0, 0, 0.5);
+    box-shadow: 0px 0px 0.5rem 0px rgba(0, 0, 0, 0.3);
   }
-  
+
   &:hover .card__info {
     transform: translateY(0);
   }
@@ -144,7 +144,7 @@ main {
     background-position: 50% 0;
     border-radius: 4px;
     transition: background-size 0.25s, background-position 0.25s;
-    
+
     &.no-image {
       background-image: url(../assets/img/sad.svg);
       background-size: 50%;
@@ -187,7 +187,7 @@ main {
       transform: scale(1.1);
     }
   }
-  
+
   .card__info {
     position: absolute;
     height: 120px;
@@ -199,7 +199,7 @@ main {
     background-color: rgba(255, 255, 255, 0.8);
     transform: translateY(100%);
     transition: transform 0.25s;
-    
+
     .card__info-button {
       display: block;
     }
@@ -234,6 +234,10 @@ main {
   margin: 0.5rem 0;
 }
 
+#top101.text-light .top101-row {
+  background:rgba(255, 255, 255, 0.2);
+}
+
 .top101-row {
   margin: 0.25rem 0;
   position: relative;
@@ -245,20 +249,20 @@ main {
   display: flex;
   box-sizing: border-box;
   border-radius: 4px;
-  border: transparent 1px solid;
   overflow: hidden;
-  transition: transform 0.5s;
+  transition: transform 0.5s, box-shadow 0.25s;
+  border: 1px solid rgba(0, 0, 0, .125);
+  background: #FFF;
   
   &:hover {
-    background-color: rgba(255, 255, 255, 0.3);
-    box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.3);
   }
-  
+
   .row__position {
     width: 2rem;
     min-width: 2rem;
   }
-  
+
   .row__poster {
     position: relative;
     height: 90px;
@@ -266,18 +270,18 @@ main {
     min-width: 60px;
     background-repeat: no-repeat;
     background-size: contain;
-    
+
     .row__rating {
       position: absolute;
       top: 3px;
       left: -3px;
     }
   }
-  
+
   .row__title {
     padding-left: 1rem;
   }
-  
+
   .row__info-button {
     position: absolute;
     bottom: 0.5rem;
@@ -285,7 +289,7 @@ main {
     transform: translateX(calc(100% + 1.25rem));
     transition: transform 0.25s ease-out;
   }
-  
+
   &:hover .row__info-button {
     transform: translateX(0%);
   }
@@ -307,11 +311,11 @@ footer {
     background-repeat: no-repeat;
     background-size: contain;
     opacity: 0.55;
-    
+
     &:hover {
       opacity: 0.7;
     }
-    
+
     &.invert {
       filter: invert(1);
     }

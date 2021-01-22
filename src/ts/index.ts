@@ -50,10 +50,12 @@ const toggleNightMode = () => {
   }
   document.querySelector('html')?.classList.toggle('bg-dark', !nightSwitch.checked);
   document.querySelector('header>h1')?.classList.toggle('text-light');
-  document.querySelectorAll('.tab-pane')
-    .forEach((tab) => tab.classList.toggle('text-light'));
+
+  document.querySelectorAll('.swiper-pagination')
+    .forEach((swiper) => swiper.classList.toggle('text-light'));
   document.querySelectorAll('.card')
     .forEach((card) => card.classList.toggle('bg-light'));
+  document.querySelector('#top101')?.classList.toggle('text-light');
   document.querySelector('.film')?.classList.toggle('invert');
   document.querySelector('footer .rsschool')?.classList.toggle('invert');
   nightSwitchTooltip.dispose();
