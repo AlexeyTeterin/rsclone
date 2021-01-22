@@ -288,6 +288,7 @@ footer {
   justify-content: center;
   flex: 0 0 auto;
   padding-bottom: 4px;
+  padding-top: 1rem;
 }
 
 footer a.rsschool {
