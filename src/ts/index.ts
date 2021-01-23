@@ -30,7 +30,9 @@ const input = <HTMLInputElement>document.querySelector('#movie-search');
 const menu = document.querySelector('div.nav')!;
 const tabs = Array.from(document.querySelectorAll('.tab-pane'));
 const top101 = document.querySelector('#top101');
+const favoritesWrapper = document.querySelector('.swiper-wrapper.favorites');
 const nightSwitch = document.querySelector('#nightSwitch') as HTMLInputElement;
+const alertFavorites = document.querySelector('.alert.favorites');
 let nightSwitchTooltip = new bootstrap.Tooltip(nightSwitch);
 
 const wait = (ms: number) => new Promise((resolve: any) => setTimeout(() => resolve(), ms));
@@ -289,7 +291,7 @@ const createTop101Element = async (movie: any) => {
 
   const tmdbData = await getTMDBdata(movie.id);
   const omdbData: MovieData = await getOMDBdata(tmdbData.imdb_id);
-  console.log(omdbData);
+  // console.log(omdbData);
   row.dataset.id = omdbData.imdbID;
   title.textContent += `, ${omdbData.Year}`;
   rating.textContent = `${movie.vote_average}`;
@@ -312,9 +314,14 @@ const top101observer = new MutationObserver(() => {
   if (top101?.children.length! < 100) {
     state.top101page += 1;
     appendTop101NextPage();
-  } else {
-    console.log('done', top101?.children.length);
   }
+});
+
+const alertFavObserver = new MutationObserver((mutationRecords) => {
+  mutationRecords.forEach((record) => {
+    if (record.target.hasChildNodes()) alertFavorites?.classList.add('visually-hidden');
+    else alertFavorites?.classList.remove('visually-hidden');
+  });
 });
 
 initStorage();
@@ -351,3 +358,4 @@ top101observer.observe(top101 as Node, {
   childList: true,
   attributes: true,
 });
+alertFavObserver.observe(favoritesWrapper as Node, { childList: true });

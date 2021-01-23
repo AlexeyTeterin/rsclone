@@ -220,12 +220,21 @@ main {
 }
 
 #movies {
-
   .alert {
     margin: 0 auto;
     width: fit-content;
   }
 }
+
+.swiper-container.favorites {
+  // position: relative;
+  
+ .alert.favorites {
+    position: absolute;
+    top: 40%;
+  }
+}
+
 
 #top101 {
   display: flex;

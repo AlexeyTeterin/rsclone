@@ -219,6 +219,11 @@ main {
   width: fit-content;
 }
 
+.swiper-container.favorites .alert.favorites {
+  position: absolute;
+  top: 40%;
+}
+
 #top101 {
   display: flex;
   flex-direction: column;
