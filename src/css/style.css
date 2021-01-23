@@ -161,7 +161,7 @@ main {
   right: 6px;
   width: 1.35rem;
   height: 1.35rem;
-  background-image: url(../assets/img/star-empty.svg);
+  background-image: url(../assets/img/star-black.svg);
   background-color: transparent;
   background-repeat: no-repeat;
   background-position: 50%;
@@ -173,7 +173,7 @@ main {
 }
 
 .card .card__fav.isFav {
-  background-image: url(../assets/img/star-gold.svg);
+  background-image: url(../assets/img/star-yellow.svg);
 }
 
 .card .card__fav:hover {
