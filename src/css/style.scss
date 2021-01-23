@@ -112,7 +112,7 @@ main {
   transition: box-shadow 0.2s;
   overflow: hidden;
   opacity: 0;
-  transition: opacity 1s, box-shadow 0.25s;
+  transition: opacity 0.5s, box-shadow 0.25s;
 
   &:hover {
     box-shadow: 0px 0px 0.5rem 0px rgba(0, 0, 0, 0.3);
@@ -173,19 +173,17 @@ main {
     outline: none;
     border: none;
     filter: drop-shadow(0 0 2px white);
-    transition: transform 0.15s;
-
+    opacity: 0.8;
+    transition: transform 0.15s, opacity 0.15s;
+    
     &.isFav {
       background-image: url(../assets/img/star-yellow.svg);
       filter: drop-shadow(0 0 2px black);
+      opacity: 1;
     }
 
     &:hover {
       transform: scale(1.2);
-    }
-
-    &:active {
-      transform: scale(1.1);
     }
   }
 
@@ -301,20 +299,18 @@ main {
       background-size: contain;
       outline: none;
       border: none;
-      filter: drop-shadow(0 0 2px white);
-      transition: transform 0.15s;
-  
+      filter: drop-shadow(0 0 3px white);
+      opacity: 0.8;
+      transition: transform 0.15s, opacity 0.15s;
+      
       &.isFav {
         background-image: url(../assets/img/star-yellow.svg);
         filter: drop-shadow(0 0 2px black);
+        opacity: 1;
       }
   
       &:hover {
-        transform: scale(1.1);
-      }
-  
-      &:active {
-        transform: scale(1.05);
+        transform: scale(1.2);
       }
     }
   }

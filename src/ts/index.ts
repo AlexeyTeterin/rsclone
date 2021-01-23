@@ -267,7 +267,7 @@ const updateFavorites = (target: HTMLElement) => {
   const favoritesTabActive = targetSwiper?.classList.contains('favorites');
   if (favoritesTabActive) {
     target.parentElement?.parentElement?.style.setProperty('opacity', '0');
-    wait(1000).then(() => reloadFavorites());
+    wait(500).then(() => reloadFavorites());
   } else reloadFavorites();
 };
 

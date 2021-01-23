@@ -107,7 +107,7 @@ main {
   transition: box-shadow 0.2s;
   overflow: hidden;
   opacity: 0;
-  transition: opacity 1s, box-shadow 0.25s;
+  transition: opacity 0.5s, box-shadow 0.25s;
 }
 
 .card:hover {
@@ -169,20 +169,18 @@ main {
   outline: none;
   border: none;
   filter: drop-shadow(0 0 2px white);
-  transition: transform 0.15s;
+  opacity: 0.8;
+  transition: transform 0.15s, opacity 0.15s;
 }
 
 .card .card__fav.isFav {
   background-image: url(../assets/img/star-yellow.svg);
   filter: drop-shadow(0 0 2px black);
+  opacity: 1;
 }
 
 .card .card__fav:hover {
   transform: scale(1.2);
-}
-
-.card .card__fav:active {
-  transform: scale(1.1);
 }
 
 .card .card__info {
@@ -291,21 +289,19 @@ main {
   background-size: contain;
   outline: none;
   border: none;
-  filter: drop-shadow(0 0 2px white);
-  transition: transform 0.15s;
+  filter: drop-shadow(0 0 3px white);
+  opacity: 0.8;
+  transition: transform 0.15s, opacity 0.15s;
 }
 
 .top101-row .row__poster .row__fav.isFav {
   background-image: url(../assets/img/star-yellow.svg);
   filter: drop-shadow(0 0 2px black);
+  opacity: 1;
 }
 
 .top101-row .row__poster .row__fav:hover {
-  transform: scale(1.1);
-}
-
-.top101-row .row__poster .row__fav:active {
-  transform: scale(1.05);
+  transform: scale(1.2);
 }
 
 .top101-row .row__title {
