@@ -58,7 +58,7 @@ export type SearchResult = {
   Ratings: Array<RatingsArray>;
 }
 
-export type MovieData = {
+export type OMDBMovieData = {
   Actors: string;
   Awards: string;
   BoxOffice: string;

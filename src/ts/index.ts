@@ -8,7 +8,7 @@ import '../css/style.css';
 import {
   getOMDBdata,
   searchMoviesOMDB,
-  MovieData,
+  OMDBMovieData,
   SearchResult,
   RatingsArray,
   getUpcomingTMDB,
@@ -30,7 +30,7 @@ const input = <HTMLInputElement>document.querySelector('#movie-search');
 const menu = document.querySelector('div.nav')!;
 const tabs = Array.from(document.querySelectorAll('.tab-pane'));
 const top101 = document.querySelector('#top101');
-const favoritesWrapper = document.querySelector('.swiper-wrapper.favorites');
+const favoritesWrapper = document.querySelector('.swiper-wrapper.favorites')!;
 const nightSwitch = document.querySelector('#nightSwitch') as HTMLInputElement;
 const alertFavorites = document.querySelector('.alert.favorites');
 let nightSwitchTooltip = new bootstrap.Tooltip(nightSwitch);
@@ -81,16 +81,23 @@ const init = () => {
   }
 };
 
-const createSlide = (data: SearchResult) => {
+const createFavButton = (movie: SearchResult, className: string) => {
   const storage = JSON.parse(localStorage.VideoBox);
+  const favButton = createElement('button', className);
+  const isFav = Object.keys(storage.Favorites)
+    .findIndex((el: string) => el === movie.imdbID) >= 0;
+  // console.log(movie.Title, movie.imdbID);
+  favButton.classList.toggle('isFav', isFav);
+  return favButton;
+};
+
+const createSlide = (data: SearchResult) => {
   const slide = createElement('div', 'swiper-slide');
   const card = createElement('div', 'card');
   const cardTitle = createElement('div', 'card__title');
   const cardPoster = createElement('div', 'card__poster');
   const cardRating = createElement('div', 'card__rating');
-  const cardFavButton = createElement('button', 'card__fav');
-  const cardIsFav = Object.keys(storage.Favorites)
-    .findIndex((el: string) => el === data.imdbID) >= 0;
+  const cardFavButton = createFavButton(data, 'card__fav');
   const cardInfo = createElement('div', 'card__info');
   const cardInfoButton = createElement('button', 'card__info-button');
 
@@ -109,7 +116,6 @@ const createSlide = (data: SearchResult) => {
   };
 
   cardRating.classList.add('badge', 'bg-warning', 'text-dark');
-  cardFavButton.classList.toggle('isFav', cardIsFav);
   cardPoster.append(cardRating, cardFavButton);
   cardInfoButton.textContent = 'Learn more';
   cardInfoButton.classList.add('btn', 'btn-warning');
@@ -119,7 +125,7 @@ const createSlide = (data: SearchResult) => {
   return slide;
 };
 
-const addMovieToLocalStorage = (data: MovieData) => {
+const saveMovieToLocalStorage = (data: OMDBMovieData) => {
   const storage = JSON.parse(localStorage.getItem('VideoBox')!);
   if (!storage.Movies[data.imdbID]) {
     storage.Movies[data.imdbID] = data;
@@ -127,7 +133,7 @@ const addMovieToLocalStorage = (data: MovieData) => {
   }
 };
 
-const addRatingToSlide = (card: HTMLElement, data: MovieData) => {
+const addRatingToSlide = (card: HTMLElement, data: OMDBMovieData) => {
   const imdbRating = data.Ratings
     .find((r: RatingsArray) => r.Source === 'Internet Movie Database');
   const cardRating = card.querySelector('.card__rating')!;
@@ -136,13 +142,12 @@ const addRatingToSlide = (card: HTMLElement, data: MovieData) => {
 
 const reloadFavorites = () => {
   const storage = JSON.parse(localStorage.VideoBox);
-  favoritesSwiper.removeAllSlides();
-  Object.values(storage.Favorites).forEach((movie) => {
-    const slide = createSlide(movie as SearchResult);
-    addRatingToSlide(slide, movie as MovieData);
+  favoritesWrapper.innerHTML = '';
+
+  Object.values(storage.Favorites).forEach((savedMovie) => {
+    const slide = createSlide(savedMovie as SearchResult);
+    addRatingToSlide(slide, savedMovie as OMDBMovieData);
     favoritesSwiper.appendSlide(slide);
-    favoritesSwiper.updateSlides();
-    favoritesSwiper.update();
   });
 
   if (favoritesWrapper?.childElementCount) alertFavorites?.classList.add('visually-hidden');
@@ -184,7 +189,7 @@ const loadSlides = (res: any) => {
     const omdb = await getOMDBdata(movie.imdbID);
     const slide = createSlide(omdb);
     moviesSwiper.appendSlide(slide);
-    addMovieToLocalStorage(omdb);
+    saveMovieToLocalStorage(omdb);
     addRatingToSlide(slide, omdb);
   });
 };
@@ -229,16 +234,12 @@ const handleMenuClick = (event: Event) => {
   const currentTab = tabs
     .find((tab) => tab instanceof HTMLElement && tab.classList.contains('active'));
 
-  Array.from(menu.children).forEach((link) => {
-    link.classList.remove('disabled');
-  });
+  Array.from(menu.children).forEach((link) => link.classList.remove('disabled'));
   target.classList.add('disabled');
   animateTabChange(currentTab, targetTab);
 
   if (currentTab?.id === 'top101') currentTab?.classList.add('visually-hidden');
   if (targetTab?.id === 'top101') targetTab?.classList.remove('visually-hidden');
-  favoritesSwiper.updateSlides();
-  favoritesSwiper.update();
 };
 
 const handleEnterPress = (event: KeyboardEvent) => {
@@ -246,13 +247,19 @@ const handleEnterPress = (event: KeyboardEvent) => {
   searchBtn.dispatchEvent(new Event('click', { bubbles: true }));
 };
 
-const toggleMovieCardFavButton = (id: string) => {
-  const storage = JSON.parse(localStorage.VideoBox);
-  const card = Array.from(moviesSwiper.slides)
+const toggleMovieCardFavButton = (id: string, isFav: boolean) => {
+  const targetCard = Array.from(moviesSwiper.slides)
     .find((el) => el.querySelector('.card')?.id === id);
-  const isFav = Object.keys(storage.Favorites)
-    .findIndex((el) => el === id) >= 0;
-  card?.querySelector('.card__fav')!.classList.toggle('isFav', isFav);
+  targetCard?.querySelector('.card__fav')!.classList.toggle('isFav', isFav);
+};
+
+const toggleTop101CardFavButton = (id: string, isFav: boolean) => {
+  const targetCard = Array.from(top101!.children)
+    .find((el) => {
+      const card = el as HTMLElement;
+      return (card.dataset.id! === id) ? card : null;
+    });
+  targetCard?.querySelector('.row__fav')?.classList.toggle('isFav', isFav);
 };
 
 const updateFavorites = (target: HTMLElement) => {
@@ -266,10 +273,14 @@ const updateFavorites = (target: HTMLElement) => {
 
 const handleFavClick = (event: Event) => {
   const target = event.target as HTMLElement;
-  if (!target.classList.contains('card__fav')) return;
-  const id = target.parentElement?.parentElement?.id!;
+  if (!target.classList.contains('card__fav') && !target.classList.contains('row__fav')) return;
+
+  const id: string = target.parentElement!.parentElement!.id!
+    || target.parentElement!.parentElement!.dataset.id!;
   const storage = JSON.parse(localStorage.VideoBox);
-  const cardIsFav = Object.keys(storage.Favorites).find((el: string) => el === id);
+  const cardIsFav: boolean = Object.keys(storage.Favorites)
+    .findIndex((el: string) => el === id) >= 0;
+  console.log(id, cardIsFav);
 
   if (cardIsFav) delete storage.Favorites[id];
   if (!cardIsFav) storage.Favorites[id] = storage.Movies[id];
@@ -277,14 +288,12 @@ const handleFavClick = (event: Event) => {
   target.classList.toggle('isFav', !cardIsFav);
   localStorage.VideoBox = JSON.stringify(storage);
 
-  toggleMovieCardFavButton(id);
+  toggleMovieCardFavButton(id, !cardIsFav);
+  toggleTop101CardFavButton(id, !cardIsFav);
   updateFavorites(target);
 };
 
 const createTop101Element = async (movie: any) => {
-  // console.log(movie);
-  const storage = JSON.parse(localStorage.VideoBox);
-
   const row = createElement('div', 'top101-row');
   const position = createElement('div', 'row__position');
   const title = createElement('div', 'row__title');
@@ -292,23 +301,20 @@ const createTop101Element = async (movie: any) => {
   const rating = createElement('div', 'row__rating');
   rating.classList.add('badge', 'bg-warning', 'text-dark');
   const infoButton = createElement('button', 'row__info-button');
-  const favButton = createElement('button', 'row__fav');
-  const isFav = Object.keys(storage.Favorites)
-    .findIndex((el: string) => el === movie.imdbID) >= 0;
-  // const favButton = createElement('button', 'card__fav');
 
   position.textContent = `${top101?.children.length! + 1}`;
   title.textContent = `${movie.title}`;
   infoButton.textContent = 'Learn more';
   infoButton.classList.add('btn', 'btn-warning');
-  favButton.classList.toggle('isFav', isFav);
-  poster.append(rating, favButton);
+
   row.append(position, poster, title, infoButton);
   top101?.append(row);
 
   const tmdbData = await getTMDBdata(movie.id);
-  const omdbData: MovieData = await getOMDBdata(tmdbData.imdb_id);
-  // console.log(omdbData);
+  const omdbData: OMDBMovieData = await getOMDBdata(tmdbData.imdb_id);
+  saveMovieToLocalStorage(omdbData);
+  const favButton = createFavButton(omdbData, 'row__fav');
+  poster.append(rating, favButton);
   row.dataset.id = omdbData.imdbID;
   title.textContent += `, ${omdbData.Year}`;
   rating.textContent = `${movie.vote_average}`;
@@ -342,7 +348,6 @@ const alertFavObserver = new MutationObserver((mutationRecords) => {
 });
 
 init();
-reloadFavorites();
 input.focus();
 getUpcomingTMDB()
   .then((res) => {
@@ -352,12 +357,13 @@ getUpcomingTMDB()
         const omdb = await getOMDBdata(tmdb.imdb_id);
         const slide = createSlide(omdb);
         moviesSwiper.appendSlide(slide);
-        addMovieToLocalStorage(omdb);
+        saveMovieToLocalStorage(omdb);
         addRatingToSlide(slide, omdb);
       });
   })
   .then(() => wait(150))
-  .then(() => document.querySelector('#movies')?.classList.add('show'));
+  .then(() => document.querySelector('#movies')?.classList.add('show'))
+  .then(() => reloadFavorites());
 
 searchBtn.addEventListener('click', handleSearchClick);
 menu.addEventListener('click', handleMenuClick);
@@ -371,8 +377,8 @@ moviesSwiper.on('activeIndexChange', () => {
     loadNextSearchPage();
   }
 });
+alertFavObserver.observe(favoritesWrapper as Node, { childList: true });
 top101observer.observe(top101 as Node, {
   childList: true,
   attributes: true,
 });
-alertFavObserver.observe(favoritesWrapper as Node, { childList: true });
