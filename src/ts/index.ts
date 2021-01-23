@@ -34,6 +34,10 @@ const favoritesWrapper = document.querySelector('.swiper-wrapper.favorites')!;
 const nightSwitch = document.querySelector('#nightSwitch') as HTMLInputElement;
 const alertFavorites = document.querySelector('.alert.favorites');
 let nightSwitchTooltip = new bootstrap.Tooltip(nightSwitch);
+const movieModal = document.getElementById('modal')!;
+const movieModalBS = new bootstrap.Modal(movieModal, {
+  keyboard: true,
+});
 
 const wait = (ms: number) => new Promise((resolve: any) => setTimeout(() => resolve(), ms));
 
@@ -86,7 +90,6 @@ const createFavButton = (movie: SearchResult, className: string) => {
   const favButton = createElement('button', className);
   const isFav = Object.keys(storage.Favorites)
     .findIndex((el: string) => el === movie.imdbID) >= 0;
-  // console.log(movie.Title, movie.imdbID);
   favButton.classList.toggle('isFav', isFav);
   return favButton;
 };
@@ -119,6 +122,7 @@ const createSlide = (data: SearchResult) => {
   cardPoster.append(cardRating, cardFavButton);
   cardInfoButton.textContent = 'Learn more';
   cardInfoButton.classList.add('btn', 'btn-warning');
+  cardInfoButton.dataset.id = data.imdbID;
   cardInfo.append(cardInfoButton);
   card.append(cardTitle, cardPoster, cardInfo);
   slide.append(card);
@@ -293,6 +297,20 @@ const handleFavClick = (event: Event) => {
   updateFavorites(target);
 };
 
+const showMovieModal = (event: Event) => {
+  const target = event.target as HTMLElement;
+  const isLearnMoreBtn = target.classList.contains('card__info-button') || target.classList.contains('row__info-button');
+  if (!isLearnMoreBtn) return;
+
+  const storage = JSON.parse(localStorage.VideoBox);
+  const { id } = target.dataset;
+  const data: OMDBMovieData = storage.Movies[id!];
+  console.log(data);
+
+  movieModal.querySelector('#modalTitle')!.textContent = data.Title;
+  movieModalBS.toggle();
+};
+
 const createTop101Element = async (movie: any) => {
   const row = createElement('div', 'top101-row');
   const position = createElement('div', 'row__position');
@@ -316,6 +334,7 @@ const createTop101Element = async (movie: any) => {
   const favButton = createFavButton(omdbData, 'row__fav');
   poster.append(rating, favButton);
   row.dataset.id = omdbData.imdbID;
+  infoButton.dataset.id = omdbData.imdbID;
   title.textContent += `, ${omdbData.Year}`;
   rating.textContent = `${movie.vote_average}`;
   poster.style.setProperty('background-image', `url(${omdbData.Poster})`);
@@ -377,6 +396,9 @@ moviesSwiper.on('activeIndexChange', () => {
     loadNextSearchPage();
   }
 });
+
+document.addEventListener('click', showMovieModal);
+
 alertFavObserver.observe(favoritesWrapper as Node, { childList: true });
 top101observer.observe(top101 as Node, {
   childList: true,
