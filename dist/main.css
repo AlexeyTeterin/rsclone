@@ -1209,6 +1209,10 @@ main {
   transform: translateX(0%);
 }
 
+.modal-poster {
+  max-width: 100%;
+}
+
 footer {
   display: flex;
   justify-content: center;

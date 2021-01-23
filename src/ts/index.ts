@@ -41,27 +41,31 @@ const movieModalBS = new bootstrap.Modal(movieModal, {
 
 const wait = (ms: number) => new Promise((resolve: any) => setTimeout(() => resolve(), ms));
 
-const createElement = (tag: string, className: string) => {
+const createElement = (tag: string, className: string = '') => {
   const element = document.createElement(tag);
-  element.classList.add(className);
+  if (className) element.classList.add(className);
   return element;
 };
 
 const toggleNightMode = () => {
-  if (nightSwitch.checked) {
-    nightSwitch.title = 'Turn off the lights';
-  }
-  if (!nightSwitch.checked) {
-    nightSwitch.title = 'Turn on the light';
-  }
-  document.querySelector('html')?.classList.toggle('bg-dark', !nightSwitch.checked);
-  document.querySelector('header>h1')?.classList.toggle('text-light');
+  if (nightSwitch.checked) nightSwitch.title = 'Turn off the lights';
+  if (!nightSwitch.checked) nightSwitch.title = 'Turn on the light';
+
+  const toggleClassOfElement = (selectorName: string, ...classNames: Array<string>) => {
+    classNames.forEach((className) => document.querySelector(selectorName)?.classList
+      .toggle(className, !nightSwitch.checked));
+  };
+
+  toggleClassOfElement('html', 'bg-dark');
+  toggleClassOfElement('header>h1', 'text-light');
+  toggleClassOfElement('.modal-content', 'bg-dark', 'text-light');
+  toggleClassOfElement('#top101', 'text-light');
+  toggleClassOfElement('.film', 'invert');
+  toggleClassOfElement('footer .rsschool', 'invert');
 
   document.querySelectorAll('.swiper-pagination')
-    .forEach((swiper) => swiper.classList.toggle('text-light'));
-  document.querySelector('#top101')?.classList.toggle('text-light');
-  document.querySelector('.film')?.classList.toggle('invert');
-  document.querySelector('footer .rsschool')?.classList.toggle('invert');
+    .forEach((swiper) => swiper.classList.toggle('text-light', !nightSwitch.checked));
+
   nightSwitchTooltip.dispose();
   nightSwitchTooltip = new bootstrap.Tooltip(nightSwitch);
 
@@ -307,7 +311,31 @@ const showMovieModal = (event: Event) => {
   const data: OMDBMovieData = storage.Movies[id!];
   console.log(data);
 
-  movieModal.querySelector('#modalTitle')!.textContent = data.Title;
+  movieModal.querySelector('#modalTitle')!.textContent = `${data.Title}, ${data.Year}`;
+  const modalBody = movieModal.querySelector('.modal-body')! as HTMLElement;
+  modalBody.innerHTML = '';
+  const poster = createElement('img', 'modal-poster') as HTMLImageElement;
+  poster.src = data.Poster;
+
+  const releaseDate = createElement('p');
+  releaseDate.innerHTML = `<b>Release date:</b> ${data.Released}`;
+
+  const director = createElement('p');
+  director.innerHTML = `<b>Director:</b> ${data.Director}`;
+
+  const actors = createElement('p');
+  actors.innerHTML = `<b>Actors:</b> ${data.Actors}`;
+
+  const plot = createElement('p', 'text-muted');
+  plot.innerHTML = `<em>${data.Plot}</em>`;
+
+  const imdbRating = createElement('p');
+  imdbRating.innerHTML = `<b>IMDB Rating:</b> <span class="badge bg-warning text-dark">${data.imdbRating}</span> (${data.imdbVotes} votes)`;
+
+  const runtime = createElement('p');
+  runtime.innerHTML = `<b>Runtime:</b> ${data.Runtime}`;
+
+  modalBody.append(poster, plot, releaseDate, director, actors, imdbRating, runtime);
   movieModalBS.toggle();
 };
 
@@ -334,9 +362,10 @@ const createTop101Element = async (movie: any) => {
   const favButton = createFavButton(omdbData, 'row__fav');
   poster.append(rating, favButton);
   row.dataset.id = omdbData.imdbID;
+  row.dataset.rating = omdbData.imdbRating;
   infoButton.dataset.id = omdbData.imdbID;
   title.textContent += `, ${omdbData.Year}`;
-  rating.textContent = `${movie.vote_average}`;
+  rating.textContent = `${omdbData.imdbRating}`;
   poster.style.setProperty('background-image', `url(${omdbData.Poster})`);
 };
 
@@ -346,16 +375,14 @@ const appendTop101NextPage = async () => {
     return top;
   };
   const movies = await getTop101Page(state.top101page);
-  if (!movies.length) {
-    top101?.classList.add('top101');
-  }
+  if (!movies.length) top101?.classList.add('top101');
   movies.forEach((movie) => createTop101Element(movie));
 };
 
-const top101observer = new MutationObserver(() => {
+const top101observer = new MutationObserver(async () => {
   if (top101?.children.length! < 100) {
     state.top101page += 1;
-    appendTop101NextPage();
+    await appendTop101NextPage();
   }
 });
 
