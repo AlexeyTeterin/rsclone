@@ -152,7 +152,7 @@ main {
   position: absolute;
   top: 6px;
   left: 6px;
-  height: 1.35rem;
+  filter: drop-shadow(0 0 2px black);
 }
 
 .card .card__fav {
@@ -275,6 +275,7 @@ main {
   position: absolute;
   top: 3px;
   left: -3px;
+  filter: drop-shadow(0 0 2px black);
 }
 
 .top101-row .row__poster .row__fav {
@@ -296,6 +297,7 @@ main {
 
 .top101-row .row__poster .row__fav.isFav {
   background-image: url(../assets/img/star-yellow.svg);
+  filter: drop-shadow(0 0 2px black);
 }
 
 .top101-row .row__poster .row__fav:hover {
