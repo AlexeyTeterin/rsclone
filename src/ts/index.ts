@@ -426,3 +426,13 @@ top101observer.observe(top101 as Node, {
   childList: true,
   attributes: true,
 });
+
+// const triggerTabList = [].slice.call(document.querySelectorAll('#nav a'));
+// triggerTabList.forEach((triggerEl: HTMLElement) => {
+//   const tabTrigger = new bootstrap.Tab(triggerEl);
+
+//   triggerEl.addEventListener('click', (event) => {
+//     event.preventDefault();
+//     tabTrigger.show();
+//   });
+// });
