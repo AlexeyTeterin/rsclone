@@ -103,10 +103,10 @@ const createSlide = (data: SearchResult) => {
   const card = createElement('div', 'card');
   const cardTitle = createElement('div', 'card__title');
   const cardPoster = createElement('div', 'card__poster');
-  const cardRating = createElement('div', 'card__rating');
+  const cardRating = createElement('div', 'card__rating', 'badge', 'bg-warning', 'text-dark');
   const cardFavButton = createFavButton(data, 'card__fav');
   const cardInfo = createElement('div', 'card__info');
-  const cardInfoButton = createElement('button', 'card__info-button');
+  const cardInfoButton = createElement('button', 'card__info-button', 'btn', 'btn-warning');
 
   card.id = data.imdbID;
   cardTitle.textContent = `${data.Title}, ${data.Year}`;
@@ -122,10 +122,8 @@ const createSlide = (data: SearchResult) => {
     card.style.setProperty('opacity', '1');
   };
 
-  cardRating.classList.add('badge', 'bg-warning', 'text-dark');
   cardPoster.append(cardRating, cardFavButton);
   cardInfoButton.textContent = 'Learn more';
-  cardInfoButton.classList.add('btn', 'btn-warning');
   cardInfoButton.dataset.id = data.imdbID;
   cardInfo.append(cardInfoButton);
   card.append(cardTitle, cardPoster, cardInfo);
@@ -343,14 +341,12 @@ const createTop101Element = async (movie: any) => {
   const position = createElement('div', 'row__position');
   const title = createElement('div', 'row__title');
   const poster = createElement('div', 'row__poster');
-  const rating = createElement('div', 'row__rating');
-  rating.classList.add('badge', 'bg-warning', 'text-dark');
-  const infoButton = createElement('button', 'row__info-button');
+  const rating = createElement('div', 'row__rating', 'badge', 'bg-warning', 'text-dark');
+  const infoButton = createElement('button', 'row__info-button', 'btn', 'btn-warning');
 
   position.textContent = `${top101?.children.length! + 1}`;
   title.textContent = `${movie.title}`;
   infoButton.textContent = 'Learn more';
-  infoButton.classList.add('btn', 'btn-warning');
 
   row.append(position, poster, title, infoButton);
   top101?.append(row);
