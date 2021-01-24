@@ -41,9 +41,9 @@ const movieModalBS = new bootstrap.Modal(movieModal, {
 
 const wait = (ms: number) => new Promise((resolve: any) => setTimeout(() => resolve(), ms));
 
-const createElement = (tag: string, className: string = '') => {
+const createElement = (tag: string, ...classNames: Array<string>) => {
   const element = document.createElement(tag);
-  if (className) element.classList.add(className);
+  classNames.forEach((className) => element.classList.add(className));
   return element;
 };
 
@@ -58,7 +58,7 @@ const toggleNightMode = () => {
 
   toggleClassOfElement('html', 'bg-dark');
   toggleClassOfElement('header>h1', 'text-light');
-  toggleClassOfElement('.modal-content', 'bg-dark', 'text-light');
+  toggleClassOfElement('.modal-content', 'dark', 'text-light');
   toggleClassOfElement('#top101', 'text-light');
   toggleClassOfElement('.film', 'invert');
   toggleClassOfElement('footer .rsschool', 'invert');
@@ -303,18 +303,17 @@ const handleFavClick = (event: Event) => {
 
 const showMovieModal = (event: Event) => {
   const target = event.target as HTMLElement;
-  const isLearnMoreBtn = target.classList.contains('card__info-button') || target.classList.contains('row__info-button');
-  if (!isLearnMoreBtn) return;
+  const targetIsLearnMoreBtn = target.classList.contains('card__info-button') || target.classList.contains('row__info-button');
+  if (!targetIsLearnMoreBtn) return;
 
   const storage = JSON.parse(localStorage.VideoBox);
   const { id } = target.dataset;
   const data: OMDBMovieData = storage.Movies[id!];
-  console.log(data);
 
   movieModal.querySelector('#modalTitle')!.textContent = `${data.Title}, ${data.Year}`;
   const modalBody = movieModal.querySelector('.modal-body')! as HTMLElement;
   modalBody.innerHTML = '';
-  const poster = createElement('img', 'modal-poster') as HTMLImageElement;
+  const poster = createElement('img', 'modal-poster', 'rounded', 'mx-auto', 'd-block') as HTMLImageElement;
   poster.src = data.Poster;
 
   const releaseDate = createElement('p');
@@ -326,8 +325,8 @@ const showMovieModal = (event: Event) => {
   const actors = createElement('p');
   actors.innerHTML = `<b>Actors:</b> ${data.Actors}`;
 
-  const plot = createElement('p', 'text-muted');
-  plot.innerHTML = `<em>${data.Plot}</em>`;
+  const plot = createElement('p', 'lh-sm', 'fst-italic', 'text-center', 'text-plot');
+  plot.innerHTML = `${data.Plot}`;
 
   const imdbRating = createElement('p');
   imdbRating.innerHTML = `<b>IMDB Rating:</b> <span class="badge bg-warning text-dark">${data.imdbRating}</span> (${data.imdbVotes} votes)`;

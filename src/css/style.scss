@@ -332,8 +332,18 @@ main {
   }
 }
 
+.modal-content.dark {
+  background-color:#4D5154;
+}
+
 .modal-poster {
   max-width: 100%;
+}
+
+.text-plot {
+  padding-top: 0.25rem;
+  color: darkgray;
+  font-size: 0.9rem;
 }
 
 footer {
