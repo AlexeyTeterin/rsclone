@@ -71,6 +71,27 @@ header {
   }
 }
 
+.settings-button {
+  position: absolute;
+  left: 1.25rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  background-image: url(../assets/img/settings.svg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  top: 2.5rem;
+  transition: transform 0.25s;
+  cursor: pointer;
+  
+  &:hover {
+    transform: rotate(90deg);
+  }
+  
+  &:active {
+    transform: rotate(90deg) scale(0.9);
+  }
+}
+
 main {
   display: flex;
   flex-direction: column;

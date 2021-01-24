@@ -956,6 +956,27 @@ header .film.invert {
   top: 0.5rem;
 }
 
+.settings-button {
+  position: absolute;
+  left: 1.25rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  background-image: url(0b120df221c9d7f01bde8063690f9f12.svg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  top: 2.5rem;
+  transition: transform 0.25s;
+  cursor: pointer;
+}
+
+.settings-button:hover {
+  transform: rotate(90deg);
+}
+
+.settings-button:active {
+  transform: rotate(90deg) scale(0.9);
+}
+
 main {
   display: flex;
   flex-direction: column;
