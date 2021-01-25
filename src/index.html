@@ -17,7 +17,7 @@
       <input class="form-check-input" type="checkbox" id="nightSwitch" data-bs-toggle="tooltip" data-bs-trigger="hover" title="Turn off the lights">
       <label class="form-check-label" for="nightSwitch"></label>
     </div>
-    <div class="settings-button"></div>
+    <div class="settings-button" id="settings"></div>
     <h1><a href=".">VideoBox<span class="film"></span></a></h1>
     <div class="nav nav-tabs" id="nav" role="tablist">
       <a class="nav-link fw-bold ac active" role="tab" aria-controls="movies" aria-selected="true" href="#" id="movies-tab" data-bs-toggle="tab">Movies</a>
@@ -52,6 +52,38 @@
       </div>
     </div>
     
+    <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalTitle" style="display: none;" aria-modal="true" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalTitle">Settings</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="settingsModal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="btn-group">
+              Swiper effects:
+              <input
+                type="radio"
+                class="btn-check"
+                name="options"
+                id="radio-coverflow"
+                autocomplete="off"
+                
+              />
+              <label class="btn btn-secondary" for="radio-coverflow">Coverflow</label>
+            
+              <input type="radio" class="btn-check" name="options" id="radio-slide" autocomplete="off" />
+              <label class="btn btn-secondary" for="radio-slide">Slide</label>
+            
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
     
     <div class="tab-content">
       
@@ -60,7 +92,7 @@
           Today's upcoming movies:
         </div>
         <div class="swiper-container movies">
-          <div class="swiper-wrapper"></div>
+          <div class="swiper-wrapper movies"></div>
           <div class="swiper-pagination"></div>
           <div class="swiper-button-prev"></div>
           <div class="swiper-button-next"></div>

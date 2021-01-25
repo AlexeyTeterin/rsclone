@@ -1,5 +1,8 @@
-// @import "custom";
-
+@mixin max_400 {
+  @media (max-width: 400px) {
+    @content;
+  }
+}
 
 html,
 body {
@@ -58,38 +61,56 @@ header {
       filter: invert(1);
     }
   }
-}
 
-.form-switch {
-  position: absolute;
-  left: 1rem;
-  top: -100%;
-  transition: top 0.25s;
+  .form-switch {
+    position: absolute;
+    left: 1rem;
+    top: -100%;
+    transition: top 0.25s;
 
-  &.visible {
-    top: 0.5rem;
+    &.visible {
+      top: 0.5rem;
+    }
+
+    input {
+      cursor: pointer;
+    }
+    
+    @include max_400() {
+      left: unset;
+      right: 1.25rem;
+      top: 0.5rem;
+    }
+  }
+
+  .settings-button {
+    position: absolute;
+    left: 1.25rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    background-image: url(../assets/img/settings.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    top: 2.5rem;
+    transition: transform 0.25s;
+    cursor: pointer;
+
+    &:hover {
+      transform: rotate(90deg);
+    }
+
+    &:active {
+      transform: rotate(90deg) scale(0.9);
+    }
+    
+    @include max_400() {
+      top: 0.5rem;
+    }
   }
 }
 
-.settings-button {
-  position: absolute;
-  left: 1.25rem;
-  width: 1.5rem;
-  height: 1.5rem;
-  background-image: url(../assets/img/settings.svg);
-  background-size: contain;
-  background-repeat: no-repeat;
-  top: 2.5rem;
-  transition: transform 0.25s;
-  cursor: pointer;
-  
-  &:hover {
-    transform: rotate(90deg);
-  }
-  
-  &:active {
-    transform: rotate(90deg) scale(0.9);
-  }
+header.text-light .settings-button {
+  filter: invert(1);
 }
 
 main {
@@ -196,7 +217,7 @@ main {
     filter: drop-shadow(0 0 2px white);
     opacity: 0.8;
     transition: transform 0.15s, opacity 0.15s;
-    
+
     &.isFav {
       background-image: url(../assets/img/star-yellow.svg);
       filter: drop-shadow(0 0 2px black);
@@ -247,9 +268,7 @@ main {
 }
 
 .swiper-container.favorites {
-  // position: relative;
-  
- .alert.favorites {
+  .alert.favorites {
     position: absolute;
     top: 40%;
   }
@@ -264,7 +283,7 @@ main {
 }
 
 #top101.text-light .top101-row {
-  background:rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .top101-row {
@@ -282,7 +301,7 @@ main {
   transition: transform 0.5s, box-shadow 0.25s;
   border: 1px solid rgba(0, 0, 0, .125);
   background: #FFF;
-  
+
   &:hover {
     box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.3);
   }
@@ -306,7 +325,7 @@ main {
       left: -3px;
       filter: drop-shadow(0 0 2px black);
     }
-    
+
     .row__fav {
       position: absolute;
       bottom: 3px;
@@ -323,13 +342,13 @@ main {
       filter: drop-shadow(0 0 3px white);
       opacity: 0.8;
       transition: transform 0.15s, opacity 0.15s;
-      
+
       &.isFav {
         background-image: url(../assets/img/star-yellow.svg);
         filter: drop-shadow(0 0 2px black);
         opacity: 1;
       }
-  
+
       &:hover {
         transform: scale(1.2);
       }
@@ -353,18 +372,26 @@ main {
   }
 }
 
+#modal {
+  
+  .modal-poster {
+    max-width: 100%;
+  }
+  
+  .text-plot {
+    padding-top: 0.25rem;
+    color: darkgray;
+    font-size: 0.9rem;
+  }
+}
+
 .modal-content.dark {
-  background-color:#4D5154;
+  background-color: #4D5154!important;
 }
 
-.modal-poster {
-  max-width: 100%;
-}
+.modal-body .list-group-item {
+    background-color: inherit;
 
-.text-plot {
-  padding-top: 0.25rem;
-  color: darkgray;
-  font-size: 0.9rem;
 }
 
 footer {

@@ -1,7 +1,7 @@
 import 'normalize.css';
 import * as bootstrap from 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Swiper from 'swiper/bundle';
+import Swiper, { EffectCoverflow } from 'swiper/bundle';
 import swiperParams from './swiperParams';
 import 'swiper/swiper-bundle.css';
 import '../css/style.css';
@@ -23,7 +23,8 @@ const state = {
   top101page: 1,
 };
 
-const moviesSwiper = new Swiper('.swiper-container.movies', swiperParams);
+swiperParams.effect = JSON.parse(localStorage.VideoBox).effect;
+let moviesSwiper = new Swiper('.swiper-container.movies', swiperParams);
 const favoritesSwiper = new Swiper('.swiper-container.favorites', swiperParams);
 const searchBtn = document.querySelector('.search-button')!;
 const input = <HTMLInputElement>document.querySelector('#movie-search');
@@ -35,9 +36,9 @@ const nightSwitch = document.querySelector('#nightSwitch') as HTMLInputElement;
 const alertFavorites = document.querySelector('.alert.favorites');
 let nightSwitchTooltip = new bootstrap.Tooltip(nightSwitch);
 const movieModal = document.getElementById('modal')!;
-const movieModalBS = new bootstrap.Modal(movieModal, {
-  keyboard: true,
-});
+const movieModalBS = new bootstrap.Modal(movieModal, { keyboard: true });
+const settingsModal = document.querySelector('#settingsModal')!;
+const settingsModalBS = new bootstrap.Modal(settingsModal, {});
 
 const wait = (ms: number) => new Promise((resolve: any) => setTimeout(() => resolve(), ms));
 
@@ -57,8 +58,9 @@ const toggleNightMode = () => {
   };
 
   toggleClassOfElement('html', 'bg-dark');
-  toggleClassOfElement('header>h1', 'text-light');
-  toggleClassOfElement('.modal-content', 'dark', 'text-light');
+  toggleClassOfElement('header', 'text-light');
+  toggleClassOfElement('#modal .modal-content', 'dark', 'text-light');
+  toggleClassOfElement('#settingsModal .modal-content', 'dark', 'text-light');
   toggleClassOfElement('#top101', 'text-light');
   toggleClassOfElement('.film', 'invert');
   toggleClassOfElement('footer .rsschool', 'invert');
@@ -77,7 +79,10 @@ const toggleNightMode = () => {
 const init = () => {
   if (!localStorage.VideoBox) {
     localStorage.setItem('VideoBox', JSON.stringify({
-      Movies: {}, Favorites: {}, darkMode: false,
+      Movies: {},
+      Favorites: {},
+      darkMode: false,
+      effect: 'coverflow',
     }));
   } else {
     const storage = JSON.parse(localStorage.VideoBox);
@@ -336,6 +341,43 @@ const showMovieModal = (event: Event) => {
   movieModalBS.toggle();
 };
 
+const showSettingsModal = () => {
+  const storage = JSON.parse(localStorage.VideoBox);
+  const activeEffect = swiperParams.effect;
+  const radioSlide = settingsModal.querySelector('#radio-slide')! as HTMLInputElement;
+  const radioCoverflow = settingsModal.querySelector('#radio-coverflow')! as HTMLInputElement;
+  if (activeEffect === 'slide') {
+    radioSlide.checked = true;
+    radioCoverflow.checked = false;
+  } else {
+    radioSlide.checked = false;
+    radioCoverflow.checked = true;
+  }
+
+  localStorage.setItem('VideoBox', JSON.stringify(storage));
+  settingsModalBS.toggle();
+};
+
+const handleEffectChange = (event: Event) => {
+  const targetBtn = event.target as HTMLElement;
+  if (!targetBtn.classList.contains('btn')) return;
+  if (targetBtn.classList.contains('close')) return;
+
+  const storage = JSON.parse(localStorage.VideoBox);
+  const targetRadio = settingsModal.querySelector(`#${targetBtn.getAttribute('for')}`);
+  const targetEffect: any = targetRadio?.id.substr(6);
+  swiperParams.effect = targetEffect;
+
+  moviesSwiper.destroy();
+  moviesSwiper = new Swiper('.swiper-container.movies', swiperParams);
+
+  favoritesSwiper.params.effect = targetEffect;
+  reloadFavorites();
+
+  storage.effect = targetEffect;
+  localStorage.VideoBox = JSON.stringify(storage);
+};
+
 const createTop101Element = async (movie: any) => {
   const row = createElement('div', 'top101-row');
   const position = createElement('div', 'row__position');
@@ -418,21 +460,12 @@ moviesSwiper.on('activeIndexChange', () => {
     loadNextSearchPage();
   }
 });
-
 document.addEventListener('click', showMovieModal);
+document.querySelector('#settings')!.addEventListener('click', showSettingsModal);
+settingsModal.addEventListener('click', handleEffectChange);
 
 alertFavObserver.observe(favoritesWrapper as Node, { childList: true });
 top101observer.observe(top101 as Node, {
   childList: true,
   attributes: true,
 });
-
-// const triggerTabList = [].slice.call(document.querySelectorAll('#nav a'));
-// triggerTabList.forEach((triggerEl: HTMLElement) => {
-//   const tabTrigger = new bootstrap.Tab(triggerEl);
-
-//   triggerEl.addEventListener('click', (event) => {
-//     event.preventDefault();
-//     tabTrigger.show();
-//   });
-// });

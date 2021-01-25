@@ -56,18 +56,30 @@ header .film.invert {
   filter: invert(1);
 }
 
-.form-switch {
+header .form-switch {
   position: absolute;
   left: 1rem;
   top: -100%;
   transition: top 0.25s;
 }
 
-.form-switch.visible {
+header .form-switch.visible {
   top: 0.5rem;
 }
 
-.settings-button {
+header .form-switch input {
+  cursor: pointer;
+}
+
+@media (max-width: 400px) {
+  header .form-switch {
+    left: unset;
+    right: 1.25rem;
+    top: 0.5rem;
+  }
+}
+
+header .settings-button {
   position: absolute;
   left: 1.25rem;
   width: 1.5rem;
@@ -80,12 +92,22 @@ header .film.invert {
   cursor: pointer;
 }
 
-.settings-button:hover {
+header .settings-button:hover {
   transform: rotate(90deg);
 }
 
-.settings-button:active {
+header .settings-button:active {
   transform: rotate(90deg) scale(0.9);
+}
+
+@media (max-width: 400px) {
+  header .settings-button {
+    top: 0.5rem;
+  }
+}
+
+header.text-light .settings-button {
+  filter: invert(1);
 }
 
 main {
@@ -341,18 +363,22 @@ main {
   transform: translateX(0%);
 }
 
-.modal-content.dark {
-  background-color: #4D5154;
-}
-
-.modal-poster {
+#modal .modal-poster {
   max-width: 100%;
 }
 
-.text-plot {
+#modal .text-plot {
   padding-top: 0.25rem;
   color: darkgray;
   font-size: 0.9rem;
+}
+
+.modal-content.dark {
+  background-color: #4D5154 !important;
+}
+
+.modal-body .list-group-item {
+  background-color: inherit;
 }
 
 footer {
