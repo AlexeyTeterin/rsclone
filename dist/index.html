@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html class="bg-light bg-dark" lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    const storage = JSON.parse(localStorage.VideoBox || null);
+    if (!storage || !storage.darkMode) document.querySelector('html').classList.remove('bg-dark');
+  </script>
+  <title>VideoBox</title>
+<link href="main.css" rel="stylesheet"></head>
+
+<body>
+  <header>
+    <div class="form-check form-switch">
+      <input class="form-check-input" type="checkbox" id="nightSwitch" data-bs-toggle="tooltip" data-bs-trigger="hover" title="Turn off the lights">
+      <label class="form-check-label" for="nightSwitch"></label>
+    </div>
+    <div class="settings-button" id="settings"></div>
+    <h1><a href=".">VideoBox<span class="film"></span></a></h1>
+    <div class="nav nav-tabs" id="nav" role="tablist">
+      <a class="nav-link fw-bold ac active" role="tab" aria-controls="movies" aria-selected="true" href="#" id="movies-tab" data-bs-toggle="tab">Movies</a>
+      <a class="nav-link fw-bold" role="tab" aria-controls="favorites" aria-selected="false" href="#" id="favorites-tab" data-bs-toggle="tab">Favorites</a>
+      <a class="nav-link fw-bold" role="tab" aria-controls="top101" aria-selected="false" href="#" id="top101-tab" data-bs-toggle="tab">Top 101</a>
+    </div>
+
+    <div class="search__container">
+      <input type="search" name="" id="movie-search" placeholder="..." class="form-control">
+      <button type="button" class="search-button btn btn-danger">
+        <span class="spinner-border spinner-border-sm visually-hidden" role="status" aria-hidden="true"></span>
+        <span class="search-text">Search</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="modalTitle" style="display: none;" aria-modal="true" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalTitle">Modal title</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalTitle" style="display: none;" aria-modal="true" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalTitle">Settings</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="settingsModal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="btn-group">
+              Swiper effects:
+              <input
+                type="radio"
+                class="btn-check"
+                name="options"
+                id="radio-coverflow"
+                autocomplete="off"
+                
+              />
+              <label class="btn btn-secondary" for="radio-coverflow">Coverflow</label>
+            
+              <input type="radio" class="btn-check" name="options" id="radio-slide" autocomplete="off" />
+              <label class="btn btn-secondary" for="radio-slide">Slide</label>
+            
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    
+    <div class="tab-content">
+      
+      <div class="tab-pane fade active" role="tabpanel" aria-labelledby="movies-tab" data-id="movies" data-bs-toggle="tab" id="movies">
+        <div class="alert alert-primary p-1" role="alert">
+          Today's upcoming movies:
+        </div>
+        <div class="swiper-container movies">
+          <div class="swiper-wrapper movies"></div>
+          <div class="swiper-pagination"></div>
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
+        </div>
+
+      </div>
+
+      <div class="tab-pane fade" role="tabpanel" aria-labelledby="favorites-tab" data-id="favorites" data-bs-toggle="tab" id="favorites">
+        <div class="swiper-container favorites">
+          <div class="alert alert-secondary p-1 favorites" role="alert">
+            Your favorite movies will be shown here
+          </div>
+          <div class="swiper-wrapper favorites"></div>
+          <div class="swiper-pagination"></div>
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
+        </div>
+      </div>
+
+      <div class="tab-pane fade visually-hidden" role="tabpanel" aria-labelledby="top101-tab" data-id="top101" data-bs-toggle="tab" id="top101"></div>
+      
+    </div>
+    
+  </main>
+
+  <footer class="text-muted">
+    <div>
+      <a class="rsschool" href="https://rs.school/js/" target="_blank" rel="noreferrer"></a>
+    </div>
+    <div> &copy; 2021, coded by
+      <a class="link-secondary" href="https://github.com/AlexeyTeterin" target="_blank" rel="noreferrer">Alexey Teterin</a>
+    </div>
+  </footer>
+<script src="bundle.js"></script></body>
+
+</html>

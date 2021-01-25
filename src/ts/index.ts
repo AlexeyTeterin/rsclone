@@ -358,6 +358,14 @@ const showSettingsModal = () => {
   settingsModalBS.toggle();
 };
 
+const handleNextSearchPageLoad = () => {
+  const { activeIndex, slides } = moviesSwiper;
+  if (slides.length - activeIndex === 7 && state.request) {
+    state.page += 1;
+    loadNextSearchPage();
+  }
+};
+
 const handleEffectChange = (event: Event) => {
   const targetBtn = event.target as HTMLElement;
   if (!targetBtn.classList.contains('btn')) return;
@@ -370,6 +378,7 @@ const handleEffectChange = (event: Event) => {
 
   moviesSwiper.destroy();
   moviesSwiper = new Swiper('.swiper-container.movies', swiperParams);
+  moviesSwiper.on('activeIndexChange', handleNextSearchPageLoad);
 
   favoritesSwiper.params.effect = targetEffect;
   reloadFavorites();
@@ -453,16 +462,10 @@ menu.addEventListener('click', handleMenuClick);
 input.addEventListener('keypress', handleEnterPress);
 document.addEventListener('click', handleFavClick);
 nightSwitch.addEventListener('click', toggleNightMode);
-moviesSwiper.on('activeIndexChange', () => {
-  const { activeIndex, slides } = moviesSwiper;
-  if (slides.length - activeIndex === 7 && state.request) {
-    state.page += 1;
-    loadNextSearchPage();
-  }
-});
 document.addEventListener('click', showMovieModal);
 document.querySelector('#settings')!.addEventListener('click', showSettingsModal);
 settingsModal.addEventListener('click', handleEffectChange);
+moviesSwiper.on('activeIndexChange', handleNextSearchPageLoad);
 
 alertFavObserver.observe(favoritesWrapper as Node, { childList: true });
 top101observer.observe(top101 as Node, {
