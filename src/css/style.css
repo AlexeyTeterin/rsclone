@@ -256,6 +256,22 @@ main {
   justify-content: center;
 }
 
+.swiper-pagination-fraction {
+  width: 100% !important;
+}
+
+.bg-dark .nav-link.active, .bg-dark .card {
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+.bg-dark .swiper-pagination {
+  color: #f8f9fa;
+}
+
+.bg-dark .swiper-pagination-bullet {
+  background: #fff;
+}
+
 #movies .alert {
   margin: 0 auto;
   width: fit-content;
@@ -377,8 +393,14 @@ main {
   background-color: #4D5154 !important;
 }
 
-.modal-body .list-group-item {
+.modal-content.dark option {
+  background-color: #4D5154 !important;
+}
+
+.modal-body .form-select {
   background-color: inherit;
+  color: inherit;
+  margin-bottom: 1rem;
 }
 
 footer {

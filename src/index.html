@@ -51,7 +51,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalTitle" style="display: none;" aria-modal="true" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -60,22 +60,23 @@
             <button type="button" class="btn-close" data-bs-dismiss="settingsModal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <div class="btn-group">
-              Swiper effects:
-              <input
-                type="radio"
-                class="btn-check"
-                name="options"
-                id="radio-coverflow"
-                autocomplete="off"
-                
-              />
-              <label class="btn btn-secondary" for="radio-coverflow">Coverflow</label>
-            
-              <input type="radio" class="btn-check" name="options" id="radio-slide" autocomplete="off" />
-              <label class="btn btn-secondary" for="radio-slide">Slide</label>
-            
+
+            <div class="form-floating">
+              <select class="form-select" id="effectSelect" aria-label="">
+                <option value="coverflow" id="option-coverflow">Coverflow</option>
+                <option value="slide" id="option-slide">Slide</option>
+              </select>
+              <label for="effectSelect">Swipe effect:</label>
             </div>
+
+            <div class="form-floating">
+              <select class="form-select" id="paginationSelect" aria-label="">
+                <option value="fraction" id="option-fraction">Page numbers</option>
+                <option value="bullets" id="option-bullets">Bullets</option>
+              </select>
+              <label for="paginationSelect">Pagination style:</label>
+            </div>
+
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal">Close</button>
@@ -83,10 +84,10 @@
         </div>
       </div>
     </div>
-    
-    
+
+
     <div class="tab-content">
-      
+
       <div class="tab-pane fade active" role="tabpanel" aria-labelledby="movies-tab" data-id="movies" data-bs-toggle="tab" id="movies">
         <div class="alert alert-primary p-1" role="alert">
           Today's upcoming movies:
@@ -113,9 +114,9 @@
       </div>
 
       <div class="tab-pane fade visually-hidden" role="tabpanel" aria-labelledby="top101-tab" data-id="top101" data-bs-toggle="tab" id="top101"></div>
-      
+
     </div>
-    
+
   </main>
 
   <footer class="text-muted">

@@ -1,7 +1,7 @@
 import 'normalize.css';
 import * as bootstrap from 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Swiper, { EffectCoverflow } from 'swiper/bundle';
+import Swiper, { EffectCoverflow, SwiperOptions, Pagination } from 'swiper/bundle';
 import swiperParams from './swiperParams';
 import 'swiper/swiper-bundle.css';
 import '../css/style.css';
@@ -16,6 +16,7 @@ import {
   OMDBSearchResponce,
   getTopRatedTMDB,
 } from './movieData';
+import { PaginationOptions } from 'swiper/types/components/pagination';
 
 const state = {
   page: 0,
@@ -23,6 +24,16 @@ const state = {
   top101page: 1,
 };
 
+let storage = JSON.parse(localStorage.VideoBox);
+const getStorage = () => {
+  storage = JSON.parse(localStorage.VideoBox);
+};
+const saveStorage = () => {
+  localStorage.VideoBox = JSON.stringify(storage);
+};
+let pagination = swiperParams.pagination as PaginationOptions;
+pagination.type = storage.pagination;
+swiperParams.pagination = pagination;
 swiperParams.effect = JSON.parse(localStorage.VideoBox).effect;
 let moviesSwiper = new Swiper('.swiper-container.movies', swiperParams);
 const favoritesSwiper = new Swiper('.swiper-container.favorites', swiperParams);
@@ -65,15 +76,12 @@ const toggleNightMode = () => {
   toggleClassOfElement('.film', 'invert');
   toggleClassOfElement('footer .rsschool', 'invert');
 
-  document.querySelectorAll('.swiper-pagination')
-    .forEach((swiper) => swiper.classList.toggle('text-light', !nightSwitch.checked));
-
   nightSwitchTooltip.dispose();
   nightSwitchTooltip = new bootstrap.Tooltip(nightSwitch);
 
-  const storage = JSON.parse(localStorage.VideoBox);
+  storage = JSON.parse(localStorage.VideoBox);
   storage.darkMode = !nightSwitch.checked;
-  localStorage.VideoBox = JSON.stringify(storage);
+  saveStorage();
 };
 
 const init = () => {
@@ -83,9 +91,10 @@ const init = () => {
       Favorites: {},
       darkMode: false,
       effect: 'coverflow',
+      pagination: 'fraction',
     }));
   } else {
-    const storage = JSON.parse(localStorage.VideoBox);
+    getStorage();
     if (storage.darkMode) {
       nightSwitch.checked = false;
       toggleNightMode();
@@ -95,7 +104,7 @@ const init = () => {
 };
 
 const createFavButton = (movie: SearchResult, className: string) => {
-  const storage = JSON.parse(localStorage.VideoBox);
+  storage = JSON.parse(localStorage.VideoBox);
   const favButton = createElement('button', className);
   const isFav = Object.keys(storage.Favorites)
     .findIndex((el: string) => el === movie.imdbID) >= 0;
@@ -137,10 +146,10 @@ const createSlide = (data: SearchResult) => {
 };
 
 const saveMovieToLocalStorage = (data: OMDBMovieData) => {
-  const storage = JSON.parse(localStorage.getItem('VideoBox')!);
+  getStorage();
   if (!storage.Movies[data.imdbID]) {
     storage.Movies[data.imdbID] = data;
-    localStorage.VideoBox = JSON.stringify(storage);
+    saveStorage();
   }
 };
 
@@ -152,7 +161,7 @@ const addRatingToSlide = (card: HTMLElement, data: OMDBMovieData) => {
 };
 
 const reloadFavorites = () => {
-  const storage = JSON.parse(localStorage.VideoBox);
+  getStorage();
   favoritesWrapper.innerHTML = '';
 
   Object.values(storage.Favorites).forEach((savedMovie) => {
@@ -286,18 +295,17 @@ const handleFavClick = (event: Event) => {
   const target = event.target as HTMLElement;
   if (!target.classList.contains('card__fav') && !target.classList.contains('row__fav')) return;
 
+  getStorage();
   const id: string = target.parentElement!.parentElement!.id!
     || target.parentElement!.parentElement!.dataset.id!;
-  const storage = JSON.parse(localStorage.VideoBox);
   const cardIsFav: boolean = Object.keys(storage.Favorites)
     .findIndex((el: string) => el === id) >= 0;
-  console.log(id, cardIsFav);
 
   if (cardIsFav) delete storage.Favorites[id];
   if (!cardIsFav) storage.Favorites[id] = storage.Movies[id];
 
   target.classList.toggle('isFav', !cardIsFav);
-  localStorage.VideoBox = JSON.stringify(storage);
+  saveStorage();
 
   toggleMovieCardFavButton(id, !cardIsFav);
   toggleTop101CardFavButton(id, !cardIsFav);
@@ -309,7 +317,7 @@ const showMovieModal = (event: Event) => {
   const targetIsLearnMoreBtn = target.classList.contains('card__info-button') || target.classList.contains('row__info-button');
   if (!targetIsLearnMoreBtn) return;
 
-  const storage = JSON.parse(localStorage.VideoBox);
+  getStorage();
   const { id } = target.dataset;
   const data: OMDBMovieData = storage.Movies[id!];
 
@@ -342,19 +350,30 @@ const showMovieModal = (event: Event) => {
 };
 
 const showSettingsModal = () => {
-  const storage = JSON.parse(localStorage.VideoBox);
-  const activeEffect = swiperParams.effect;
-  const radioSlide = settingsModal.querySelector('#radio-slide')! as HTMLInputElement;
-  const radioCoverflow = settingsModal.querySelector('#radio-coverflow')! as HTMLInputElement;
+  getStorage();
+  const activeEffect = storage.effect;
+  const activePaginationType = storage.pagination;
+  const optionSlide = settingsModal.querySelector('#option-slide')! as HTMLOptionElement;
+  const optionCoverflow = settingsModal.querySelector('#option-coverflow')! as HTMLOptionElement;
+  const optionFraction = settingsModal.querySelector('#option-fraction')! as HTMLOptionElement;
+  const optionBullets = settingsModal.querySelector('#option-bullets')! as HTMLOptionElement;
+
   if (activeEffect === 'slide') {
-    radioSlide.checked = true;
-    radioCoverflow.checked = false;
+    optionSlide.selected = true;
+    optionCoverflow.selected = false;
   } else {
-    radioSlide.checked = false;
-    radioCoverflow.checked = true;
+    optionSlide.selected = false;
+    optionCoverflow.selected = true;
   }
 
-  localStorage.setItem('VideoBox', JSON.stringify(storage));
+  if (activePaginationType === 'fraction') {
+    optionFraction.selected = true;
+    optionBullets.selected = false;
+  } else {
+    optionBullets.selected = true;
+    optionFraction.selected = false;
+  }
+
   settingsModalBS.toggle();
 };
 
@@ -367,13 +386,11 @@ const handleNextSearchPageLoad = () => {
 };
 
 const handleEffectChange = (event: Event) => {
-  const targetBtn = event.target as HTMLElement;
-  if (!targetBtn.classList.contains('btn')) return;
-  if (targetBtn.classList.contains('close')) return;
+  const target = event.target as HTMLSelectElement;
+  if (target.id !== 'effectSelect') return;
 
-  const storage = JSON.parse(localStorage.VideoBox);
-  const targetRadio = settingsModal.querySelector(`#${targetBtn.getAttribute('for')}`);
-  const targetEffect: any = targetRadio?.id.substr(6);
+  getStorage();
+  const targetEffect = target.value as SwiperOptions['effect'];
   swiperParams.effect = targetEffect;
 
   moviesSwiper.destroy();
@@ -384,7 +401,36 @@ const handleEffectChange = (event: Event) => {
   reloadFavorites();
 
   storage.effect = targetEffect;
-  localStorage.VideoBox = JSON.stringify(storage);
+  saveStorage();
+};
+
+const handlePaginationChange = (event: Event) => {
+  const target = event.target as HTMLSelectElement;
+  if (target.id !== 'paginationSelect') return;
+
+  document.querySelectorAll('.swiper-pagination')
+    .forEach((el) => {
+      const swiper = el;
+      swiper.className = 'swiper-pagination';
+    });
+  const targetPaginationType = target.value as PaginationOptions['type'];
+  pagination = moviesSwiper.params.pagination as PaginationOptions;
+  pagination.type = targetPaginationType;
+
+  moviesSwiper.params.pagination = pagination;
+  moviesSwiper.pagination.init();
+  moviesSwiper.pagination.render();
+  moviesSwiper.pagination.update();
+
+  favoritesSwiper.params.pagination = pagination;
+  favoritesSwiper.pagination.init();
+  favoritesSwiper.pagination.render();
+  favoritesSwiper.pagination.update();
+
+  swiperParams.pagination = pagination;
+  getStorage();
+  storage.pagination = targetPaginationType;
+  saveStorage();
 };
 
 const createTop101Element = async (movie: any) => {
@@ -464,7 +510,8 @@ document.addEventListener('click', handleFavClick);
 nightSwitch.addEventListener('click', toggleNightMode);
 document.addEventListener('click', showMovieModal);
 document.querySelector('#settings')!.addEventListener('click', showSettingsModal);
-settingsModal.addEventListener('click', handleEffectChange);
+document.querySelector('#effectSelect')!.addEventListener('change', handleEffectChange);
+document.querySelector('#paginationSelect')!.addEventListener('change', handlePaginationChange);
 moviesSwiper.on('activeIndexChange', handleNextSearchPageLoad);
 
 alertFavObserver.observe(favoritesWrapper as Node, { childList: true });

@@ -75,7 +75,7 @@ header {
     input {
       cursor: pointer;
     }
-    
+
     @include max_400() {
       left: unset;
       right: 1.25rem;
@@ -102,7 +102,7 @@ header {
     &:active {
       transform: rotate(90deg) scale(0.9);
     }
-    
+
     @include max_400() {
       top: 0.5rem;
     }
@@ -260,6 +260,24 @@ main {
   justify-content: center;
 }
 
+.swiper-pagination-fraction {
+  width: 100% !important;
+}
+
+.bg-dark {
+  .nav-link.active, .card {
+    background-color: rgba(255, 255, 255, 0.95);
+  }
+  
+  .swiper-pagination {
+    color: #f8f9fa;
+  }
+  
+  .swiper-pagination-bullet {
+    background: #fff;
+  }
+}
+
 #movies {
   .alert {
     margin: 0 auto;
@@ -373,11 +391,11 @@ main {
 }
 
 #modal {
-  
+
   .modal-poster {
     max-width: 100%;
   }
-  
+
   .text-plot {
     padding-top: 0.25rem;
     color: darkgray;
@@ -386,12 +404,17 @@ main {
 }
 
 .modal-content.dark {
-  background-color: #4D5154!important;
+  background-color: #4D5154 !important;
+
+  option {
+    background-color: #4D5154 !important;
+  }
 }
 
-.modal-body .list-group-item {
-    background-color: inherit;
-
+.modal-body .form-select {
+  background-color: inherit;
+  color: inherit;
+  margin-bottom: 1rem;
 }
 
 footer {
