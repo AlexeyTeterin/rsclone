@@ -113,7 +113,7 @@ const createSlide = (data: SearchResult) => {
   const card = createElement('div', 'card');
   const cardTitle = createElement('div', 'card__title');
   const cardPoster = createElement('div', 'card__poster');
-  const cardRating = createElement('div', 'card__rating', 'badge', 'bg-warning', 'text-dark');
+  const cardRating = createElement('div', 'card__rating', 'badge', 'bg-warning', 'badge-warning', 'text-dark');
   const cardFavButton = createFavButton(data, 'card__fav');
   const cardInfo = createElement('div', 'card__info');
   const cardInfoButton = createElement('button', 'card__info-button', 'btn', 'btn-warning');
@@ -336,7 +336,8 @@ const showMovieModal = (event: Event) => {
   plot.innerHTML = `${data.Plot}`;
 
   const imdbRating = createElement('p');
-  imdbRating.innerHTML = `<b>IMDB Rating:</b> <span class="badge bg-warning text-dark">${data.imdbRating}</span> (${data.imdbVotes} votes)`;
+  imdbRating.dataset.id = data.imdbID;
+  imdbRating.innerHTML = `<b>IMDB Rating:</b> <span class="badge bg-warning text-dark modal-rating">${data.imdbRating}</span> (${data.imdbVotes} votes)`;
 
   const runtime = createElement('p');
   runtime.innerHTML = `<b>Runtime:</b> ${data.Runtime}`;
@@ -429,6 +430,24 @@ const handlePaginationChange = (event: Event) => {
   saveStorage();
 };
 
+const handleRatingBadgeClick = (event: Event) => {
+  const target = event.target as HTMLLinkElement;
+  let id: string;
+  const openLink = () => window.open(`https://www.imdb.com/title/${id}/`);
+  if (target.classList.contains('card__rating')) {
+    id = target.parentElement?.parentElement?.id!;
+    openLink();
+  }
+  if (target.classList.contains('row__rating')) {
+    id = target.parentElement?.parentElement?.dataset.id!;
+    openLink();
+  }
+  if (target.classList.contains('modal-rating')) {
+    id = target.parentElement?.dataset.id!;
+    openLink();
+  }
+};
+
 const createTop101Element = async (movie: any) => {
   const row = createElement('div', 'top101-row');
   const position = createElement('div', 'row__position');
@@ -509,6 +528,7 @@ document.querySelector('#settings')!.addEventListener('click', showSettingsModal
 document.querySelector('#effectSelect')!.addEventListener('change', handleEffectChange);
 document.querySelector('#paginationSelect')!.addEventListener('change', handlePaginationChange);
 moviesSwiper.on('activeIndexChange', handleNextSearchPageLoad);
+document.addEventListener('click', handleRatingBadgeClick);
 
 alertFavObserver.observe(favoritesWrapper as Node, { childList: true });
 top101observer.observe(top101 as Node, {

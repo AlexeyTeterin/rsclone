@@ -454,6 +454,15 @@ main {
   margin-bottom: 1rem;
 }
 
+.badge {
+  cursor: pointer;
+  transition: opacity .15s;
+}
+
+.badge:hover {
+  opacity: 0.8;
+}
+
 footer {
   display: flex;
   justify-content: center;
