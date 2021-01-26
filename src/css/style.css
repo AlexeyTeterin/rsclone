@@ -1,10 +1,19 @@
 html,
 body {
   height: 100%;
-  display: flex;
-  flex-direction: column;
   background: transparent;
   transition: background 0.25s;
+}
+
+html {
+  display: block;
+  margin: 0 auto;
+  max-width: 1280px;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
 }
 
 header {
@@ -21,6 +30,12 @@ header h1 {
   cursor: pointer;
 }
 
+@media (max-width: 400px) {
+  header h1 {
+    font-size: 30px;
+  }
+}
+
 header h1 a {
   all: unset;
   color: unset;
@@ -32,7 +47,7 @@ header h1 a:hover {
   color: unset;
 }
 
-header .film {
+header h1 span.film {
   display: inline-block;
   width: calc(1.375rem + 0.5vw);
   height: calc(1.375rem + 0.5vw);
@@ -52,31 +67,73 @@ header .film {
   }
 }
 
-header .film.invert {
+header h1 span.film.invert {
   filter: invert(1);
 }
 
-header .form-switch {
+header .nightSwitch-container {
   position: absolute;
-  left: 1rem;
+  left: 3rem;
   top: -100%;
   transition: top 0.25s;
 }
 
-header .form-switch.visible {
-  top: 0.5rem;
-}
-
-header .form-switch input {
-  cursor: pointer;
+header .nightSwitch-container.visible {
+  top: 0.25rem;
 }
 
 @media (max-width: 400px) {
-  header .form-switch {
+  header .nightSwitch-container {
     left: unset;
     right: 1.25rem;
-    top: 0.5rem;
   }
+}
+
+header .nightSwitch-container .checkbox {
+  opacity: 0;
+  position: absolute;
+  left: 0rem;
+  top: -100%;
+  transition: top 0.25s;
+}
+
+header .nightSwitch-container .label {
+  background-color: #111;
+  border-radius: 50px;
+  border: 1px solid darkgray;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px;
+  position: relative;
+  height: 28px;
+  width: 52px;
+  transform: scale(0.85);
+}
+
+header .nightSwitch-container .label .ball {
+  background-color: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  height: 22px;
+  width: 22px;
+  transform: translateX(0px);
+  transition: transform 0.2s linear;
+}
+
+header .nightSwitch-container .checkbox:checked + .label .ball {
+  transform: translateX(24px);
+}
+
+header .nightSwitch-container .fa-moon {
+  color: #e7cd63;
+}
+
+header .nightSwitch-container .fa-sun {
+  color: #f0c025;
 }
 
 header .settings-button {
@@ -87,7 +144,7 @@ header .settings-button {
   background-image: url(../assets/img/settings.svg);
   background-size: contain;
   background-repeat: no-repeat;
-  top: 2.5rem;
+  top: .35rem;
   transition: transform 0.25s;
   cursor: pointer;
 }
@@ -97,13 +154,7 @@ header .settings-button:hover {
 }
 
 header .settings-button:active {
-  transform: rotate(90deg) scale(0.9);
-}
-
-@media (max-width: 400px) {
-  header .settings-button {
-    top: 0.5rem;
-  }
+  transform: rotate(120deg) scale(0.9);
 }
 
 header.text-light .settings-button {

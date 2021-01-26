@@ -1,7 +1,8 @@
 import 'normalize.css';
 import * as bootstrap from 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Swiper, { EffectCoverflow, SwiperOptions, Pagination } from 'swiper/bundle';
+import Swiper, { SwiperOptions } from 'swiper/bundle';
+import { PaginationOptions } from 'swiper/types/components/pagination';
 import swiperParams from './swiperParams';
 import 'swiper/swiper-bundle.css';
 import '../css/style.css';
@@ -16,7 +17,6 @@ import {
   OMDBSearchResponce,
   getTopRatedTMDB,
 } from './movieData';
-import { PaginationOptions } from 'swiper/types/components/pagination';
 
 const state = {
   page: 0,
@@ -45,7 +45,6 @@ const top101 = document.querySelector('#top101');
 const favoritesWrapper = document.querySelector('.swiper-wrapper.favorites')!;
 const nightSwitch = document.querySelector('#nightSwitch') as HTMLInputElement;
 const alertFavorites = document.querySelector('.alert.favorites');
-let nightSwitchTooltip = new bootstrap.Tooltip(nightSwitch);
 const movieModal = document.getElementById('modal')!;
 const movieModalBS = new bootstrap.Modal(movieModal, { keyboard: true });
 const settingsModal = document.querySelector('#settingsModal')!;
@@ -75,9 +74,6 @@ const toggleNightMode = () => {
   toggleClassOfElement('#top101', 'text-light');
   toggleClassOfElement('.film', 'invert');
   toggleClassOfElement('footer .rsschool', 'invert');
-
-  nightSwitchTooltip.dispose();
-  nightSwitchTooltip = new bootstrap.Tooltip(nightSwitch);
 
   storage = JSON.parse(localStorage.VideoBox);
   storage.darkMode = !nightSwitch.checked;
