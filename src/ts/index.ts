@@ -44,6 +44,7 @@ const tabs = Array.from(document.querySelectorAll('.tab-pane'));
 const top101 = document.querySelector('#top101');
 const favoritesWrapper = document.querySelector('.swiper-wrapper.favorites')!;
 const nightSwitch = document.querySelector('#nightSwitch') as HTMLInputElement;
+const settingsButton = document.querySelector('#settings')!;
 const alertFavorites = document.querySelector('.alert.favorites');
 const movieModal = document.getElementById('modal')!;
 const movieModalBS = new bootstrap.Modal(movieModal, { keyboard: true });
@@ -95,7 +96,10 @@ const init = () => {
       nightSwitch.checked = false;
       toggleNightMode();
     } else nightSwitch.checked = true;
-    wait(500).then(() => nightSwitch.parentElement?.classList.add('visible'));
+    wait(1000).then(() => {
+      settingsButton.classList.add('visible');
+      nightSwitch.parentElement?.classList.add('visible');
+    });
   }
 };
 
@@ -524,7 +528,7 @@ input.addEventListener('keypress', handleEnterPress);
 document.addEventListener('click', handleFavClick);
 nightSwitch.addEventListener('click', toggleNightMode);
 document.addEventListener('click', showMovieModal);
-document.querySelector('#settings')!.addEventListener('click', showSettingsModal);
+settingsButton.addEventListener('click', showSettingsModal);
 document.querySelector('#effectSelect')!.addEventListener('change', handleEffectChange);
 document.querySelector('#paginationSelect')!.addEventListener('change', handlePaginationChange);
 moviesSwiper.on('activeIndexChange', handleNextSearchPageLoad);

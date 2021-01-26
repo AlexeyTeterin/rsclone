@@ -75,7 +75,7 @@ header .nightSwitch-container {
   position: absolute;
   left: 3rem;
   top: -100%;
-  transition: top 0.25s;
+  transition: top 0.5s;
 }
 
 header .nightSwitch-container.visible {
@@ -98,9 +98,9 @@ header .nightSwitch-container .checkbox {
 }
 
 header .nightSwitch-container .label {
-  background-color: #111;
+  background-color: #4D5154;
   border-radius: 50px;
-  border: 1px solid darkgray;
+  border: 1px solid gray;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -113,7 +113,7 @@ header .nightSwitch-container .label {
 }
 
 header .nightSwitch-container .label .ball {
-  background-color: #fff;
+  background-color: white;
   border-radius: 50%;
   position: absolute;
   top: 2px;
@@ -144,17 +144,36 @@ header .settings-button {
   background-image: url(../assets/img/settings.svg);
   background-size: contain;
   background-repeat: no-repeat;
-  top: .35rem;
-  transition: transform 0.25s;
   cursor: pointer;
+  top: -100%;
+  transition: top 0.5s, transform 0.25s;
+}
+
+header .settings-button.visible {
+  transform: rotate(0deg);
+  animation: spin 1.5s ease-out 0.1s 1;
+  top: 0.35rem;
 }
 
 header .settings-button:hover {
-  transform: rotate(90deg);
+  transform: rotate(-60deg);
 }
 
 header .settings-button:active {
-  transform: rotate(120deg) scale(0.9);
+  transform: scale(0.9);
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(-360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+header.text-light .label.nightSwitch {
+  background-color: #000;
 }
 
 header.text-light .settings-button {
@@ -311,7 +330,8 @@ main {
   width: 100% !important;
 }
 
-.bg-dark .nav-link.active, .bg-dark .card {
+.bg-dark .nav-link.active,
+.bg-dark .card {
   background-color: rgba(255, 255, 255, 0.95);
 }
 
