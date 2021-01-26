@@ -1153,7 +1153,7 @@ main {
   border: none;
   filter: drop-shadow(0 0 2px white);
   opacity: 0.8;
-  transition: transform 0.15s, opacity 0.15s;
+  transition: transform 0.15s, opacity 0.15s, background 0.15s;
 }
 
 .card .card__fav.isFav {
@@ -1290,7 +1290,7 @@ main {
   border: none;
   filter: drop-shadow(0 0 3px white);
   opacity: 0.8;
-  transition: transform 0.15s, opacity 0.15s;
+  transition: transform 0.15s, opacity 0.15s, background .15s;
 }
 
 .top101-row .row__poster .row__fav.isFav {

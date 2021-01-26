@@ -268,7 +268,7 @@ main {
     border: none;
     filter: drop-shadow(0 0 2px white);
     opacity: 0.8;
-    transition: transform 0.15s, opacity 0.15s;
+    transition: transform 0.15s, opacity 0.15s, background 0.15s;
 
     &.isFav {
       background-image: url(../assets/img/star-yellow.svg);
@@ -411,7 +411,7 @@ main {
       border: none;
       filter: drop-shadow(0 0 3px white);
       opacity: 0.8;
-      transition: transform 0.15s, opacity 0.15s;
+      transition: transform 0.15s, opacity 0.15s, background .15s;
 
       &.isFav {
         background-image: url(../assets/img/star-yellow.svg);
