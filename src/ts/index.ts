@@ -34,7 +34,7 @@ const saveStorage = () => {
 let pagination = swiperParams.pagination as PaginationOptions;
 pagination.type = storage.pagination;
 swiperParams.pagination = pagination;
-swiperParams.effect = JSON.parse(localStorage.VideoBox).effect;
+swiperParams.effect = storage.effect;
 let moviesSwiper = new Swiper('.swiper-container.movies', swiperParams);
 const favoritesSwiper = new Swiper('.swiper-container.favorites', swiperParams);
 const searchBtn = document.querySelector('.search-button')!;
@@ -75,7 +75,7 @@ const toggleTheme = () => {
   toggleElementClasses('.film', 'invert');
   toggleElementClasses('footer .rsschool', 'invert');
 
-  storage = JSON.parse(localStorage.VideoBox);
+  getStorage();
   storage.darkMode = !themeSwitch.checked;
   saveStorage();
 };
@@ -103,7 +103,7 @@ const init = () => {
 };
 
 const createFavButton = (movie: SearchResult, className: string) => {
-  storage = JSON.parse(localStorage.VideoBox);
+  getStorage();
   const favButton = createElement('button', className);
   const isFav = Object.keys(storage.Favorites)
     .findIndex((el: string) => el === movie.imdbID) >= 0;
@@ -264,6 +264,10 @@ const handleMenuClick = (event: Event) => {
 const handleEnterPress = (event: KeyboardEvent) => {
   if (event.key !== 'Enter') return;
   searchBtn.dispatchEvent(new Event('click', { bubbles: true }));
+};
+
+const handleTabKeyress = (event: KeyboardEvent) => {
+
 };
 
 const toggleMovieCardIsFav = (id: string, isFav: boolean) => {
@@ -526,6 +530,7 @@ document.querySelector('#effectSelect')!.addEventListener('change', toggleSwiper
 document.querySelector('#paginationSelect')!.addEventListener('change', toggleSwiperPaginationType);
 moviesSwiper.on('activeIndexChange', handleNextSearchPageLoad);
 document.addEventListener('click', handleRatingBadgeClick);
+document.addEventListener('keypress', handleTabKeyress);
 
 alertFavObserver.observe(favoritesWrapper as Node, { childList: true });
 top101observer.observe(top101 as Node, {
