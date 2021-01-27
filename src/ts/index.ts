@@ -24,7 +24,7 @@ const state = {
   top101page: 1,
 };
 
-let storage = JSON.parse(localStorage.VideoBox);
+let storage: any;
 const getStorage = () => {
   storage = JSON.parse(localStorage.VideoBox);
 };
@@ -32,9 +32,6 @@ const saveStorage = () => {
   localStorage.VideoBox = JSON.stringify(storage);
 };
 let pagination = swiperParams.pagination as PaginationOptions;
-pagination.type = storage.pagination;
-swiperParams.pagination = pagination;
-swiperParams.effect = storage.effect;
 let moviesSwiper = new Swiper('.swiper-container.movies', swiperParams);
 const favoritesSwiper = new Swiper('.swiper-container.favorites', swiperParams);
 const searchBtn = document.querySelector('.search-button')!;
@@ -77,6 +74,11 @@ const toggleTheme = () => {
   saveStorage();
 };
 
+const showControls = () => {
+  settingsButton.classList.add('visible');
+  themeSwitch.parentElement?.classList.add('visible');
+};
+
 const init = () => {
   if (!localStorage.VideoBox) {
     localStorage.setItem('VideoBox', JSON.stringify({
@@ -85,6 +87,8 @@ const init = () => {
       darkMode: false,
       effect: 'coverflow',
       pagination: 'fraction',
+      keyboardControl: true,
+      mouseControl: true,
     }));
   } else {
     getStorage();
@@ -92,11 +96,8 @@ const init = () => {
       themeSwitch.checked = false;
       toggleTheme();
     } else themeSwitch.checked = true;
-    wait(1000).then(() => {
-      settingsButton.classList.add('visible');
-      themeSwitch.parentElement?.classList.add('visible');
-    });
   }
+  wait(1000).then(() => showControls());
 };
 
 const createFavButton = (movie: SearchResult, className: string) => {
@@ -355,10 +356,13 @@ const showSettingsModal = () => {
   getStorage();
   const activeEffect = storage.effect;
   const activePaginationType = storage.pagination;
+  const { keyboardControl, mouseControl } = storage;
   const optionSlide = settingsModal.querySelector('#option-slide')! as HTMLOptionElement;
   const optionCoverflow = settingsModal.querySelector('#option-coverflow')! as HTMLOptionElement;
   const optionFraction = settingsModal.querySelector('#option-fraction')! as HTMLOptionElement;
   const optionBullets = settingsModal.querySelector('#option-bullets')! as HTMLOptionElement;
+  const keyboardControlToggle = settingsModal.querySelector('#keyboardControl')! as HTMLInputElement;
+  const mouseControlToggle = settingsModal.querySelector('#mouseControl')! as HTMLInputElement;
 
   if (activeEffect === 'slide') {
     optionSlide.selected = true;
@@ -375,6 +379,9 @@ const showSettingsModal = () => {
     optionBullets.selected = true;
     optionFraction.selected = false;
   }
+
+  if (keyboardControl) keyboardControlToggle.checked = true;
+  if (mouseControl) mouseControlToggle.checked = true;
 
   settingsModalBS.toggle();
 };
@@ -433,6 +440,16 @@ const toggleSwiperPaginationType = (event: Event) => {
   getStorage();
   storage.pagination = targetPaginationType;
   saveStorage();
+};
+
+const toggleKeyboardControl = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  console.log(target.checked);
+};
+
+const toggleMouseControl = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  console.log(target.checked);
 };
 
 const handleRatingBadgeClick = (event: Event) => {
@@ -532,6 +549,8 @@ document.addEventListener('click', showMovieModal);
 settingsButton.addEventListener('click', showSettingsModal);
 document.querySelector('#effectSelect')!.addEventListener('change', toggleSwiperEffect);
 document.querySelector('#paginationSelect')!.addEventListener('change', toggleSwiperPaginationType);
+document.querySelector('#keyboardControl')!.addEventListener('change', toggleKeyboardControl);
+document.querySelector('#mouseControl')!.addEventListener('change', toggleMouseControl);
 moviesSwiper.on('activeIndexChange', handleNextSearchPageLoad);
 document.addEventListener('click', handleRatingBadgeClick);
 window.addEventListener('keydown', handleTabKeyress);

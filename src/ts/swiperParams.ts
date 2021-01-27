@@ -1,19 +1,21 @@
 import { SwiperOptions } from 'swiper';
 
+const storage: any = localStorage.getItem('VideoBox');
+
 const swiperParams: SwiperOptions = {
   direction: 'horizontal',
   loop: false,
   slidesPerView: 1,
   spaceBetween: -50,
   centerInsufficientSlides: true,
-  effect: 'coverflow',
+  effect: storage?.effect || 'coverflow',
   coverflowEffect: {
     rotate: 15,
     slideShadows: false,
   },
   pagination: {
     el: '.swiper-pagination',
-    type: 'fraction',
+    type: storage?.pagination || 'fraction',
     clickable: true,
     dynamicBullets: true,
     dynamicMainBullets: 5,
