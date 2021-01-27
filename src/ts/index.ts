@@ -181,13 +181,6 @@ const animateTabChange = (current: Element | undefined, target: Element | undefi
   wait(200).then(() => target?.classList.add('show'));
 };
 
-const toggleSearchSpinner = () => {
-  const spinner = document.querySelector('button>span.spinner-border');
-  const searchText = document.querySelector('button>span.search-text');
-  spinner?.classList.toggle('visually-hidden');
-  searchText?.classList.toggle('visually-hidden');
-};
-
 const setAlertMessage = (res: OMDBSearchResponce) => {
   const request = input.value;
   const alert = document.querySelector('#movies>.alert')!;
@@ -203,7 +196,7 @@ const setAlertMessage = (res: OMDBSearchResponce) => {
   alert.classList.remove('visually-hidden');
 };
 
-const loadSlides = (res: any) => {
+const loadFoundSlides = (res: any) => {
   res.Search.forEach(async (movie: SearchResult) => {
     const omdb = await getOMDBdata(movie.imdbID);
     const slide = createSlide(omdb);
@@ -214,6 +207,13 @@ const loadSlides = (res: any) => {
 };
 
 const handleSearchClick = () => {
+  const toggleSearchSpinner = () => {
+    const spinner = document.querySelector('button>span.spinner-border');
+    const searchText = document.querySelector('button>span.search-text');
+    spinner?.classList.toggle('visually-hidden');
+    searchText?.classList.toggle('visually-hidden');
+  };
+
   toggleSearchSpinner();
   document.querySelector('#movies')?.classList.remove('show');
   state.page = 1;
@@ -227,7 +227,7 @@ const handleSearchClick = () => {
         setAlertMessage(res);
         return;
       }
-      loadSlides(res);
+      loadFoundSlides(res);
       setAlertMessage(res);
     })
     .then(() => document.querySelector('#movies-tab')?.dispatchEvent(new Event('click', { bubbles: true })))
@@ -241,7 +241,7 @@ const loadNextSearchPage = () => {
         setAlertMessage(res);
         return;
       }
-      loadSlides(res);
+      loadFoundSlides(res);
     });
 };
 
@@ -266,13 +266,13 @@ const handleEnterPress = (event: KeyboardEvent) => {
   searchBtn.dispatchEvent(new Event('click', { bubbles: true }));
 };
 
-const toggleMovieCardFavButton = (id: string, isFav: boolean) => {
+const toggleMovieCardIsFav = (id: string, isFav: boolean) => {
   const targetCard = Array.from(moviesSwiper.slides)
     .find((el) => el.querySelector('.card')?.id === id);
   targetCard?.querySelector('.card__fav')!.classList.toggle('isFav', isFav);
 };
 
-const toggleTop101CardFavButton = (id: string, isFav: boolean) => {
+const toggleTop101CardIsFav = (id: string, isFav: boolean) => {
   const targetCard = Array.from(top101!.children)
     .find((el) => {
       const card = el as HTMLElement;
@@ -290,7 +290,7 @@ const updateFavorites = (target: HTMLElement) => {
   } else reloadFavorites();
 };
 
-const handleFavClick = (event: Event) => {
+const handleSlideFavButtonClick = (event: Event) => {
   const target = event.target as HTMLElement;
   if (!target.classList.contains('card__fav') && !target.classList.contains('row__fav')) return;
 
@@ -306,8 +306,8 @@ const handleFavClick = (event: Event) => {
   target.classList.toggle('isFav', !cardIsFav);
   saveStorage();
 
-  toggleMovieCardFavButton(id, !cardIsFav);
-  toggleTop101CardFavButton(id, !cardIsFav);
+  toggleMovieCardIsFav(id, !cardIsFav);
+  toggleTop101CardIsFav(id, !cardIsFav);
   updateFavorites(target);
 };
 
@@ -379,7 +379,7 @@ const handleNextSearchPageLoad = () => {
   }
 };
 
-const handleEffectChange = (event: Event) => {
+const toggleSwiperEffect = (event: Event) => {
   const target = event.target as HTMLSelectElement;
   if (target.id !== 'effectSelect') return;
 
@@ -398,7 +398,7 @@ const handleEffectChange = (event: Event) => {
   saveStorage();
 };
 
-const handlePaginationChange = (event: Event) => {
+const toggleSwiperPaginationType = (event: Event) => {
   const target = event.target as HTMLSelectElement;
   if (target.id !== 'paginationSelect') return;
 
@@ -518,12 +518,12 @@ getUpcomingTMDB()
 searchBtn.addEventListener('click', handleSearchClick);
 menu.addEventListener('click', handleMenuClick);
 input.addEventListener('keypress', handleEnterPress);
-document.addEventListener('click', handleFavClick);
+document.addEventListener('click', handleSlideFavButtonClick);
 themeSwitch.addEventListener('click', toggleTheme);
 document.addEventListener('click', showMovieModal);
 settingsButton.addEventListener('click', showSettingsModal);
-document.querySelector('#effectSelect')!.addEventListener('change', handleEffectChange);
-document.querySelector('#paginationSelect')!.addEventListener('change', handlePaginationChange);
+document.querySelector('#effectSelect')!.addEventListener('change', toggleSwiperEffect);
+document.querySelector('#paginationSelect')!.addEventListener('change', toggleSwiperPaginationType);
 moviesSwiper.on('activeIndexChange', handleNextSearchPageLoad);
 document.addEventListener('click', handleRatingBadgeClick);
 
