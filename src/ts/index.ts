@@ -63,10 +63,9 @@ const toggleTheme = () => {
   if (themeSwitch.checked) themeSwitch.title = 'Turn off the lights';
   if (!themeSwitch.checked) themeSwitch.title = 'Turn on the light';
 
-  const toggleElementClasses = (selectorName: string, ...classNames: Array<string>) => {
-    classNames.forEach((className) => document.querySelector(selectorName)?.classList
+  const toggleElementClasses = (selectorName: string, ...classNames: Array<string>) => classNames
+    .forEach((className) => document.querySelector(selectorName)?.classList
       .toggle(className, !themeSwitch.checked));
-  };
 
   toggleElementClasses('html', 'bg-dark');
   toggleElementClasses('header', 'text-light');
