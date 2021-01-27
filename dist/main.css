@@ -915,7 +915,6 @@ header {
 
 header h1 {
   font-weight: bold;
-  transition: color 0.25s;
   cursor: pointer;
 }
 
