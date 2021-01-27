@@ -1,6 +1,6 @@
 import { SwiperOptions } from 'swiper';
 
-const storage: any = localStorage.getItem('VideoBox');
+const storage: any = localStorage.getItem('VideoBox') ? JSON.parse(localStorage.VideoBox) : null;
 
 const swiperParams: SwiperOptions = {
   direction: 'horizontal',
@@ -41,11 +41,8 @@ const swiperParams: SwiperOptions = {
       slidesPerView: 4,
     },
   },
-  mousewheel: {
-    invert: false,
-    sensitivity: 10,
-  },
-  keyboard: true,
+  mousewheel: storage?.mouseControl ?? true,
+  keyboard: storage?.keyboardControl ?? true,
 };
 
 export default swiperParams;

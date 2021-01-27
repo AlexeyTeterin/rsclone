@@ -7,15 +7,8 @@ import swiperParams from './swiperParams';
 import 'swiper/swiper-bundle.css';
 import '../css/style.css';
 import {
-  getOMDBdata,
-  searchMoviesOMDB,
-  OMDBMovieData,
-  SearchResult,
-  RatingsArray,
-  getUpcomingTMDB,
-  getTMDBdata,
-  OMDBSearchResponce,
-  getTopRatedTMDB,
+  getOMDBdata, searchMoviesOMDB, OMDBMovieData, SearchResult, RatingsArray,
+  getUpcomingTMDB, getTMDBdata, OMDBSearchResponce, getTopRatedTMDB,
 } from './movieData';
 
 const state = {
@@ -33,7 +26,7 @@ const saveStorage = () => {
 };
 let pagination = swiperParams.pagination as PaginationOptions;
 let moviesSwiper = new Swiper('.swiper-container.movies', swiperParams);
-const favoritesSwiper = new Swiper('.swiper-container.favorites', swiperParams);
+let favoritesSwiper = new Swiper('.swiper-container.favorites', swiperParams);
 const searchBtn = document.querySelector('.search-button')!;
 const input = <HTMLInputElement>document.querySelector('#movie-search');
 const menu = document.querySelector('div.nav')!;
@@ -157,19 +150,6 @@ const addRatingToSlide = (card: HTMLElement, data: OMDBMovieData) => {
   cardRating.textContent = imdbRating ? `${imdbRating.Value.slice(0, -3)}` : 'n/a';
 };
 
-const reloadFavorites = () => {
-  getStorage();
-  favoritesWrapper.innerHTML = '';
-
-  Object.values(storage.Favorites).forEach((savedMovie) => {
-    const slide = createSlide(savedMovie as SearchResult);
-    addRatingToSlide(slide, savedMovie as OMDBMovieData);
-    favoritesSwiper.appendSlide(slide);
-  });
-
-  if (favoritesWrapper?.childElementCount) alertFavorites?.classList.add('visually-hidden');
-};
-
 const animateTabChange = (current: Element | undefined, target: Element | undefined) => {
   current?.classList.remove('show');
   wait(150).then(() => {
@@ -264,9 +244,13 @@ const handleEnterPress = (event: KeyboardEvent) => {
   searchBtn.dispatchEvent(new Event('click', { bubbles: true }));
 };
 
-const handleTabKeyress = (event: KeyboardEvent) => {
+const preventTabPress = (event: KeyboardEvent) => {
   if (event.key !== 'Tab') return;
   event?.preventDefault();
+};
+
+const handleTabKeyress = (event: KeyboardEvent) => {
+  if (event.key !== 'Tab') return;
   const nav = document.querySelector('#nav')!.children;
   const activeTabIndex = [].findIndex.call(nav, (tab: HTMLElement) => tab.classList.contains('active'));
   const lastTabActive = nav.length - activeTabIndex === 1;
@@ -394,6 +378,30 @@ const handleNextSearchPageLoad = () => {
   }
 };
 
+const updateMoviesSwiper = () => {
+  moviesSwiper.destroy();
+  moviesSwiper = new Swiper('.swiper-container.movies', swiperParams);
+  moviesSwiper.on('activeIndexChange', handleNextSearchPageLoad);
+};
+
+const updateFavoritesSwiper = () => {
+  favoritesSwiper.destroy();
+  favoritesSwiper = new Swiper('.swiper-container.favorites', swiperParams);
+};
+
+const reloadFavorites = () => {
+  getStorage();
+  favoritesWrapper.innerHTML = '';
+
+  Object.values(storage.Favorites).forEach((savedMovie) => {
+    const slide = createSlide(savedMovie as SearchResult);
+    addRatingToSlide(slide, savedMovie as OMDBMovieData);
+    favoritesSwiper.appendSlide(slide);
+  });
+
+  if (favoritesWrapper?.childElementCount) alertFavorites?.classList.add('visually-hidden');
+};
+
 const toggleSwiperEffect = (event: Event) => {
   const target = event.target as HTMLSelectElement;
   if (target.id !== 'effectSelect') return;
@@ -402,9 +410,8 @@ const toggleSwiperEffect = (event: Event) => {
   const targetEffect = target.value as SwiperOptions['effect'];
   swiperParams.effect = targetEffect;
 
-  moviesSwiper.destroy();
-  moviesSwiper = new Swiper('.swiper-container.movies', swiperParams);
-  moviesSwiper.on('activeIndexChange', handleNextSearchPageLoad);
+  updateMoviesSwiper();
+  // updateFavoritesSwiper();
 
   favoritesSwiper.params.effect = targetEffect;
   reloadFavorites();
@@ -444,12 +451,29 @@ const toggleSwiperPaginationType = (event: Event) => {
 
 const toggleKeyboardControl = (event: Event) => {
   const target = event.target as HTMLInputElement;
-  console.log(target.checked);
+
+  swiperParams.keyboard = target.checked;
+  updateMoviesSwiper();
+  updateFavoritesSwiper();
+  reloadFavorites();
+
+  if (target.checked) document.addEventListener('keydown', handleTabKeyress);
+  if (!target.checked) document.removeEventListener('keydown', handleTabKeyress);
+
+  storage.keyboardControl = target.checked;
+  saveStorage();
 };
 
 const toggleMouseControl = (event: Event) => {
   const target = event.target as HTMLInputElement;
-  console.log(target.checked);
+
+  swiperParams.mousewheel = target.checked;
+  updateMoviesSwiper();
+  updateFavoritesSwiper();
+  reloadFavorites();
+
+  storage.mouseControl = target.checked;
+  saveStorage();
 };
 
 const handleRatingBadgeClick = (event: Event) => {
@@ -553,7 +577,8 @@ document.querySelector('#keyboardControl')!.addEventListener('change', toggleKey
 document.querySelector('#mouseControl')!.addEventListener('change', toggleMouseControl);
 moviesSwiper.on('activeIndexChange', handleNextSearchPageLoad);
 document.addEventListener('click', handleRatingBadgeClick);
-window.addEventListener('keydown', handleTabKeyress);
+document.addEventListener('keydown', preventTabPress);
+if (swiperParams.keyboard) document.addEventListener('keydown', handleTabKeyress);
 
 alertFavObserver.observe(favoritesWrapper as Node, { childList: true });
 top101observer.observe(top101 as Node, {
