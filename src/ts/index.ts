@@ -60,9 +60,6 @@ const createElement = (tag: string, ...classNames: Array<string>) => {
 };
 
 const toggleTheme = () => {
-  if (themeSwitch.checked) themeSwitch.title = 'Turn off the lights';
-  if (!themeSwitch.checked) themeSwitch.title = 'Turn on the light';
-
   const toggleElementClasses = (selectorName: string, ...classNames: Array<string>) => classNames
     .forEach((className) => document.querySelector(selectorName)?.classList
       .toggle(className, !themeSwitch.checked));
