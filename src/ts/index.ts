@@ -59,7 +59,7 @@ const createElement = (tag: string, ...classNames: Array<string>) => {
   return element;
 };
 
-const toggleNightMode = () => {
+const toggleTheme = () => {
   if (themeSwitch.checked) themeSwitch.title = 'Turn off the lights';
   if (!themeSwitch.checked) themeSwitch.title = 'Turn on the light';
 
@@ -94,7 +94,7 @@ const init = () => {
     getStorage();
     if (storage.darkMode) {
       themeSwitch.checked = false;
-      toggleNightMode();
+      toggleTheme();
     } else themeSwitch.checked = true;
     wait(1000).then(() => {
       settingsButton.classList.add('visible');
@@ -526,7 +526,7 @@ searchBtn.addEventListener('click', handleSearchClick);
 menu.addEventListener('click', handleMenuClick);
 input.addEventListener('keypress', handleEnterPress);
 document.addEventListener('click', handleFavClick);
-themeSwitch.addEventListener('click', toggleNightMode);
+themeSwitch.addEventListener('click', toggleTheme);
 document.addEventListener('click', showMovieModal);
 settingsButton.addEventListener('click', showSettingsModal);
 document.querySelector('#effectSelect')!.addEventListener('change', handleEffectChange);
