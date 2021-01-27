@@ -75,7 +75,7 @@ header {
     }
   }
 
-  .nightSwitch-container {
+  .themeSwitch-container {
     position: absolute;
     left: 3rem;
     top: -100%;
@@ -178,7 +178,7 @@ header {
 }
 
 header.text-light {
-  .label.nightSwitch {
+  .label.themeSwitch {
     background-color: #000;
   }
 }

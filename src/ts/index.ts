@@ -43,7 +43,7 @@ const menu = document.querySelector('div.nav')!;
 const tabs = Array.from(document.querySelectorAll('.tab-pane'));
 const top101 = document.querySelector('#top101');
 const favoritesWrapper = document.querySelector('.swiper-wrapper.favorites')!;
-const nightSwitch = document.querySelector('#nightSwitch') as HTMLInputElement;
+const themeSwitch = document.querySelector('#themeSwitch') as HTMLInputElement;
 const settingsButton = document.querySelector('#settings')!;
 const alertFavorites = document.querySelector('.alert.favorites');
 const movieModal = document.getElementById('modal')!;
@@ -60,12 +60,12 @@ const createElement = (tag: string, ...classNames: Array<string>) => {
 };
 
 const toggleNightMode = () => {
-  if (nightSwitch.checked) nightSwitch.title = 'Turn off the lights';
-  if (!nightSwitch.checked) nightSwitch.title = 'Turn on the light';
+  if (themeSwitch.checked) themeSwitch.title = 'Turn off the lights';
+  if (!themeSwitch.checked) themeSwitch.title = 'Turn on the light';
 
   const toggleClassOfElement = (selectorName: string, ...classNames: Array<string>) => {
     classNames.forEach((className) => document.querySelector(selectorName)?.classList
-      .toggle(className, !nightSwitch.checked));
+      .toggle(className, !themeSwitch.checked));
   };
 
   toggleClassOfElement('html', 'bg-dark');
@@ -77,7 +77,7 @@ const toggleNightMode = () => {
   toggleClassOfElement('footer .rsschool', 'invert');
 
   storage = JSON.parse(localStorage.VideoBox);
-  storage.darkMode = !nightSwitch.checked;
+  storage.darkMode = !themeSwitch.checked;
   saveStorage();
 };
 
@@ -93,12 +93,12 @@ const init = () => {
   } else {
     getStorage();
     if (storage.darkMode) {
-      nightSwitch.checked = false;
+      themeSwitch.checked = false;
       toggleNightMode();
-    } else nightSwitch.checked = true;
+    } else themeSwitch.checked = true;
     wait(1000).then(() => {
       settingsButton.classList.add('visible');
-      nightSwitch.parentElement?.classList.add('visible');
+      themeSwitch.parentElement?.classList.add('visible');
     });
   }
 };
@@ -526,7 +526,7 @@ searchBtn.addEventListener('click', handleSearchClick);
 menu.addEventListener('click', handleMenuClick);
 input.addEventListener('keypress', handleEnterPress);
 document.addEventListener('click', handleFavClick);
-nightSwitch.addEventListener('click', toggleNightMode);
+themeSwitch.addEventListener('click', toggleNightMode);
 document.addEventListener('click', showMovieModal);
 settingsButton.addEventListener('click', showSettingsModal);
 document.querySelector('#effectSelect')!.addEventListener('change', handleEffectChange);

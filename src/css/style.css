@@ -71,25 +71,25 @@ header h1 span.film.invert {
   filter: invert(1);
 }
 
-header .nightSwitch-container {
+header .themeSwitch-container {
   position: absolute;
   left: 3rem;
   top: -100%;
   transition: top 0.5s;
 }
 
-header .nightSwitch-container.visible {
+header .themeSwitch-container.visible {
   top: 0.25rem;
 }
 
 @media (max-width: 400px) {
-  header .nightSwitch-container {
+  header .themeSwitch-container {
     left: unset;
     right: 1.25rem;
   }
 }
 
-header .nightSwitch-container .checkbox {
+header .themeSwitch-container .checkbox {
   opacity: 0;
   position: absolute;
   left: 0rem;
@@ -97,7 +97,7 @@ header .nightSwitch-container .checkbox {
   transition: top 0.25s;
 }
 
-header .nightSwitch-container .label {
+header .themeSwitch-container .label {
   background-color: #4D5154;
   border-radius: 50px;
   border: 1px solid gray;
@@ -112,7 +112,7 @@ header .nightSwitch-container .label {
   transform: scale(0.85);
 }
 
-header .nightSwitch-container .label .ball {
+header .themeSwitch-container .label .ball {
   background-color: white;
   border-radius: 50%;
   position: absolute;
@@ -124,15 +124,15 @@ header .nightSwitch-container .label .ball {
   transition: transform 0.2s linear;
 }
 
-header .nightSwitch-container .checkbox:checked + .label .ball {
+header .themeSwitch-container .checkbox:checked + .label .ball {
   transform: translateX(24px);
 }
 
-header .nightSwitch-container .fa-moon {
+header .themeSwitch-container .fa-moon {
   color: #e7cd63;
 }
 
-header .nightSwitch-container .fa-sun {
+header .themeSwitch-container .fa-sun {
   color: #f0c025;
 }
 
@@ -172,7 +172,7 @@ header .settings-button:active {
   }
 }
 
-header.text-light .label.nightSwitch {
+header.text-light .label.themeSwitch {
   background-color: #000;
 }
 
