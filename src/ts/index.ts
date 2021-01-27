@@ -63,18 +63,18 @@ const toggleTheme = () => {
   if (themeSwitch.checked) themeSwitch.title = 'Turn off the lights';
   if (!themeSwitch.checked) themeSwitch.title = 'Turn on the light';
 
-  const toggleClassOfElement = (selectorName: string, ...classNames: Array<string>) => {
+  const toggleElementClasses = (selectorName: string, ...classNames: Array<string>) => {
     classNames.forEach((className) => document.querySelector(selectorName)?.classList
       .toggle(className, !themeSwitch.checked));
   };
 
-  toggleClassOfElement('html', 'bg-dark');
-  toggleClassOfElement('header', 'text-light');
-  toggleClassOfElement('#modal .modal-content', 'dark', 'text-light');
-  toggleClassOfElement('#settingsModal .modal-content', 'dark', 'text-light');
-  toggleClassOfElement('#top101', 'text-light');
-  toggleClassOfElement('.film', 'invert');
-  toggleClassOfElement('footer .rsschool', 'invert');
+  toggleElementClasses('html', 'bg-dark');
+  toggleElementClasses('header', 'text-light');
+  toggleElementClasses('#modal .modal-content', 'dark', 'text-light');
+  toggleElementClasses('#settingsModal .modal-content', 'dark', 'text-light');
+  toggleElementClasses('#top101', 'text-light');
+  toggleElementClasses('.film', 'invert');
+  toggleElementClasses('footer .rsschool', 'invert');
 
   storage = JSON.parse(localStorage.VideoBox);
   storage.darkMode = !themeSwitch.checked;
