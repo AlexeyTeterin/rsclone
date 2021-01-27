@@ -319,30 +319,24 @@ const showMovieModal = (event: Event) => {
   getStorage();
   const { id } = target.dataset;
   const data: OMDBMovieData = storage.Movies[id!];
+  const modalBody = movieModal.querySelector('.modal-body')! as HTMLElement;
+  const poster = createElement('img', 'modal-poster', 'rounded', 'mx-auto', 'd-block') as HTMLImageElement;
+  const releaseDate = createElement('p');
+  const director = createElement('p');
+  const actors = createElement('p');
+  const plot = createElement('p', 'lh-sm', 'fst-italic', 'text-center', 'text-plot');
+  const imdbRating = createElement('p');
+  const runtime = createElement('p');
 
   movieModal.querySelector('#modalTitle')!.textContent = `${data.Title}, ${data.Year}`;
-  const modalBody = movieModal.querySelector('.modal-body')! as HTMLElement;
   modalBody.innerHTML = '';
-  const poster = createElement('img', 'modal-poster', 'rounded', 'mx-auto', 'd-block') as HTMLImageElement;
   poster.src = data.Poster;
-
-  const releaseDate = createElement('p');
   releaseDate.innerHTML = `<b>Release date:</b> ${data.Released}`;
-
-  const director = createElement('p');
   director.innerHTML = `<b>Director:</b> ${data.Director}`;
-
-  const actors = createElement('p');
   actors.innerHTML = `<b>Actors:</b> ${data.Actors}`;
-
-  const plot = createElement('p', 'lh-sm', 'fst-italic', 'text-center', 'text-plot');
   plot.innerHTML = `${data.Plot}`;
-
-  const imdbRating = createElement('p');
   imdbRating.dataset.id = data.imdbID;
   imdbRating.innerHTML = `<b>IMDB Rating:</b> <span class="badge bg-warning text-dark modal-rating">${data.imdbRating}</span> (${data.imdbVotes} votes)`;
-
-  const runtime = createElement('p');
   runtime.innerHTML = `<b>Runtime:</b> ${data.Runtime}`;
 
   modalBody.append(poster, plot, releaseDate, director, actors, imdbRating, runtime);
