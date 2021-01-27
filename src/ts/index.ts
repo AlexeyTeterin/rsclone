@@ -267,7 +267,14 @@ const handleEnterPress = (event: KeyboardEvent) => {
 };
 
 const handleTabKeyress = (event: KeyboardEvent) => {
+  if (event.key !== 'Tab') return;
+  event?.preventDefault();
+  const nav = document.querySelector('#nav')!.children;
+  const activeTabIndex = [].findIndex.call(nav, (tab: HTMLElement) => tab.classList.contains('active'));
+  const lastTabActive = nav.length - activeTabIndex === 1;
+  const nextTabIndex = (lastTabActive) ? 0 : activeTabIndex + 1;
 
+  nav[nextTabIndex].dispatchEvent(new Event('click', { bubbles: true }));
 };
 
 const toggleMovieCardIsFav = (id: string, isFav: boolean) => {
@@ -530,7 +537,7 @@ document.querySelector('#effectSelect')!.addEventListener('change', toggleSwiper
 document.querySelector('#paginationSelect')!.addEventListener('change', toggleSwiperPaginationType);
 moviesSwiper.on('activeIndexChange', handleNextSearchPageLoad);
 document.addEventListener('click', handleRatingBadgeClick);
-document.addEventListener('keypress', handleTabKeyress);
+window.addEventListener('keydown', handleTabKeyress);
 
 alertFavObserver.observe(favoritesWrapper as Node, { childList: true });
 top101observer.observe(top101 as Node, {
