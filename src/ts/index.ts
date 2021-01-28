@@ -495,6 +495,8 @@ const handleRatingBadgeClick = (event: Event) => {
 };
 
 const createTop101Element = async (movie: any) => {
+  if (top101!.children.length > 100) return;
+
   const row = createElement('div', 'top101-row');
   const position = createElement('div', 'row__position');
   const title = createElement('div', 'row__title');
