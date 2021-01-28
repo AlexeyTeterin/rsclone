@@ -494,6 +494,8 @@ const handleRatingBadgeClick = (event: Event) => {
   }
 };
 
+const top101positions: Array<number> = [];
+
 const createTop101Element = async (movie: any) => {
   if (top101!.children.length > 100) return;
 
@@ -504,7 +506,6 @@ const createTop101Element = async (movie: any) => {
   const rating = createElement('div', 'row__rating', 'badge', 'bg-warning', 'text-dark');
   const infoButton = createElement('button', 'row__info-button', 'btn', 'btn-warning');
 
-  position.textContent = `${top101?.children.length! + 1}`;
   title.textContent = `${movie.title}`;
   infoButton.textContent = 'Learn more';
 
@@ -515,6 +516,11 @@ const createTop101Element = async (movie: any) => {
   const omdbData: OMDBMovieData = await getOMDBdata(tmdbData.imdb_id);
   saveMovieToLocalStorage(omdbData);
   const favButton = createFavButton(omdbData, 'row__fav');
+  let order = 91 - (parseFloat(omdbData.imdbRating) * 10);
+  while (top101positions.includes(order)) order += 1;
+  top101positions.push(order);
+  position.textContent = `${order}`;
+  row.style.setProperty('order', `${order}`);
   poster.append(rating, favButton);
   row.dataset.id = omdbData.imdbID;
   row.dataset.rating = omdbData.imdbRating;
