@@ -30,7 +30,7 @@ export async function getTopRatedTMDB(n: number) {
     const url = `https://api.themoviedb.org/3/movie/top_rated?api_key=${key}&page=${page}`;
     const responce = await fetch(url);
     const data = await responce.json();
-    return data.results.filter((movie: any) => movie.vote_count > 10000);
+    return data.results.filter((movie: any) => movie.vote_count > 5000);
   }
   const partResult = await getPartResult();
   result.push(...partResult);
