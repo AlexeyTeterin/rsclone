@@ -24,6 +24,7 @@ const getStorage = () => {
 const saveStorage = () => {
   localStorage.VideoBox = JSON.stringify(storage);
 };
+const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 let pagination = swiperParams.pagination as PaginationOptions;
 let moviesSwiper = new Swiper('.swiper-container.movies', swiperParams);
 let favoritesSwiper = new Swiper('.swiper-container.favorites', swiperParams);
@@ -78,18 +79,19 @@ const init = () => {
       Movies: {},
       Favorites: {},
       darkMode: false,
+      darkModeAuto: false,
       effect: 'coverflow',
       pagination: 'fraction',
       keyboardControl: true,
       mouseControl: true,
     }));
-  } else {
-    getStorage();
-    if (storage.darkMode) {
-      themeSwitch.checked = false;
-      toggleTheme();
-    } else themeSwitch.checked = true;
   }
+  getStorage();
+  if ((!storage.darkModeAuto && storage.darkMode) || (storage.darkModeAuto && isDarkMode)) {
+    themeSwitch.checked = false;
+    toggleTheme();
+  } else themeSwitch.checked = true;
+
   wait(1000).then(() => showControls());
 };
 
@@ -349,13 +351,14 @@ const showSettingsModal = () => {
   getStorage();
   const activeEffect = storage.effect;
   const activePaginationType = storage.pagination;
-  const { keyboardControl, mouseControl } = storage;
+  const { keyboardControl, mouseControl, darkModeAuto } = storage;
   const optionSlide = settingsModal.querySelector('#option-slide')! as HTMLOptionElement;
   const optionCoverflow = settingsModal.querySelector('#option-coverflow')! as HTMLOptionElement;
   const optionFraction = settingsModal.querySelector('#option-fraction')! as HTMLOptionElement;
   const optionBullets = settingsModal.querySelector('#option-bullets')! as HTMLOptionElement;
   const keyboardControlToggle = settingsModal.querySelector('#keyboardControl')! as HTMLInputElement;
   const mouseControlToggle = settingsModal.querySelector('#mouseControl')! as HTMLInputElement;
+  const darkModeControlToggle = settingsModal.querySelector('#darkModeControl') as HTMLInputElement;
 
   if (activeEffect === 'slide') {
     optionSlide.selected = true;
@@ -375,6 +378,7 @@ const showSettingsModal = () => {
 
   if (keyboardControl) keyboardControlToggle.checked = true;
   if (mouseControl) mouseControlToggle.checked = true;
+  if (darkModeAuto) darkModeControlToggle.checked = true;
 
   settingsModalBS.toggle();
 };
@@ -420,7 +424,6 @@ const toggleSwiperEffect = (event: Event) => {
   swiperParams.effect = targetEffect;
 
   updateMoviesSwiper();
-  // updateFavoritesSwiper();
 
   favoritesSwiper.params.effect = targetEffect;
   reloadFavorites();
@@ -482,6 +485,13 @@ const toggleMouseControl = (event: Event) => {
   reloadFavorites();
 
   storage.mouseControl = target.checked;
+  saveStorage();
+};
+
+const toggleDarkModeAuto = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+
+  storage.darkModeAuto = target.checked;
   saveStorage();
 };
 
@@ -610,11 +620,14 @@ input.addEventListener('keypress', handleEnterPress);
 document.addEventListener('click', handleSlideFavButtonClick);
 themeSwitch.addEventListener('click', toggleTheme);
 document.addEventListener('click', showMovieModal);
+
 settingsButton.addEventListener('click', showSettingsModal);
-document.querySelector('#effectSelect')!.addEventListener('change', toggleSwiperEffect);
-document.querySelector('#paginationSelect')!.addEventListener('change', toggleSwiperPaginationType);
-document.querySelector('#keyboardControl')!.addEventListener('change', toggleKeyboardControl);
-document.querySelector('#mouseControl')!.addEventListener('change', toggleMouseControl);
+settingsModal.querySelector('#effectSelect')!.addEventListener('change', toggleSwiperEffect);
+settingsModal.querySelector('#paginationSelect')!.addEventListener('change', toggleSwiperPaginationType);
+settingsModal.querySelector('#keyboardControl')!.addEventListener('change', toggleKeyboardControl);
+settingsModal.querySelector('#mouseControl')!.addEventListener('change', toggleMouseControl);
+settingsModal.querySelector('#darkModeControl')!.addEventListener('change', toggleDarkModeAuto);
+
 moviesSwiper.on('activeIndexChange', handleNextSearchPageLoad);
 document.addEventListener('click', handleRatingBadgeClick);
 document.addEventListener('keydown', preventTabPress);
