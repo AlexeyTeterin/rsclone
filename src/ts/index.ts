@@ -17,6 +17,7 @@ import Storage from './Storage';
 import { isDarkMode, themeSwitch, toggleTheme } from './theme';
 import { showMovieModal } from './movieModal';
 import { top101, top101observer } from './top101';
+import { loadFoundSlides, handleSearchClick, input } from './search';
 
 const state = {
   page: 0,
@@ -30,7 +31,6 @@ const swiper = {
   favorites: new Swiper('.swiper-container.favorites', swiperParams),
 };
 const searchBtn = document.querySelector('.search-button')!;
-const input = <HTMLInputElement>document.querySelector('#movie-search');
 const menu = document.querySelector('div.nav')!;
 const tabs = Array.from(document.querySelectorAll('.tab-pane'));
 const favoritesWrapper = document.querySelector('.swiper-wrapper.favorites')!;
@@ -141,44 +141,6 @@ const setAlertMessage = (res: OMDBSearchResponce) => {
     alert.classList.add('alert-success');
   }
   alert.classList.remove('visually-hidden');
-};
-
-const loadFoundSlides = (res: any) => {
-  res.Search.forEach(async (movie: SearchResult) => {
-    const omdb = await getOMDBdata(movie.imdbID);
-    const slide = createSlide(omdb);
-    swiper.movies.appendSlide(slide);
-    saveMovieToLocalStorage(omdb);
-    addRatingToSlide(slide, omdb);
-  });
-};
-
-const handleSearchClick = () => {
-  const toggleSearchSpinner = () => {
-    const spinner = document.querySelector('button>span.spinner-border');
-    const searchText = document.querySelector('button>span.search-text');
-    spinner?.classList.toggle('visually-hidden');
-    searchText?.classList.toggle('visually-hidden');
-  };
-
-  toggleSearchSpinner();
-  document.querySelector('#movies')?.classList.remove('show');
-  state.page = 1;
-  state.request = input.value.trim();
-
-  wait(150)
-    .then(() => searchMoviesOMDB(state.request, state.page))
-    .then((res) => {
-      swiper.movies.removeAllSlides();
-      if (res.Error) {
-        setAlertMessage(res);
-        return;
-      }
-      loadFoundSlides(res);
-      setAlertMessage(res);
-    })
-    .then(() => document.querySelector('#movies-tab')?.dispatchEvent(new Event('click', { bubbles: true })))
-    .then(toggleSearchSpinner);
 };
 
 const loadNextSearchPage = () => {
@@ -353,6 +315,7 @@ top101observer.observe(top101 as Node, {
 });
 
 export {
-  state, storage, swiper, settingsButton, handleNextSearchPageLoad, reloadFavorites,
+  state, storage, swiper, settingsButton, handleNextSearchPageLoad,
+  reloadFavorites, wait, setAlertMessage, createSlide, addRatingToSlide,
   createElement, saveMovieToLocalStorage, createFavButton,
 };
