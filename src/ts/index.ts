@@ -1,4 +1,3 @@
-/* eslint-disable import/no-mutable-exports */
 import 'normalize.css';
 import * as bootstrap from 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -15,6 +14,7 @@ import {
   toggleDarkModeAuto, toggleKeyboardControl, toggleMouseControl,
   toggleSwiperEffect, toggleSwiperPaginationType,
 } from './settingsModal';
+import Storage from './Storage';
 
 const state = {
   page: 0,
@@ -22,13 +22,7 @@ const state = {
   top101page: 1,
 };
 
-export let storage: any;
-export const getStorage = () => {
-  storage = JSON.parse(localStorage.VideoBox);
-};
-export const saveStorage = () => {
-  localStorage.VideoBox = JSON.stringify(storage);
-};
+export const storage = new Storage();
 const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 export let moviesSwiper = new Swiper('.swiper-container.movies', swiperParams);
 export let favoritesSwiper = new Swiper('.swiper-container.favorites', swiperParams);
@@ -65,9 +59,9 @@ const toggleTheme = () => {
   toggleElementClasses('.film', 'invert');
   toggleElementClasses('footer', 'text-muted');
 
-  getStorage();
+  storage.load();
   storage.darkMode = !themeSwitch.checked;
-  saveStorage();
+  storage.save();
 };
 
 const showControls = () => {
@@ -76,19 +70,9 @@ const showControls = () => {
 };
 
 const init = () => {
-  if (!localStorage.VideoBox) {
-    localStorage.setItem('VideoBox', JSON.stringify({
-      Movies: {},
-      Favorites: {},
-      darkMode: false,
-      darkModeAuto: false,
-      effect: 'coverflow',
-      pagination: 'fraction',
-      keyboardControl: true,
-      mouseControl: true,
-    }));
-  }
-  getStorage();
+  if (!localStorage.VideoBox) storage.save();
+  else storage.load();
+
   if ((!storage.darkModeAuto && storage.darkMode) || (storage.darkModeAuto && isDarkMode)) {
     themeSwitch.checked = false;
     toggleTheme();
@@ -98,7 +82,7 @@ const init = () => {
 };
 
 const createFavButton = (movie: SearchResult, className: string) => {
-  getStorage();
+  storage.load();
   const favButton = createElement('button', className);
   const isFav = Object.keys(storage.Favorites)
     .findIndex((el: string) => el === movie.imdbID) >= 0;
@@ -140,10 +124,10 @@ const createSlide = (data: SearchResult) => {
 };
 
 const saveMovieToLocalStorage = (data: OMDBMovieData) => {
-  getStorage();
+  storage.load();
   if (!storage.Movies[data.imdbID]) {
     storage.Movies[data.imdbID] = data;
-    saveStorage();
+    storage.save();
   }
 };
 
@@ -269,7 +253,7 @@ const toggleTop101CardIsFav = (id: string, isFav: boolean) => {
 };
 
 export const reloadFavorites = () => {
-  getStorage();
+  storage.load();
   favoritesWrapper.innerHTML = '';
 
   Object.values(storage.Favorites).forEach((savedMovie) => {
@@ -294,7 +278,7 @@ const handleSlideFavButtonClick = (event: Event) => {
   const target = event.target as HTMLElement;
   if (!target.classList.contains('card__fav') && !target.classList.contains('row__fav')) return;
 
-  getStorage();
+  storage.load();
   const id: string = target.parentElement!.parentElement!.id!
     || target.parentElement!.parentElement!.dataset.id!;
   const cardIsFav: boolean = Object.keys(storage.Favorites)
@@ -304,7 +288,7 @@ const handleSlideFavButtonClick = (event: Event) => {
   if (!cardIsFav) storage.Favorites[id] = storage.Movies[id];
 
   target.classList.toggle('isFav', !cardIsFav);
-  saveStorage();
+  storage.save();
 
   toggleMovieCardIsFav(id, !cardIsFav);
   toggleTop101CardIsFav(id, !cardIsFav);
@@ -316,7 +300,7 @@ const showMovieModal = (event: Event) => {
   const targetIsLearnMoreBtn = target.classList.contains('card__info-button') || target.classList.contains('row__info-button');
   if (!targetIsLearnMoreBtn) return;
 
-  getStorage();
+  storage.load();
   const { id } = target.dataset;
   const data: OMDBMovieData = storage.Movies[id!];
   const modalBody = movieModal.querySelector('.modal-body')! as HTMLElement;

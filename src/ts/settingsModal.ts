@@ -3,9 +3,9 @@ import { SwiperOptions } from 'swiper/bundle';
 import { PaginationOptions } from 'swiper/types/components/pagination';
 import swiperParams from './swiperParams';
 import {
-  getStorage, storage, updateMoviesSwiper,
+  storage, updateMoviesSwiper,
   updateFavoritesSwiper, moviesSwiper, favoritesSwiper,
-  reloadFavorites, saveStorage,
+  reloadFavorites,
 } from './index';
 
 export const settingsModal = document.querySelector('#settingsModal')!;
@@ -13,7 +13,7 @@ const settingsModalBS = new bootstrap.Modal(settingsModal, {});
 let pagination = swiperParams.pagination as PaginationOptions;
 
 export const showSettingsModal = () => {
-  getStorage();
+  storage.load();
   const activeEffect = storage.effect;
   const activePaginationType = storage.pagination;
   const { keyboardControl, mouseControl, darkModeAuto } = storage;
@@ -52,7 +52,7 @@ export const toggleSwiperEffect = (event: Event) => {
   const target = event.target as HTMLSelectElement;
   if (target.id !== 'effectSelect') return;
 
-  getStorage();
+  storage.load();
   const targetEffect = target.value as SwiperOptions['effect'];
   swiperParams.effect = targetEffect;
 
@@ -61,8 +61,8 @@ export const toggleSwiperEffect = (event: Event) => {
   favoritesSwiper.params.effect = targetEffect;
   reloadFavorites();
 
-  storage.effect = targetEffect;
-  saveStorage();
+  storage.effect = targetEffect!;
+  storage.save();
 };
 
 export const toggleSwiperPaginationType = (event: Event) => {
@@ -89,9 +89,9 @@ export const toggleSwiperPaginationType = (event: Event) => {
   favoritesSwiper.pagination.update();
 
   swiperParams.pagination = pagination;
-  getStorage();
-  storage.pagination = targetPaginationType;
-  saveStorage();
+  storage.load();
+  storage.pagination = targetPaginationType!;
+  storage.save();
 };
 
 export const handleTabKeyress = (event: KeyboardEvent) => {
@@ -116,7 +116,7 @@ export const toggleKeyboardControl = (event: Event) => {
   if (!target.checked) document.removeEventListener('keydown', handleTabKeyress);
 
   storage.keyboardControl = target.checked;
-  saveStorage();
+  storage.save();
 };
 
 export const toggleMouseControl = (event: Event) => {
@@ -128,12 +128,12 @@ export const toggleMouseControl = (event: Event) => {
   reloadFavorites();
 
   storage.mouseControl = target.checked;
-  saveStorage();
+  storage.save();
 };
 
 export const toggleDarkModeAuto = (event: Event) => {
   const target = event.target as HTMLInputElement;
 
   storage.darkModeAuto = target.checked;
-  saveStorage();
+  storage.save();
 };
