@@ -1,8 +1,8 @@
+/* eslint-disable import/no-mutable-exports */
 import 'normalize.css';
 import * as bootstrap from 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Swiper, { SwiperOptions } from 'swiper/bundle';
-import { PaginationOptions } from 'swiper/types/components/pagination';
+import Swiper from 'swiper/bundle';
 import swiperParams from './swiperParams';
 import 'swiper/swiper-bundle.css';
 import '../css/style.css';
@@ -10,6 +10,11 @@ import {
   getOMDBdata, searchMoviesOMDB, OMDBMovieData, SearchResult, RatingsArray,
   getUpcomingTMDB, getTMDBdata, OMDBSearchResponce, getTopRatedTMDB,
 } from './movieData';
+import {
+  handleTabKeyress, settingsModal, showSettingsModal,
+  toggleDarkModeAuto, toggleKeyboardControl, toggleMouseControl,
+  toggleSwiperEffect, toggleSwiperPaginationType,
+} from './settingsModal';
 
 const state = {
   page: 0,
@@ -17,17 +22,16 @@ const state = {
   top101page: 1,
 };
 
-let storage: any;
-const getStorage = () => {
+export let storage: any;
+export const getStorage = () => {
   storage = JSON.parse(localStorage.VideoBox);
 };
-const saveStorage = () => {
+export const saveStorage = () => {
   localStorage.VideoBox = JSON.stringify(storage);
 };
 const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-let pagination = swiperParams.pagination as PaginationOptions;
-let moviesSwiper = new Swiper('.swiper-container.movies', swiperParams);
-let favoritesSwiper = new Swiper('.swiper-container.favorites', swiperParams);
+export let moviesSwiper = new Swiper('.swiper-container.movies', swiperParams);
+export let favoritesSwiper = new Swiper('.swiper-container.favorites', swiperParams);
 const searchBtn = document.querySelector('.search-button')!;
 const input = <HTMLInputElement>document.querySelector('#movie-search');
 const menu = document.querySelector('div.nav')!;
@@ -35,12 +39,10 @@ const tabs = Array.from(document.querySelectorAll('.tab-pane'));
 const top101 = document.querySelector('#top101')!;
 const favoritesWrapper = document.querySelector('.swiper-wrapper.favorites')!;
 const themeSwitch = document.querySelector('#themeSwitch') as HTMLInputElement;
-const settingsButton = document.querySelector('#settings')!;
+export const settingsButton = document.querySelector('#settings')!;
 const alertFavorites = document.querySelector('.alert.favorites');
 const movieModal = document.getElementById('modal')!;
 const movieModalBS = new bootstrap.Modal(movieModal, { keyboard: true });
-const settingsModal = document.querySelector('#settingsModal')!;
-const settingsModalBS = new bootstrap.Modal(settingsModal, {});
 
 const wait = (ms: number) => new Promise((resolve: any) => setTimeout(() => resolve(), ms));
 
@@ -251,16 +253,6 @@ const preventTabPress = (event: KeyboardEvent) => {
   event?.preventDefault();
 };
 
-const handleTabKeyress = (event: KeyboardEvent) => {
-  if (event.key !== 'Tab') return;
-  const nav = document.querySelector('#nav')!.children;
-  const activeTabIndex = [].findIndex.call(nav, (tab: HTMLElement) => tab.classList.contains('active'));
-  const lastTabActive = nav.length - activeTabIndex === 1;
-  const nextTabIndex = (lastTabActive) ? 0 : activeTabIndex + 1;
-
-  nav[nextTabIndex].dispatchEvent(new Event('click', { bubbles: true }));
-};
-
 const toggleMovieCardIsFav = (id: string, isFav: boolean) => {
   const targetCard = Array.from(moviesSwiper.slides)
     .find((el) => el.querySelector('.card')?.id === id);
@@ -274,6 +266,19 @@ const toggleTop101CardIsFav = (id: string, isFav: boolean) => {
       return (card.dataset.id! === id) ? card : null;
     });
   targetCard?.querySelector('.row__fav')?.classList.toggle('isFav', isFav);
+};
+
+export const reloadFavorites = () => {
+  getStorage();
+  favoritesWrapper.innerHTML = '';
+
+  Object.values(storage.Favorites).forEach((savedMovie) => {
+    const slide = createSlide(savedMovie as SearchResult);
+    addRatingToSlide(slide, savedMovie as OMDBMovieData);
+    favoritesSwiper.appendSlide(slide);
+  });
+
+  if (favoritesWrapper?.childElementCount) alertFavorites?.classList.add('visually-hidden');
 };
 
 const updateFavorites = (target: HTMLElement) => {
@@ -347,42 +352,6 @@ const showMovieModal = (event: Event) => {
   movieModalBS.toggle();
 };
 
-const showSettingsModal = () => {
-  getStorage();
-  const activeEffect = storage.effect;
-  const activePaginationType = storage.pagination;
-  const { keyboardControl, mouseControl, darkModeAuto } = storage;
-  const optionSlide = settingsModal.querySelector('#option-slide')! as HTMLOptionElement;
-  const optionCoverflow = settingsModal.querySelector('#option-coverflow')! as HTMLOptionElement;
-  const optionFraction = settingsModal.querySelector('#option-fraction')! as HTMLOptionElement;
-  const optionBullets = settingsModal.querySelector('#option-bullets')! as HTMLOptionElement;
-  const keyboardControlToggle = settingsModal.querySelector('#keyboardControl')! as HTMLInputElement;
-  const mouseControlToggle = settingsModal.querySelector('#mouseControl')! as HTMLInputElement;
-  const darkModeControlToggle = settingsModal.querySelector('#darkModeControl') as HTMLInputElement;
-
-  if (activeEffect === 'slide') {
-    optionSlide.selected = true;
-    optionCoverflow.selected = false;
-  } else {
-    optionSlide.selected = false;
-    optionCoverflow.selected = true;
-  }
-
-  if (activePaginationType === 'fraction') {
-    optionFraction.selected = true;
-    optionBullets.selected = false;
-  } else {
-    optionBullets.selected = true;
-    optionFraction.selected = false;
-  }
-
-  if (keyboardControl) keyboardControlToggle.checked = true;
-  if (mouseControl) mouseControlToggle.checked = true;
-  if (darkModeAuto) darkModeControlToggle.checked = true;
-
-  settingsModalBS.toggle();
-};
-
 const handleNextSearchPageLoad = () => {
   const { activeIndex, slides } = moviesSwiper;
   if (slides.length - activeIndex === 7 && state.request) {
@@ -391,108 +360,15 @@ const handleNextSearchPageLoad = () => {
   }
 };
 
-const updateMoviesSwiper = () => {
+export const updateMoviesSwiper = () => {
   moviesSwiper.destroy();
   moviesSwiper = new Swiper('.swiper-container.movies', swiperParams);
   moviesSwiper.on('activeIndexChange', handleNextSearchPageLoad);
 };
 
-const updateFavoritesSwiper = () => {
+export const updateFavoritesSwiper = () => {
   favoritesSwiper.destroy();
   favoritesSwiper = new Swiper('.swiper-container.favorites', swiperParams);
-};
-
-const reloadFavorites = () => {
-  getStorage();
-  favoritesWrapper.innerHTML = '';
-
-  Object.values(storage.Favorites).forEach((savedMovie) => {
-    const slide = createSlide(savedMovie as SearchResult);
-    addRatingToSlide(slide, savedMovie as OMDBMovieData);
-    favoritesSwiper.appendSlide(slide);
-  });
-
-  if (favoritesWrapper?.childElementCount) alertFavorites?.classList.add('visually-hidden');
-};
-
-const toggleSwiperEffect = (event: Event) => {
-  const target = event.target as HTMLSelectElement;
-  if (target.id !== 'effectSelect') return;
-
-  getStorage();
-  const targetEffect = target.value as SwiperOptions['effect'];
-  swiperParams.effect = targetEffect;
-
-  updateMoviesSwiper();
-
-  favoritesSwiper.params.effect = targetEffect;
-  reloadFavorites();
-
-  storage.effect = targetEffect;
-  saveStorage();
-};
-
-const toggleSwiperPaginationType = (event: Event) => {
-  const target = event.target as HTMLSelectElement;
-  if (target.id !== 'paginationSelect') return;
-
-  document.querySelectorAll('.swiper-pagination')
-    .forEach((el) => {
-      const swiper = el;
-      swiper.className = 'swiper-pagination';
-    });
-  const targetPaginationType = target.value as PaginationOptions['type'];
-  pagination = moviesSwiper.params.pagination as PaginationOptions;
-  pagination.type = targetPaginationType;
-
-  moviesSwiper.params.pagination = pagination;
-  moviesSwiper.pagination.init();
-  moviesSwiper.pagination.render();
-  moviesSwiper.pagination.update();
-
-  favoritesSwiper.params.pagination = pagination;
-  favoritesSwiper.pagination.init();
-  favoritesSwiper.pagination.render();
-  favoritesSwiper.pagination.update();
-
-  swiperParams.pagination = pagination;
-  getStorage();
-  storage.pagination = targetPaginationType;
-  saveStorage();
-};
-
-const toggleKeyboardControl = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-
-  swiperParams.keyboard = target.checked;
-  updateMoviesSwiper();
-  updateFavoritesSwiper();
-  reloadFavorites();
-
-  if (target.checked) document.addEventListener('keydown', handleTabKeyress);
-  if (!target.checked) document.removeEventListener('keydown', handleTabKeyress);
-
-  storage.keyboardControl = target.checked;
-  saveStorage();
-};
-
-const toggleMouseControl = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-
-  swiperParams.mousewheel = target.checked;
-  updateMoviesSwiper();
-  updateFavoritesSwiper();
-  reloadFavorites();
-
-  storage.mouseControl = target.checked;
-  saveStorage();
-};
-
-const toggleDarkModeAuto = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-
-  storage.darkModeAuto = target.checked;
-  saveStorage();
 };
 
 const handleRatingBadgeClick = (event: Event) => {
