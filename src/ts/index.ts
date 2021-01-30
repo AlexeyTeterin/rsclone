@@ -25,7 +25,7 @@ const state = {
 export const storage = new Storage();
 const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 export let moviesSwiper = new Swiper('.swiper-container.movies', swiperParams);
-export let favoritesSwiper = new Swiper('.swiper-container.favorites', swiperParams);
+export const favoritesSwiper = new Swiper('.swiper-container.favorites', swiperParams);
 const searchBtn = document.querySelector('.search-button')!;
 const input = <HTMLInputElement>document.querySelector('#movie-search');
 const menu = document.querySelector('div.nav')!;
@@ -338,6 +338,7 @@ const showMovieModal = (event: Event) => {
 
 const handleNextSearchPageLoad = () => {
   const { activeIndex, slides } = moviesSwiper;
+  console.log(activeIndex);
   if (slides.length - activeIndex === 7 && state.request) {
     state.page += 1;
     loadNextSearchPage();
@@ -348,11 +349,6 @@ export const updateMoviesSwiper = () => {
   moviesSwiper.destroy();
   moviesSwiper = new Swiper('.swiper-container.movies', swiperParams);
   moviesSwiper.on('activeIndexChange', handleNextSearchPageLoad);
-};
-
-export const updateFavoritesSwiper = () => {
-  favoritesSwiper.destroy();
-  favoritesSwiper = new Swiper('.swiper-container.favorites', swiperParams);
 };
 
 const handleRatingBadgeClick = (event: Event) => {

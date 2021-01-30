@@ -1,11 +1,9 @@
 import * as bootstrap from 'bootstrap';
-import { SwiperOptions } from 'swiper/bundle';
+import Swiper, { SwiperOptions } from 'swiper/bundle';
 import { PaginationOptions } from 'swiper/types/components/pagination';
 import swiperParams from './swiperParams';
 import {
-  storage, updateMoviesSwiper,
-  updateFavoritesSwiper, moviesSwiper, favoritesSwiper,
-  reloadFavorites,
+  storage, favoritesSwiper, reloadFavorites, updateMoviesSwiper, moviesSwiper,
 } from './index';
 
 export const settingsModal = document.querySelector('#settingsModal')!;
@@ -48,17 +46,22 @@ export const showSettingsModal = () => {
   settingsModalBS.toggle();
 };
 
+const updateFavoritesSwiper = () => {
+  favoritesSwiper.destroy();
+  Object.assign(favoritesSwiper, new Swiper('.swiper-container.favorites', swiperParams), { destroyed: false });
+};
+
 export const toggleSwiperEffect = (event: Event) => {
   const target = event.target as HTMLSelectElement;
   if (target.id !== 'effectSelect') return;
 
   storage.load();
+
   const targetEffect = target.value as SwiperOptions['effect'];
   swiperParams.effect = targetEffect;
 
   updateMoviesSwiper();
-
-  favoritesSwiper.params.effect = targetEffect;
+  updateFavoritesSwiper();
   reloadFavorites();
 
   storage.effect = targetEffect!;
