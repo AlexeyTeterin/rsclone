@@ -22,10 +22,12 @@ const state = {
   top101page: 1,
 };
 
-export const storage = new Storage();
+const storage = new Storage();
 const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-export let moviesSwiper = new Swiper('.swiper-container.movies', swiperParams);
-export const favoritesSwiper = new Swiper('.swiper-container.favorites', swiperParams);
+const swiper = {
+  movies: new Swiper('.swiper-container.movies', swiperParams),
+  favorites: new Swiper('.swiper-container.favorites', swiperParams),
+};
 const searchBtn = document.querySelector('.search-button')!;
 const input = <HTMLInputElement>document.querySelector('#movie-search');
 const menu = document.querySelector('div.nav')!;
@@ -33,7 +35,7 @@ const tabs = Array.from(document.querySelectorAll('.tab-pane'));
 const top101 = document.querySelector('#top101')!;
 const favoritesWrapper = document.querySelector('.swiper-wrapper.favorites')!;
 const themeSwitch = document.querySelector('#themeSwitch') as HTMLInputElement;
-export const settingsButton = document.querySelector('#settings')!;
+const settingsButton = document.querySelector('#settings')!;
 const alertFavorites = document.querySelector('.alert.favorites');
 const movieModal = document.getElementById('modal')!;
 const movieModalBS = new bootstrap.Modal(movieModal, { keyboard: true });
@@ -166,7 +168,7 @@ const loadFoundSlides = (res: any) => {
   res.Search.forEach(async (movie: SearchResult) => {
     const omdb = await getOMDBdata(movie.imdbID);
     const slide = createSlide(omdb);
-    moviesSwiper.appendSlide(slide);
+    swiper.movies.appendSlide(slide);
     saveMovieToLocalStorage(omdb);
     addRatingToSlide(slide, omdb);
   });
@@ -188,7 +190,7 @@ const handleSearchClick = () => {
   wait(150)
     .then(() => searchMoviesOMDB(state.request, state.page))
     .then((res) => {
-      moviesSwiper.removeAllSlides();
+      swiper.movies.removeAllSlides();
       if (res.Error) {
         setAlertMessage(res);
         return;
@@ -238,7 +240,7 @@ const preventTabPress = (event: KeyboardEvent) => {
 };
 
 const toggleMovieCardIsFav = (id: string, isFav: boolean) => {
-  const targetCard = Array.from(moviesSwiper.slides)
+  const targetCard = Array.from(swiper.movies.slides)
     .find((el) => el.querySelector('.card')?.id === id);
   targetCard?.querySelector('.card__fav')!.classList.toggle('isFav', isFav);
 };
@@ -259,7 +261,7 @@ export const reloadFavorites = () => {
   Object.values(storage.Favorites).forEach((savedMovie) => {
     const slide = createSlide(savedMovie as SearchResult);
     addRatingToSlide(slide, savedMovie as OMDBMovieData);
-    favoritesSwiper.appendSlide(slide);
+    swiper.favorites.appendSlide(slide);
   });
 
   if (favoritesWrapper?.childElementCount) alertFavorites?.classList.add('visually-hidden');
@@ -337,18 +339,11 @@ const showMovieModal = (event: Event) => {
 };
 
 const handleNextSearchPageLoad = () => {
-  const { activeIndex, slides } = moviesSwiper;
-  console.log(activeIndex);
+  const { activeIndex, slides } = swiper.movies;
   if (slides.length - activeIndex === 7 && state.request) {
     state.page += 1;
     loadNextSearchPage();
   }
-};
-
-export const updateMoviesSwiper = () => {
-  moviesSwiper.destroy();
-  moviesSwiper = new Swiper('.swiper-container.movies', swiperParams);
-  moviesSwiper.on('activeIndexChange', handleNextSearchPageLoad);
 };
 
 const handleRatingBadgeClick = (event: Event) => {
@@ -461,7 +456,7 @@ getUpcomingTMDB()
         const tmdb = await getTMDBdata(movie.id);
         const omdb = await getOMDBdata(tmdb.imdb_id);
         const slide = createSlide(omdb);
-        moviesSwiper.appendSlide(slide);
+        swiper.movies.appendSlide(slide);
         saveMovieToLocalStorage(omdb);
         addRatingToSlide(slide, omdb);
       });
@@ -484,7 +479,7 @@ settingsModal.querySelector('#keyboardControl')!.addEventListener('change', togg
 settingsModal.querySelector('#mouseControl')!.addEventListener('change', toggleMouseControl);
 settingsModal.querySelector('#darkModeControl')!.addEventListener('change', toggleDarkModeAuto);
 
-moviesSwiper.on('activeIndexChange', handleNextSearchPageLoad);
+swiper.movies.on('activeIndexChange', handleNextSearchPageLoad);
 document.addEventListener('click', handleRatingBadgeClick);
 document.addEventListener('keydown', preventTabPress);
 if (swiperParams.keyboard) document.addEventListener('keydown', handleTabKeyress);
@@ -494,3 +489,7 @@ top101observer.observe(top101 as Node, {
   childList: true,
   attributes: true,
 });
+
+export {
+  storage, swiper, settingsButton, handleNextSearchPageLoad,
+};

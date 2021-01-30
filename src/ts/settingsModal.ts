@@ -3,14 +3,14 @@ import Swiper, { SwiperOptions } from 'swiper/bundle';
 import { PaginationOptions } from 'swiper/types/components/pagination';
 import swiperParams from './swiperParams';
 import {
-  storage, favoritesSwiper, reloadFavorites, updateMoviesSwiper, moviesSwiper,
+  storage, swiper, reloadFavorites, handleNextSearchPageLoad,
 } from './index';
 
-export const settingsModal = document.querySelector('#settingsModal')!;
+const settingsModal = document.querySelector('#settingsModal')!;
 const settingsModalBS = new bootstrap.Modal(settingsModal, {});
 let pagination = swiperParams.pagination as PaginationOptions;
 
-export const showSettingsModal = () => {
+const showSettingsModal = () => {
   storage.load();
   const activeEffect = storage.effect;
   const activePaginationType = storage.pagination;
@@ -46,12 +46,18 @@ export const showSettingsModal = () => {
   settingsModalBS.toggle();
 };
 
-const updateFavoritesSwiper = () => {
-  favoritesSwiper.destroy();
-  Object.assign(favoritesSwiper, new Swiper('.swiper-container.favorites', swiperParams), { destroyed: false });
+const updateMoviesSwiper = () => {
+  swiper.movies.destroy();
+  swiper.movies = new Swiper('.swiper-container.movies', swiperParams);
+  swiper.movies.on('activeIndexChange', handleNextSearchPageLoad);
 };
 
-export const toggleSwiperEffect = (event: Event) => {
+const updateFavoritesSwiper = () => {
+  swiper.favorites.destroy();
+  swiper.favorites = new Swiper('.swiper-container.favorites', swiperParams);
+};
+
+const toggleSwiperEffect = (event: Event) => {
   const target = event.target as HTMLSelectElement;
   if (target.id !== 'effectSelect') return;
 
@@ -68,28 +74,28 @@ export const toggleSwiperEffect = (event: Event) => {
   storage.save();
 };
 
-export const toggleSwiperPaginationType = (event: Event) => {
+const toggleSwiperPaginationType = (event: Event) => {
   const target = event.target as HTMLSelectElement;
   if (target.id !== 'paginationSelect') return;
 
   document.querySelectorAll('.swiper-pagination')
     .forEach((el) => {
-      const swiper = el;
-      swiper.className = 'swiper-pagination';
+      const swip = el;
+      swip.className = 'swiper-pagination';
     });
   const targetPaginationType = target.value as PaginationOptions['type'];
-  pagination = moviesSwiper.params.pagination as PaginationOptions;
+  pagination = swiper.movies.params.pagination as PaginationOptions;
   pagination.type = targetPaginationType;
 
-  moviesSwiper.params.pagination = pagination;
-  moviesSwiper.pagination.init();
-  moviesSwiper.pagination.render();
-  moviesSwiper.pagination.update();
+  swiper.movies.params.pagination = pagination;
+  swiper.movies.pagination.init();
+  swiper.movies.pagination.render();
+  swiper.movies.pagination.update();
 
-  favoritesSwiper.params.pagination = pagination;
-  favoritesSwiper.pagination.init();
-  favoritesSwiper.pagination.render();
-  favoritesSwiper.pagination.update();
+  swiper.favorites.params.pagination = pagination;
+  swiper.favorites.pagination.init();
+  swiper.favorites.pagination.render();
+  swiper.favorites.pagination.update();
 
   swiperParams.pagination = pagination;
   storage.load();
@@ -97,7 +103,7 @@ export const toggleSwiperPaginationType = (event: Event) => {
   storage.save();
 };
 
-export const handleTabKeyress = (event: KeyboardEvent) => {
+const handleTabKeyress = (event: KeyboardEvent) => {
   if (event.key !== 'Tab') return;
   const nav = document.querySelector('#nav')!.children;
   const activeTabIndex = [].findIndex.call(nav, (tab: HTMLElement) => tab.classList.contains('active'));
@@ -107,7 +113,7 @@ export const handleTabKeyress = (event: KeyboardEvent) => {
   nav[nextTabIndex].dispatchEvent(new Event('click', { bubbles: true }));
 };
 
-export const toggleKeyboardControl = (event: Event) => {
+const toggleKeyboardControl = (event: Event) => {
   const target = event.target as HTMLInputElement;
 
   swiperParams.keyboard = target.checked;
@@ -122,7 +128,7 @@ export const toggleKeyboardControl = (event: Event) => {
   storage.save();
 };
 
-export const toggleMouseControl = (event: Event) => {
+const toggleMouseControl = (event: Event) => {
   const target = event.target as HTMLInputElement;
 
   swiperParams.mousewheel = target.checked;
@@ -134,9 +140,15 @@ export const toggleMouseControl = (event: Event) => {
   storage.save();
 };
 
-export const toggleDarkModeAuto = (event: Event) => {
+const toggleDarkModeAuto = (event: Event) => {
   const target = event.target as HTMLInputElement;
 
   storage.darkModeAuto = target.checked;
   storage.save();
+};
+
+export {
+  settingsModal, showSettingsModal, toggleSwiperEffect,
+  toggleSwiperPaginationType, handleTabKeyress, toggleKeyboardControl,
+  toggleMouseControl, toggleDarkModeAuto,
 };
