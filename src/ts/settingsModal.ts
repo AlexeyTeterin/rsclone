@@ -6,6 +6,7 @@ import {
   storage, swiper, reloadFavorites, handleNextSearchPageLoad,
 } from './index';
 
+const settingsButton = document.querySelector('#settings')!;
 const settingsModal = document.querySelector('#settingsModal')!;
 const settingsModalBS = new bootstrap.Modal(settingsModal, {});
 let pagination = swiperParams.pagination as PaginationOptions;
@@ -148,7 +149,7 @@ const toggleDarkModeAuto = (event: Event) => {
 };
 
 export {
-  settingsModal, showSettingsModal, toggleSwiperEffect,
+  settingsModal, settingsButton, showSettingsModal, toggleSwiperEffect,
   toggleSwiperPaginationType, handleTabKeyress, toggleKeyboardControl,
   toggleMouseControl, toggleDarkModeAuto,
 };

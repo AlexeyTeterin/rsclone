@@ -1,17 +1,18 @@
 import {
   createSlide, swiper,
-  saveMovieToLocalStorage, setAlertMessage, state, wait, addRatingToSlide,
+  setAlertMessage, state, wait, addRatingToSlide, storage,
 } from './index';
 import { getOMDBdata, searchMoviesOMDB, SearchResult } from './movieData';
 
 const input = <HTMLInputElement>document.querySelector('#movie-search');
+const searchBtn = document.querySelector('.search-button')!;
 
 const loadFoundSlides = (res: any) => {
   res.Search.forEach(async (movie: SearchResult) => {
     const omdb = await getOMDBdata(movie.imdbID);
     const slide = createSlide(omdb);
     swiper.movies.appendSlide(slide);
-    saveMovieToLocalStorage(omdb);
+    storage.saveMovie(omdb);
     addRatingToSlide(slide, omdb);
   });
 };
@@ -44,4 +45,26 @@ const handleSearchClick = () => {
     .then(toggleSearchSpinner);
 };
 
-export { input, handleSearchClick, loadFoundSlides };
+const loadNextSearchPage = () => {
+  searchMoviesOMDB(state.request, state.page)
+    .then((res) => {
+      if (res.Error) {
+        setAlertMessage(res);
+        return;
+      }
+      loadFoundSlides(res);
+    });
+};
+
+const handleNextSearchPageLoad = () => {
+  const { activeIndex, slides } = swiper.movies;
+  if (slides.length - activeIndex === 7 && state.request) {
+    state.page += 1;
+    loadNextSearchPage();
+  }
+};
+
+export {
+  input, handleSearchClick, loadFoundSlides, handleNextSearchPageLoad,
+  searchBtn,
+};

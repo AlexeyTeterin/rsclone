@@ -1,3 +1,5 @@
+import { OMDBMovieData } from './movieData';
+
 export default class Storage {
   constructor() {
     this.Movies = {};
@@ -34,4 +36,12 @@ export default class Storage {
   save = () => {
     localStorage.VideoBox = JSON.stringify(this);
   }
+
+  saveMovie = (data: OMDBMovieData) => {
+    this.load();
+    if (!this.Movies[data.imdbID]) {
+      this.Movies[data.imdbID] = data;
+      this.save();
+    }
+  };
 }

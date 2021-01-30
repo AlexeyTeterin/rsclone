@@ -5,11 +5,11 @@ import swiperParams from './swiperParams';
 import 'swiper/swiper-bundle.css';
 import '../css/style.css';
 import {
-  getOMDBdata, searchMoviesOMDB, OMDBMovieData, SearchResult, RatingsArray,
+  getOMDBdata, OMDBMovieData, SearchResult, RatingsArray,
   getUpcomingTMDB, getTMDBdata, OMDBSearchResponce,
 } from './movieData';
 import {
-  handleTabKeyress, settingsModal, showSettingsModal,
+  handleTabKeyress, settingsButton, settingsModal, showSettingsModal,
   toggleDarkModeAuto, toggleKeyboardControl, toggleMouseControl,
   toggleSwiperEffect, toggleSwiperPaginationType,
 } from './settingsModal';
@@ -17,33 +17,26 @@ import Storage from './Storage';
 import { isDarkMode, themeSwitch, toggleTheme } from './theme';
 import { showMovieModal } from './movieModal';
 import { top101, top101observer } from './top101';
-import { loadFoundSlides, handleSearchClick, input } from './search';
+import {
+  handleSearchClick, input, handleNextSearchPageLoad, searchBtn,
+} from './search';
+import {
+  reloadFavorites, favoritesWrapper, createFavButton, handleSlideFavButtonClick, alertFavObserver,
+} from './favorites';
+import { handleMenuClick, menu } from './nav';
 
+const storage = new Storage();
 const state = {
   page: 0,
   request: '',
   top101page: 1,
 };
-
-const storage = new Storage();
 const swiper = {
   movies: new Swiper('.swiper-container.movies', swiperParams),
   favorites: new Swiper('.swiper-container.favorites', swiperParams),
 };
-const searchBtn = document.querySelector('.search-button')!;
-const menu = document.querySelector('div.nav')!;
-const tabs = Array.from(document.querySelectorAll('.tab-pane'));
-const favoritesWrapper = document.querySelector('.swiper-wrapper.favorites')!;
-const settingsButton = document.querySelector('#settings')!;
-const alertFavorites = document.querySelector('.alert.favorites');
 
 const wait = (ms: number) => new Promise((resolve: any) => setTimeout(() => resolve(), ms));
-
-const createElement = (tag: string, ...classNames: Array<string>) => {
-  const element = document.createElement(tag);
-  classNames.forEach((className) => element.classList.add(className));
-  return element;
-};
 
 const showControls = () => {
   settingsButton.classList.add('visible');
@@ -62,13 +55,10 @@ const init = () => {
   wait(1000).then(() => showControls());
 };
 
-const createFavButton = (movie: SearchResult, className: string) => {
-  storage.load();
-  const favButton = createElement('button', className);
-  const isFav = Object.keys(storage.Favorites)
-    .findIndex((el: string) => el === movie.imdbID) >= 0;
-  favButton.classList.toggle('isFav', isFav);
-  return favButton;
+const createElement = (tag: string, ...classNames: Array<string>) => {
+  const element = document.createElement(tag);
+  classNames.forEach((className) => element.classList.add(className));
+  return element;
 };
 
 const createSlide = (data: SearchResult) => {
@@ -104,28 +94,11 @@ const createSlide = (data: SearchResult) => {
   return slide;
 };
 
-const saveMovieToLocalStorage = (data: OMDBMovieData) => {
-  storage.load();
-  if (!storage.Movies[data.imdbID]) {
-    storage.Movies[data.imdbID] = data;
-    storage.save();
-  }
-};
-
 const addRatingToSlide = (card: HTMLElement, data: OMDBMovieData) => {
   const imdbRating = data.Ratings
     .find((r: RatingsArray) => r.Source === 'Internet Movie Database');
   const cardRating = card.querySelector('.card__rating')!;
   cardRating.textContent = imdbRating ? `${imdbRating.Value.slice(0, -3)}` : 'n/a';
-};
-
-const animateTabChange = (current: Element | undefined, target: Element | undefined) => {
-  current?.classList.remove('show');
-  wait(150).then(() => {
-    current?.classList.remove('active');
-    target?.classList.add('active');
-  });
-  wait(200).then(() => target?.classList.add('show'));
 };
 
 const setAlertMessage = (res: OMDBSearchResponce) => {
@@ -143,33 +116,6 @@ const setAlertMessage = (res: OMDBSearchResponce) => {
   alert.classList.remove('visually-hidden');
 };
 
-const loadNextSearchPage = () => {
-  searchMoviesOMDB(state.request, state.page)
-    .then((res) => {
-      if (res.Error) {
-        setAlertMessage(res);
-        return;
-      }
-      loadFoundSlides(res);
-    });
-};
-
-const handleMenuClick = (event: Event) => {
-  const target = event.target! as HTMLElement;
-  if (!target.classList.contains('nav-link')) return;
-  const targetTab = tabs
-    .find((tab) => tab instanceof HTMLElement && target.id.indexOf(tab.dataset.id!) >= 0);
-  const currentTab = tabs
-    .find((tab) => tab instanceof HTMLElement && tab.classList.contains('active'));
-
-  Array.from(menu.children).forEach((link) => link.classList.remove('disabled'));
-  target.classList.add('disabled');
-  animateTabChange(currentTab, targetTab);
-
-  if (currentTab?.id === 'top101') currentTab?.classList.add('visually-hidden');
-  if (targetTab?.id === 'top101') targetTab?.classList.remove('visually-hidden');
-};
-
 const handleEnterPress = (event: KeyboardEvent) => {
   if (event.key !== 'Enter') return;
   searchBtn.dispatchEvent(new Event('click', { bubbles: true }));
@@ -178,72 +124,6 @@ const handleEnterPress = (event: KeyboardEvent) => {
 const preventTabPress = (event: KeyboardEvent) => {
   if (event.key !== 'Tab') return;
   event?.preventDefault();
-};
-
-const toggleMovieCardIsFav = (id: string, isFav: boolean) => {
-  const targetCard = Array.from(swiper.movies.slides)
-    .find((el) => el.querySelector('.card')?.id === id);
-  targetCard?.querySelector('.card__fav')!.classList.toggle('isFav', isFav);
-};
-
-const toggleTop101CardIsFav = (id: string, isFav: boolean) => {
-  const targetCard = Array.from(top101!.children)
-    .find((el) => {
-      const card = el as HTMLElement;
-      return (card.dataset.id! === id) ? card : null;
-    });
-  targetCard?.querySelector('.row__fav')?.classList.toggle('isFav', isFav);
-};
-
-const reloadFavorites = () => {
-  storage.load();
-  favoritesWrapper.innerHTML = '';
-
-  Object.values(storage.Favorites).forEach((savedMovie) => {
-    const slide = createSlide(savedMovie as SearchResult);
-    addRatingToSlide(slide, savedMovie as OMDBMovieData);
-    swiper.favorites.appendSlide(slide);
-  });
-
-  if (favoritesWrapper?.childElementCount) alertFavorites?.classList.add('visually-hidden');
-};
-
-const updateFavorites = (target: HTMLElement) => {
-  const targetSwiper = target.parentElement?.parentElement?.parentElement?.parentElement;
-  const favoritesTabActive = targetSwiper?.classList.contains('favorites');
-  if (favoritesTabActive) {
-    target.parentElement?.parentElement?.style.setProperty('opacity', '0');
-    wait(500).then(() => reloadFavorites());
-  } else reloadFavorites();
-};
-
-const handleSlideFavButtonClick = (event: Event) => {
-  const target = event.target as HTMLElement;
-  if (!target.classList.contains('card__fav') && !target.classList.contains('row__fav')) return;
-
-  storage.load();
-  const id: string = target.parentElement!.parentElement!.id!
-    || target.parentElement!.parentElement!.dataset.id!;
-  const cardIsFav: boolean = Object.keys(storage.Favorites)
-    .findIndex((el: string) => el === id) >= 0;
-
-  if (cardIsFav) delete storage.Favorites[id];
-  if (!cardIsFav) storage.Favorites[id] = storage.Movies[id];
-
-  target.classList.toggle('isFav', !cardIsFav);
-  storage.save();
-
-  toggleMovieCardIsFav(id, !cardIsFav);
-  toggleTop101CardIsFav(id, !cardIsFav);
-  updateFavorites(target);
-};
-
-const handleNextSearchPageLoad = () => {
-  const { activeIndex, slides } = swiper.movies;
-  if (slides.length - activeIndex === 7 && state.request) {
-    state.page += 1;
-    loadNextSearchPage();
-  }
 };
 
 const handleRatingBadgeClick = (event: Event) => {
@@ -264,13 +144,6 @@ const handleRatingBadgeClick = (event: Event) => {
   }
 };
 
-const alertFavObserver = new MutationObserver((mutationRecords) => {
-  mutationRecords.forEach((record) => {
-    if (record.target.hasChildNodes()) alertFavorites?.classList.add('visually-hidden');
-    else alertFavorites?.classList.remove('visually-hidden');
-  });
-});
-
 init();
 input.focus();
 getUpcomingTMDB()
@@ -281,7 +154,7 @@ getUpcomingTMDB()
         const omdb = await getOMDBdata(tmdb.imdb_id);
         const slide = createSlide(omdb);
         swiper.movies.appendSlide(slide);
-        saveMovieToLocalStorage(omdb);
+        storage.saveMovie(omdb);
         addRatingToSlide(slide, omdb);
       });
   })
@@ -317,5 +190,5 @@ top101observer.observe(top101 as Node, {
 export {
   state, storage, swiper, settingsButton, handleNextSearchPageLoad,
   reloadFavorites, wait, setAlertMessage, createSlide, addRatingToSlide,
-  createElement, saveMovieToLocalStorage, createFavButton,
+  createElement,
 };

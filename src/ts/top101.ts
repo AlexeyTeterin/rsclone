@@ -1,6 +1,5 @@
-import {
-  createElement, createFavButton, saveMovieToLocalStorage, state,
-} from './index';
+import { createFavButton } from './favorites';
+import { createElement, state, storage } from './index';
 import {
   getOMDBdata, getTMDBdata, getTopRatedTMDB, OMDBMovieData,
 } from './movieData';
@@ -27,7 +26,7 @@ const createTop101Card = async (movie: any) => {
 
   const tmdbData = await getTMDBdata(movie.id);
   const omdbData: OMDBMovieData = await getOMDBdata(tmdbData.imdb_id);
-  saveMovieToLocalStorage(omdbData);
+  storage.saveMovie(omdbData);
   const favButton = createFavButton(omdbData, 'row__fav');
   poster.append(rating, favButton);
   row.dataset.id = omdbData.imdbID;
