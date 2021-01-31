@@ -5,6 +5,7 @@ const themeSwitch = document.querySelector('#themeSwitch') as HTMLInputElement;
 const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
 const toggleTheme = () => {
+  console.log('theme toggle');
   const toggleElementClasses = (selectorName: string, ...classNames: Array<string>) => classNames
     .forEach((className) => document.querySelector(selectorName)?.classList
       .toggle(className, !themeSwitch.checked));

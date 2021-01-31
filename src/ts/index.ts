@@ -50,7 +50,9 @@ const init = () => {
   if ((!storage.darkModeAuto && storage.darkMode) || (storage.darkModeAuto && isDarkMode)) {
     themeSwitch.checked = false;
     toggleTheme();
-  } else themeSwitch.checked = true;
+  } else if (storage.darkModeAuto && !isDarkMode && storage.darkMode) {
+    toggleTheme();
+  }
 
   wait(1000).then(() => showControls());
 };
