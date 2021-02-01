@@ -16,8 +16,6 @@ const reloadFavorites = () => {
     addRatingToSlide(slide, savedMovie as OMDBMovieData);
     swiper.favorites.appendSlide(slide);
   });
-
-  if (favoritesWrapper?.childElementCount) alertFavorites?.classList.add('visually-hidden');
 };
 
 const updateFavorites = (target: HTMLElement) => {
@@ -76,8 +74,15 @@ const handleSlideFavButtonClick = (event: Event) => {
 
 const alertFavObserver = new MutationObserver((mutationRecords) => {
   mutationRecords.forEach((record) => {
-    if (record.target.hasChildNodes()) alertFavorites?.classList.add('visually-hidden');
-    else alertFavorites?.classList.remove('visually-hidden');
+    if (record.target.hasChildNodes()) {
+      const favCount = favoritesWrapper.children.length;
+      alertFavorites!.innerHTML = `You have <b>${favCount}</b> favorite movies:`;
+      if (favCount === 1) alertFavorites!.innerHTML = alertFavorites!.innerHTML.replace('movies', 'movie');
+      alertFavorites?.classList.add('top');
+    } else {
+      alertFavorites!.innerHTML = 'Your favorite movies will be shown here';
+      alertFavorites?.classList.remove('top');
+    }
   });
 });
 

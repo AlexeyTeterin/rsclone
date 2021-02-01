@@ -393,13 +393,15 @@ main {
   }
 }
 
-.swiper-container.favorites {
-  .alert.favorites {
-    position: absolute;
-    top: 40%;
+#favorites .alert.favorites {
+  margin: 0 auto;
+  width: fit-content;
+  transform: translateY(200px);
+  
+  &.top {
+    transform: translateY(0);
   }
 }
-
 
 #top101 {
   display: flex;
