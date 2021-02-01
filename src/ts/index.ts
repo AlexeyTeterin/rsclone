@@ -15,7 +15,7 @@ import {
 } from './settingsModal';
 import Storage from './Storage';
 import {
-  applySystemTheme, isDarkMode, themeSwitch, toggleTheme,
+  animateHeader, applySystemTheme, isDarkMode, removeHeaderAnimation, themeSwitch, toggleTheme,
 } from './theme';
 import { showMovieModal } from './movieModal';
 import { top101, top101observer } from './top101';
@@ -177,6 +177,8 @@ settingsModal.querySelector('#keyboardControl')!.addEventListener('change', togg
 settingsModal.querySelector('#mouseControl')!.addEventListener('change', toggleMouseControl);
 settingsModal.querySelector('#darkModeControl')!.addEventListener('change', toggleDarkModeAuto);
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applySystemTheme);
+document.querySelector('h1')!.addEventListener('mouseover', animateHeader);
+document.querySelector('h1')!.addEventListener('mouseleave', removeHeaderAnimation);
 
 swiper.movies.on('activeIndexChange', handleNextSearchPageLoad);
 document.addEventListener('click', handleRatingBadgeClick);

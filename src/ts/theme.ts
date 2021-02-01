@@ -30,6 +30,24 @@ const applySystemTheme = () => {
   }
 };
 
+const textSpans = document.querySelectorAll('h1 span:not(:nth-child(2))');
+
+const animateHeader = () => {
+  Array.from(textSpans).forEach((el) => {
+    const span = el as HTMLElement;
+    span.classList.add('glitch');
+    span.dataset.text = span.textContent!;
+  });
+};
+
+const removeHeaderAnimation = () => {
+  Array.from(textSpans).forEach((el) => {
+    const span = el as HTMLElement;
+    span.classList.remove('glitch');
+  });
+};
+
 export {
   isDarkMode, themeSwitch, toggleTheme, applySystemTheme,
+  animateHeader, removeHeaderAnimation,
 };
