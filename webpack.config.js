@@ -3,6 +3,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 
 const config = {
   entry: './src/ts/index.ts',
@@ -61,6 +62,7 @@ const config = {
     }),
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin(),
+    new FaviconsWebpackPlugin('./src/assets/img/film.svg'),
   ],
   resolve: {
     extensions: [
