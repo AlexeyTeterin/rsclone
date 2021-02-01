@@ -5,6 +5,7 @@ import swiperParams from './swiperParams';
 import {
   storage, swiper, reloadFavorites, handleNextSearchPageLoad,
 } from './index';
+import { applySystemTheme } from './theme';
 
 const settingsButton = document.querySelector('#settings')!;
 const settingsModal = document.querySelector('#settingsModal')!;
@@ -146,6 +147,8 @@ const toggleDarkModeAuto = (event: Event) => {
 
   storage.darkModeAuto = target.checked;
   storage.save();
+
+  if (target.checked) applySystemTheme();
 };
 
 export {

@@ -14,7 +14,9 @@ import {
   toggleSwiperEffect, toggleSwiperPaginationType,
 } from './settingsModal';
 import Storage from './Storage';
-import { isDarkMode, themeSwitch, toggleTheme } from './theme';
+import {
+  applySystemTheme, isDarkMode, themeSwitch, toggleTheme,
+} from './theme';
 import { showMovieModal } from './movieModal';
 import { top101, top101observer } from './top101';
 import {
@@ -47,12 +49,9 @@ const init = () => {
   if (!localStorage.VideoBox) storage.save();
   else storage.load();
 
-  if ((!storage.darkModeAuto && storage.darkMode) || (storage.darkModeAuto && isDarkMode)) {
-    themeSwitch.checked = false;
-    toggleTheme();
-  } else if (storage.darkModeAuto && !isDarkMode && storage.darkMode) {
-    toggleTheme();
-  }
+  if (storage.darkModeAuto && isDarkMode()) themeSwitch.checked = false;
+  if ((!storage.darkModeAuto && storage.darkMode)) themeSwitch.checked = false;
+  toggleTheme();
 
   wait(1000).then(() => showControls());
 };
@@ -177,6 +176,7 @@ settingsModal.querySelector('#paginationSelect')!.addEventListener('change', tog
 settingsModal.querySelector('#keyboardControl')!.addEventListener('change', toggleKeyboardControl);
 settingsModal.querySelector('#mouseControl')!.addEventListener('change', toggleMouseControl);
 settingsModal.querySelector('#darkModeControl')!.addEventListener('change', toggleDarkModeAuto);
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applySystemTheme);
 
 swiper.movies.on('activeIndexChange', handleNextSearchPageLoad);
 document.addEventListener('click', handleRatingBadgeClick);

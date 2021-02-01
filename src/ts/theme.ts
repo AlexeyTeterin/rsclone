@@ -2,14 +2,13 @@ import { storage } from './index';
 
 const themeSwitch = document.querySelector('#themeSwitch') as HTMLInputElement;
 
-const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+const isDarkMode = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+const toggleElementClasses = (selectorName: string, ...classNames: Array<string>) => classNames
+  .forEach((className) => document.querySelector(selectorName)?.classList
+    .toggle(className, !themeSwitch.checked));
 
 const toggleTheme = () => {
-  console.log('theme toggle');
-  const toggleElementClasses = (selectorName: string, ...classNames: Array<string>) => classNames
-    .forEach((className) => document.querySelector(selectorName)?.classList
-      .toggle(className, !themeSwitch.checked));
-
   toggleElementClasses('html', 'bg-dark');
   toggleElementClasses('header', 'text-light');
   toggleElementClasses('#modal .modal-content', 'dark', 'text-light');
@@ -23,4 +22,14 @@ const toggleTheme = () => {
   storage.save();
 };
 
-export { isDarkMode, themeSwitch, toggleTheme };
+const applySystemTheme = () => {
+  if (!storage.darkModeAuto) return;
+  if (isDarkMode() !== storage.darkMode) {
+    themeSwitch.checked = !themeSwitch.checked;
+    toggleTheme();
+  }
+};
+
+export {
+  isDarkMode, themeSwitch, toggleTheme, applySystemTheme,
+};
