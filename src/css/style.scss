@@ -351,7 +351,7 @@ main {
   width: auto;
   display: flex;
   justify-content: center;
-  height: 470px;
+  height: 446px;
   max-width: 1280px;
 }
 
@@ -372,6 +372,7 @@ main {
 
   .swiper-pagination {
     color: #f8f9fa;
+    bottom: 0;
   }
 
   .swiper-pagination-bullet {
