@@ -26,6 +26,8 @@ import {
   reloadFavorites, favoritesWrapper, createFavButton, handleSlideFavButtonClick, alertFavObserver,
 } from './favorites';
 import { handleMenuClick, menu } from './nav';
+import Keyboard from '../js/keyboard';
+import '../css/keyboard.css';
 
 const storage = new Storage();
 const state = {
@@ -45,9 +47,17 @@ const showControls = () => {
   themeSwitch.parentElement?.classList.add('visible');
 };
 
+const keyboard = new Keyboard();
+const keyboardButton = document.querySelector('.fa-keyboard')!;
+
 const init = () => {
   if (!localStorage.VideoBox) storage.save();
   else storage.load();
+
+  if (window.innerWidth < 400) {
+    keyboardButton.classList.add('hidden');
+  }
+  keyboard.init();
 
   if (storage.darkModeAuto && isDarkMode()) themeSwitch.checked = false;
   if ((!storage.darkModeAuto && storage.darkMode)) themeSwitch.checked = false;
@@ -179,6 +189,20 @@ settingsModal.querySelector('#darkModeControl')!.addEventListener('change', togg
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applySystemTheme);
 document.querySelector('h1')!.addEventListener('mouseover', animateHeader);
 document.querySelector('h1')!.addEventListener('mouseleave', removeHeaderAnimation);
+keyboardButton.addEventListener('click', () => {
+  keyboardButton.classList.toggle('active');
+  keyboard.toggleKeyboard();
+});
+window.addEventListener('resize', () => {
+  if (window.innerWidth < 400) {
+    keyboard.hideKeyboard();
+    keyboardButton.classList.add('hidden');
+    keyboardButton.classList.remove('active');
+  } else {
+    keyboardButton.classList.remove('hidden');
+  }
+});
+document.querySelector('#enter')!.addEventListener('click', () => searchBtn.dispatchEvent(new Event('click')));
 
 swiper.movies.on('activeIndexChange', handleNextSearchPageLoad);
 document.addEventListener('click', handleRatingBadgeClick);

@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const config = {
   entry: './src/ts/index.ts',
@@ -41,7 +42,7 @@ const config = {
       },
       {
         test: /\.svg$/,
-        use: 'file-loader',
+        use: 'url-loader',
       },
       {
         test: /\.png$/,
@@ -63,6 +64,12 @@ const config = {
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin(),
     new FaviconsWebpackPlugin('./src/assets/img/film.svg'),
+    new CopyWebpackPlugin({
+      patterns: [{
+        from: path.resolve(__dirname, 'src/assets/audio'),
+        to: path.resolve(__dirname, 'dist/assets/audio'),
+      }],
+    }),
   ],
   resolve: {
     extensions: [

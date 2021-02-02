@@ -221,11 +221,28 @@ main {
 }
 
 .search__container {
+  position: relative;
   margin: 0 auto;
   padding: 1rem;
   display: flex;
   justify-content: center;
-  width: 300px;
+  min-width: 320px;
+  max-width: 500px;
+  width: 50%;
+  
+  .fa-keyboard {
+    position: absolute;
+    left: -1rem;
+    font-size: 1.5rem;
+    line-height: 1.5;
+    opacity: 0.5;
+    cursor: pointer;
+    transition: opacity 0.25s, transform 0.5s;
+    
+    &.active {
+      opacity: 1;
+    }
+  }
 
   .search-button {
     margin-left: 6px;

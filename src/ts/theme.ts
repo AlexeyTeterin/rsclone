@@ -16,6 +16,7 @@ const toggleTheme = () => {
   toggleElementClasses('#top101', 'text-light');
   toggleElementClasses('.film', 'invert');
   toggleElementClasses('footer', 'text-muted');
+  toggleElementClasses('.keyboard', 'bg-dark');
 
   storage.load();
   storage.darkMode = !themeSwitch.checked;
