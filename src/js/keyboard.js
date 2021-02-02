@@ -433,7 +433,7 @@ export default class Keyboard {
 
   hideKeyboard() {
     this.elements.keysContainer.classList.add('hidden');
-    textarea.blur();
+    // textarea.blur();
     setTimeout(() => {
       this.elements.main.classList.add('goDown');
     }, 200);

@@ -63,6 +63,8 @@ const init = () => {
   if ((!storage.darkModeAuto && storage.darkMode)) themeSwitch.checked = false;
   toggleTheme();
 
+  input.focus();
+
   wait(1000).then(() => showControls());
 };
 
@@ -156,7 +158,6 @@ const handleRatingBadgeClick = (event: Event) => {
 };
 
 init();
-input.focus();
 getUpcomingTMDB()
   .then((res) => {
     res.results
