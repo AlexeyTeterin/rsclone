@@ -190,10 +190,16 @@ settingsModal.querySelector('#darkModeControl')!.addEventListener('change', togg
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applySystemTheme);
 document.querySelector('h1')!.addEventListener('mouseover', animateHeader);
 document.querySelector('h1')!.addEventListener('mouseleave', removeHeaderAnimation);
+document.addEventListener('click', handleRatingBadgeClick);
+document.addEventListener('keydown', preventTabPress);
 keyboardButton.addEventListener('click', () => {
   keyboardButton.classList.toggle('active');
   keyboard.toggleKeyboard();
 });
+document.querySelector('#off')!.addEventListener('click', () => {
+  keyboardButton.classList.remove('active');
+});
+document.querySelector('#enter')!.addEventListener('click', () => searchBtn.dispatchEvent(new Event('click')));
 window.addEventListener('resize', () => {
   if (window.innerWidth < 400) {
     keyboard.hideKeyboard();
@@ -203,11 +209,8 @@ window.addEventListener('resize', () => {
     keyboardButton.classList.remove('hidden');
   }
 });
-document.querySelector('#enter')!.addEventListener('click', () => searchBtn.dispatchEvent(new Event('click')));
 
 swiper.movies.on('activeIndexChange', handleNextSearchPageLoad);
-document.addEventListener('click', handleRatingBadgeClick);
-document.addEventListener('keydown', preventTabPress);
 if (swiperParams.keyboard) document.addEventListener('keydown', handleTabKeyress);
 
 alertFavObserver.observe(favoritesWrapper as Node, { childList: true });
