@@ -16,7 +16,7 @@ import onLearnMoreClick from './modal_movieInfo';
 import { top101observer } from './tab_top101';
 import { onSearchButtonClick, onActiveIndexChange } from './search';
 import { loadFavorites, favoritesObserver } from './tab_favorites';
-import onMenuElementClick from './nav';
+import onMenuElementClick from './menu';
 import Keyboard from '../js/keyboard';
 import { onRatingBadgeClick, onFavButtonClick } from './movieSlide';
 import loadUpcomingMovies from './tab_movies';
