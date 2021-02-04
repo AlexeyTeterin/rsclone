@@ -4,7 +4,7 @@ import {
 } from './index';
 import { getOMDBdata, searchMoviesOMDB, SearchResult } from './API';
 
-export const input = <HTMLInputElement>document.querySelector('#movie-search');
+export const searchInput = <HTMLInputElement>document.querySelector('#movie-search');
 export const searchBtn = document.querySelector('.search-button')!;
 
 export const loadFoundSlides = (res: any) => {
@@ -28,7 +28,7 @@ export const handleSearchClick = () => {
   toggleSearchSpinner();
   document.querySelector('#movies')?.classList.remove('show');
   state.page = 1;
-  state.request = input.value.trim();
+  state.request = searchInput.value.trim();
 
   wait(150)
     .then(() => searchMoviesOMDB(state.request, state.page))

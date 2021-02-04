@@ -16,7 +16,7 @@ import {
 import { showMovieModal } from './modal_movieInfo';
 import { top101, top101observer } from './tab_top101';
 import {
-  handleSearchClick, input, handleNextSearchPageLoad, searchBtn,
+  handleSearchClick, searchInput, handleNextSearchPageLoad, searchBtn,
 } from './search';
 import { loadFavorites, favoritesWrapper, alertFavObserver } from './tab_favorites';
 import { handleMenuClick, menu } from './nav';
@@ -59,7 +59,7 @@ const init = () => {
   if ((!storage.darkModeAuto && storage.darkMode)) themeSwitch.checked = false;
   toggleTheme();
 
-  input.focus();
+  searchInput.focus();
 
   wait(1000).then(() => showControls());
 };
@@ -71,7 +71,7 @@ export const createElement = (tag: string, ...classNames: Array<string>) => {
 };
 
 const setAlertMessage = (res: OMDBSearchResponce) => {
-  const request = input.value;
+  const request = searchInput.value;
   const alert = document.querySelector('#movies>.alert')!;
   alert.classList.remove('alert-success', 'alert-danger');
   const { totalResults } = res;
@@ -98,7 +98,7 @@ const preventTabPress = (event: KeyboardEvent) => {
 init();
 loadUpcomingMovies()
   .then(() => wait(150))
-  .then(() => document.querySelector('#movies')?.classList.add('show'))
+  .then(() => document.querySelector('#movies')!.classList.add('show'))
   .then(() => loadFavorites());
 
 // window listeners
@@ -120,7 +120,7 @@ document.addEventListener('keydown', handleTabKeyress);
 // element's listeners
 themeSwitch.addEventListener('click', toggleTheme);
 menu.addEventListener('click', handleMenuClick);
-input.addEventListener('keypress', handleEnterPress);
+searchInput.addEventListener('keypress', handleEnterPress);
 searchBtn.addEventListener('click', handleSearchClick);
 runSettingsModalListeners();
 runHeaderAnimationListeners();
