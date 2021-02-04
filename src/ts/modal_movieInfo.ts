@@ -1,11 +1,11 @@
 import * as bootstrap from 'bootstrap';
 import { storage, createElement } from './index';
-import { OMDBMovieData } from './movieData';
+import { OMDBMovieData } from './API';
 
-const movieModal = document.getElementById('modal')!;
+export const movieModal = document.getElementById('modal')!;
 const movieModalBS = new bootstrap.Modal(movieModal, { keyboard: true });
 
-const showMovieModal = (event: Event) => {
+export const showMovieModal = (event: Event) => {
   const target = event.target as HTMLElement;
   const targetIsLearnMoreBtn = target.classList.contains('card__info-button') || target.classList.contains('row__info-button');
   if (!targetIsLearnMoreBtn) return;
@@ -45,5 +45,3 @@ const showMovieModal = (event: Event) => {
     genre, director, actors, imdbRating, runtime, awards, boxOffice);
   movieModalBS.toggle();
 };
-
-export { movieModal, showMovieModal };

@@ -7,24 +7,24 @@ import '../css/style.css';
 import {
   getOMDBdata, OMDBMovieData, SearchResult, RatingsArray,
   getUpcomingTMDB, getTMDBdata, OMDBSearchResponce,
-} from './movieData';
+} from './API';
 import {
   handleTabKeyress, settingsButton, settingsModal, showSettingsModal,
   toggleDarkModeAuto, toggleKeyboardControl, toggleMouseControl,
   toggleSwiperEffect, toggleSwiperPaginationType,
-} from './settingsModal';
+} from './modal_settings';
 import Storage from './Storage';
 import {
   animateHeader, applySystemTheme, isDarkMode, removeHeaderAnimation, themeSwitch, toggleTheme,
 } from './theme';
-import { showMovieModal } from './movieModal';
-import { top101, top101observer } from './top101';
+import { showMovieModal } from './modal_movieInfo';
+import { top101, top101observer } from './tab_top101';
 import {
   handleSearchClick, input, handleNextSearchPageLoad, searchBtn,
 } from './search';
 import {
   reloadFavorites, favoritesWrapper, createFavButton, handleSlideFavButtonClick, alertFavObserver,
-} from './favorites';
+} from './tab_favorites';
 import { handleMenuClick, menu } from './nav';
 import Keyboard from '../js/keyboard';
 import '../css/keyboard.css';

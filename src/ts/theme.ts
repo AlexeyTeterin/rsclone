@@ -1,14 +1,16 @@
 import { storage } from './index';
 
-const themeSwitch = document.querySelector('#themeSwitch') as HTMLInputElement;
+export const themeSwitch = document.querySelector('#themeSwitch') as HTMLInputElement;
 
-const isDarkMode = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+export const isDarkMode = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-const toggleElementClasses = (selectorName: string, ...classNames: Array<string>) => classNames
-  .forEach((className) => document.querySelector(selectorName)?.classList
-    .toggle(className, !themeSwitch.checked));
+export const toggleElementClasses = (selectorName: string, ...classNames: Array<string>) => {
+  classNames
+    .forEach((className) => document.querySelector(selectorName)?.classList
+      .toggle(className, !themeSwitch.checked));
+};
 
-const toggleTheme = () => {
+export const toggleTheme = () => {
   toggleElementClasses('html', 'bg-dark');
   toggleElementClasses('header', 'text-light');
   toggleElementClasses('#modal .modal-content', 'dark', 'text-light');
@@ -23,7 +25,7 @@ const toggleTheme = () => {
   storage.save();
 };
 
-const applySystemTheme = () => {
+export const applySystemTheme = () => {
   if (!storage.darkModeAuto) return;
   if (isDarkMode() !== storage.darkMode) {
     themeSwitch.checked = !themeSwitch.checked;
@@ -31,9 +33,9 @@ const applySystemTheme = () => {
   }
 };
 
-const textSpans = document.querySelectorAll('h1 span:not(:nth-child(2))');
+export const textSpans = document.querySelectorAll('h1 span:not(:nth-child(2))');
 
-const animateHeader = () => {
+export const animateHeader = () => {
   Array.from(textSpans).forEach((el) => {
     const span = el as HTMLElement;
     span.classList.add('glitch');
@@ -41,14 +43,9 @@ const animateHeader = () => {
   });
 };
 
-const removeHeaderAnimation = () => {
+export const removeHeaderAnimation = () => {
   Array.from(textSpans).forEach((el) => {
     const span = el as HTMLElement;
     span.classList.remove('glitch');
   });
-};
-
-export {
-  isDarkMode, themeSwitch, toggleTheme, applySystemTheme,
-  animateHeader, removeHeaderAnimation,
 };

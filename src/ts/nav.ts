@@ -1,6 +1,6 @@
 import { wait } from './index';
 
-const menu = document.querySelector('div.nav')!;
+export const menu = document.querySelector('div.nav')!;
 const tabs = Array.from(document.querySelectorAll('.tab-pane'));
 
 const animateTabChange = (current: Element | undefined, target: Element | undefined) => {
@@ -12,7 +12,7 @@ const animateTabChange = (current: Element | undefined, target: Element | undefi
   wait(200).then(() => target?.classList.add('show'));
 };
 
-const handleMenuClick = (event: Event) => {
+export const handleMenuClick = (event: Event) => {
   const target = event.target! as HTMLElement;
   if (!target.classList.contains('nav-link')) return;
   const targetTab = tabs
@@ -27,5 +27,3 @@ const handleMenuClick = (event: Event) => {
   if (currentTab?.id === 'top101') currentTab?.classList.add('visually-hidden');
   if (targetTab?.id === 'top101') targetTab?.classList.remove('visually-hidden');
 };
-
-export { menu, handleMenuClick };

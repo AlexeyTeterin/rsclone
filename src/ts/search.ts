@@ -2,12 +2,12 @@ import {
   createSlide, swiper,
   setAlertMessage, state, wait, addRatingToSlide, storage,
 } from './index';
-import { getOMDBdata, searchMoviesOMDB, SearchResult } from './movieData';
+import { getOMDBdata, searchMoviesOMDB, SearchResult } from './API';
 
-const input = <HTMLInputElement>document.querySelector('#movie-search');
-const searchBtn = document.querySelector('.search-button')!;
+export const input = <HTMLInputElement>document.querySelector('#movie-search');
+export const searchBtn = document.querySelector('.search-button')!;
 
-const loadFoundSlides = (res: any) => {
+export const loadFoundSlides = (res: any) => {
   res.Search.forEach(async (movie: SearchResult) => {
     const omdb = await getOMDBdata(movie.imdbID);
     const slide = createSlide(omdb);
@@ -17,7 +17,7 @@ const loadFoundSlides = (res: any) => {
   });
 };
 
-const handleSearchClick = () => {
+export const handleSearchClick = () => {
   const toggleSearchSpinner = () => {
     const spinner = document.querySelector('button>span.spinner-border');
     const searchText = document.querySelector('button>span.search-text');
@@ -45,7 +45,7 @@ const handleSearchClick = () => {
     .then(toggleSearchSpinner);
 };
 
-const loadNextSearchPage = () => {
+export const loadNextSearchPage = () => {
   searchMoviesOMDB(state.request, state.page)
     .then((res) => {
       if (res.Error) {
@@ -56,15 +56,10 @@ const loadNextSearchPage = () => {
     });
 };
 
-const handleNextSearchPageLoad = () => {
+export const handleNextSearchPageLoad = () => {
   const { activeIndex, slides } = swiper.movies;
   if (slides.length - activeIndex === 7 && state.request) {
     state.page += 1;
     loadNextSearchPage();
   }
-};
-
-export {
-  input, handleSearchClick, loadFoundSlides, handleNextSearchPageLoad,
-  searchBtn,
 };

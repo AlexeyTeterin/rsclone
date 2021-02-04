@@ -1,4 +1,4 @@
-import { OMDBMovieData } from './movieData';
+import { OMDBMovieData } from './API';
 
 export default class Storage {
   constructor() {

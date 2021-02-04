@@ -1,12 +1,12 @@
-import { createFavButton } from './favorites';
+import { createFavButton } from './tab_favorites';
 import { createElement, state, storage } from './index';
 import {
   getOMDBdata, getTMDBdata, getTopRatedTMDB, OMDBMovieData,
-} from './movieData';
+} from './API';
 
-const top101 = document.querySelector('#top101')!;
+export const top101 = document.querySelector('#top101')!;
 
-const createTop101Card = async (movie: any) => {
+export const createTop101Card = async (movie: any) => {
   const rowsNumber = top101!.children.length;
   if (rowsNumber === 101) return;
 
@@ -42,7 +42,7 @@ const createTop101Card = async (movie: any) => {
   }
 };
 
-const sortTop101 = () => {
+export const sortTop101 = () => {
   const rows = Array.from(top101.children);
   const sorted = rows.slice().sort((a: Element, b: Element) => {
     const el1 = a as HTMLElement; const el2 = b as HTMLElement;
@@ -60,7 +60,7 @@ const sortTop101 = () => {
   top101.classList.add('sorted');
 };
 
-const appendTop101NextPage = async () => {
+export const appendTop101NextPage = async () => {
   const getTop101Page = async (page: number = 1) => {
     const top = await getTopRatedTMDB(page);
     return top;
@@ -70,7 +70,7 @@ const appendTop101NextPage = async () => {
   movies.forEach((movie) => createTop101Card(movie));
 };
 
-const top101observer = new MutationObserver(() => {
+export const top101observer = new MutationObserver(() => {
   const rows = Array.from(top101.children);
 
   if (rows.length! < 100) {
@@ -81,7 +81,3 @@ const top101observer = new MutationObserver(() => {
     if (lastRowsReady && !top101.classList.contains('sorted')) sortTop101();
   }
 });
-
-export {
-  top101, top101observer, appendTop101NextPage, sortTop101, createTop101Card,
-};

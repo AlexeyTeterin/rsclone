@@ -1,13 +1,13 @@
 import {
   storage, createSlide, addRatingToSlide, wait, swiper, createElement,
 } from './index';
-import { SearchResult, OMDBMovieData } from './movieData';
-import { top101 } from './top101';
+import { SearchResult, OMDBMovieData } from './API';
+import { top101 } from './tab_top101';
 
-const favoritesWrapper = document.querySelector('.swiper-wrapper.favorites')!;
-const alertFavorites = document.querySelector('.alert.favorites');
+export const favoritesWrapper = document.querySelector('.swiper-wrapper.favorites')!;
+export const alertFavorites = document.querySelector('.alert.favorites');
 
-const reloadFavorites = () => {
+export const reloadFavorites = () => {
   storage.load();
   favoritesWrapper.innerHTML = '';
 
@@ -18,7 +18,7 @@ const reloadFavorites = () => {
   });
 };
 
-const updateFavorites = (target: HTMLElement) => {
+export const updateFavorites = (target: HTMLElement) => {
   const targetSwiper = target.parentElement?.parentElement?.parentElement?.parentElement;
   const favoritesTabActive = targetSwiper?.classList.contains('favorites');
   if (favoritesTabActive) {
@@ -27,7 +27,7 @@ const updateFavorites = (target: HTMLElement) => {
   } else reloadFavorites();
 };
 
-const createFavButton = (movie: SearchResult, className: string) => {
+export const createFavButton = (movie: SearchResult, className: string) => {
   storage.load();
   const favButton = createElement('button', className);
   const isFav = Object.keys(storage.Favorites)
@@ -36,13 +36,13 @@ const createFavButton = (movie: SearchResult, className: string) => {
   return favButton;
 };
 
-const toggleMovieCardIsFav = (id: string, isFav: boolean) => {
+export const toggleMovieCardIsFav = (id: string, isFav: boolean) => {
   const targetCard = Array.from(swiper.movies.slides)
     .find((el) => el.querySelector('.card')?.id === id);
   targetCard?.querySelector('.card__fav')!.classList.toggle('isFav', isFav);
 };
 
-const toggleTop101CardIsFav = (id: string, isFav: boolean) => {
+export const toggleTop101CardIsFav = (id: string, isFav: boolean) => {
   const targetCard = Array.from(top101!.children)
     .find((el) => {
       const card = el as HTMLElement;
@@ -51,7 +51,7 @@ const toggleTop101CardIsFav = (id: string, isFav: boolean) => {
   targetCard?.querySelector('.row__fav')?.classList.toggle('isFav', isFav);
 };
 
-const handleSlideFavButtonClick = (event: Event) => {
+export const handleSlideFavButtonClick = (event: Event) => {
   const target = event.target as HTMLElement;
   if (!target.classList.contains('card__fav') && !target.classList.contains('row__fav')) return;
 
@@ -72,7 +72,7 @@ const handleSlideFavButtonClick = (event: Event) => {
   updateFavorites(target);
 };
 
-const alertFavObserver = new MutationObserver((mutationRecords) => {
+export const alertFavObserver = new MutationObserver((mutationRecords) => {
   mutationRecords.forEach((record) => {
     if (record.target.hasChildNodes()) {
       const favCount = favoritesWrapper.children.length;
@@ -85,9 +85,3 @@ const alertFavObserver = new MutationObserver((mutationRecords) => {
     }
   });
 });
-
-export {
-  reloadFavorites, updateFavorites, alertFavorites, alertFavObserver,
-  favoritesWrapper, createFavButton, handleSlideFavButtonClick,
-  toggleTop101CardIsFav,
-};
