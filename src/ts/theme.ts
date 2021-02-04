@@ -1,14 +1,7 @@
+import { headerTextSpans, themeSwitch, toggleElementClasses } from './dom_elements';
 import { storage } from './index';
 
-export const themeSwitch = document.querySelector('#themeSwitch') as HTMLInputElement;
-
 export const isDarkMode = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-export const toggleElementClasses = (selectorName: string, ...classNames: Array<string>) => {
-  classNames
-    .forEach((className) => document.querySelector(selectorName)?.classList
-      .toggle(className, !themeSwitch.checked));
-};
 
 export const onThemeSwitchClick = () => {
   toggleElementClasses('html', 'bg-dark');
@@ -33,10 +26,8 @@ export const applySystemTheme = () => {
   }
 };
 
-export const textSpans = document.querySelectorAll('h1 span:not(:nth-child(2))');
-
 export const onHeaderMouseover = () => {
-  Array.from(textSpans).forEach((el) => {
+  Array.from(headerTextSpans).forEach((el) => {
     const span = el as HTMLElement;
     span.classList.add('glitch');
     span.dataset.text = span.textContent!;
@@ -44,7 +35,7 @@ export const onHeaderMouseover = () => {
 };
 
 export const onHeaderMouseLeave = () => {
-  Array.from(textSpans).forEach((el) => {
+  Array.from(headerTextSpans).forEach((el) => {
     const span = el as HTMLElement;
     span.classList.remove('glitch');
   });

@@ -1,11 +1,11 @@
 import * as bootstrap from 'bootstrap';
-import { storage, createElement } from './index';
+import { storage } from './index';
 import { OMDBMovieData } from './API';
+import { createElement, movieModal } from './dom_elements';
 
-export const movieModal = document.getElementById('modal')!;
-const movieModalBS = new bootstrap.Modal(movieModal, { keyboard: true });
+const movieBootstrapModal = new bootstrap.Modal(movieModal, { keyboard: true });
 
-export const onLearnMoreClick = (event: Event) => {
+const onLearnMoreClick = (event: Event) => {
   const target = event.target as HTMLElement;
   const targetIsLearnMoreBtn = target.classList.contains('card__info-button') || target.classList.contains('row__info-button');
   if (!targetIsLearnMoreBtn) return;
@@ -43,5 +43,7 @@ export const onLearnMoreClick = (event: Event) => {
 
   modalBody.append(poster, plot, releaseDate, country,
     genre, director, actors, imdbRating, runtime, awards, boxOffice);
-  movieModalBS.toggle();
+  movieBootstrapModal.toggle();
 };
+
+export default onLearnMoreClick;

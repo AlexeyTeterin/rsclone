@@ -1,10 +1,10 @@
 import {
-  storage, createSlide, createRatingBadge, wait, swiper,
+  storage, wait, swiper,
 } from './index';
 import { SearchResult, OMDBMovieData } from './API';
-
-export const favoritesWrapper = document.querySelector('.swiper-wrapper.favorites')!;
-export const alertFavorites = document.querySelector('.alert.favorites');
+import {
+  createSlide, createRatingBadge, favoritesAlert, favoritesWrapper,
+} from './dom_elements';
 
 export const loadFavorites = () => {
   storage.load();
@@ -26,16 +26,16 @@ export const updateFavorites = (target: HTMLElement) => {
   } else loadFavorites();
 };
 
-export const alertFavObserver = new MutationObserver((mutationRecords) => {
+export const favoritesObserver = new MutationObserver((mutationRecords) => {
   mutationRecords.forEach((record) => {
     if (record.target.hasChildNodes()) {
       const favCount = favoritesWrapper.children.length;
-      alertFavorites!.innerHTML = `You have <b>${favCount}</b> favorite movies:`;
-      if (favCount === 1) alertFavorites!.innerHTML = alertFavorites!.innerHTML.replace('movies', 'movie');
-      alertFavorites?.classList.add('top');
+      favoritesAlert!.innerHTML = `You have <b>${favCount}</b> favorite movies:`;
+      if (favCount === 1) favoritesAlert!.innerHTML = favoritesAlert!.innerHTML.replace('movies', 'movie');
+      favoritesAlert?.classList.add('top');
     } else {
-      alertFavorites!.innerHTML = 'Your favorite movies will be shown here';
-      alertFavorites?.classList.remove('top');
+      favoritesAlert!.innerHTML = 'Your favorite movies will be shown here';
+      favoritesAlert?.classList.remove('top');
     }
   });
 });

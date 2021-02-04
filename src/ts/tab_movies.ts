@@ -1,7 +1,8 @@
 import {
-  createSlide, storage, createRatingBadge, swiper,
+  storage, swiper,
 } from '.';
 import { getOMDBdata, getTMDBdata, getUpcomingTMDB } from './API';
+import { createSlide, createRatingBadge } from './dom_elements';
 
 const loadUpcomingMovies = async () => {
   getUpcomingTMDB()

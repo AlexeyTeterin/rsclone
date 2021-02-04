@@ -45,7 +45,7 @@ export async function getTMDBdata(id: string) {
   return data;
 }
 
-export type RatingsArray = {
+export type Ratings = {
   Source: string,
   Value: string,
 }
@@ -55,7 +55,7 @@ export type SearchResult = {
   Year: string;
   Poster: string;
   imdbID: string;
-  Ratings: Array<RatingsArray>;
+  Ratings: Array<Ratings>;
 }
 
 export type OMDBMovieData = {
@@ -72,7 +72,7 @@ export type OMDBMovieData = {
   Poster: string;
   Production: string;
   Rated: string;
-  Ratings: Array<RatingsArray>;
+  Ratings: Array<Ratings>;
   Released: string;
   Response: string;
   Runtime: string;

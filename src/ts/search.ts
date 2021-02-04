@@ -1,13 +1,12 @@
 import {
-  createSlide, swiper,
-  state, wait, createRatingBadge, storage,
+  swiper, state, wait, storage,
 } from './index';
 import {
   getOMDBdata, OMDBSearchResponce, searchMoviesOMDB, SearchResult,
 } from './API';
-
-export const searchInput = <HTMLInputElement>document.querySelector('#movie-search');
-export const searchBtn = document.querySelector('.search-button')!;
+import {
+  createRatingBadge, createSlide, searchInput, searchAlert,
+} from './dom_elements';
 
 export const loadFoundSlides = (res: any) => {
   res.Search.forEach(async (movie: SearchResult) => {
@@ -21,17 +20,16 @@ export const loadFoundSlides = (res: any) => {
 
 const setAlertMessage = (res: OMDBSearchResponce) => {
   const request = searchInput.value;
-  const alert = document.querySelector('#movies>.alert')!;
-  alert.classList.remove('alert-success', 'alert-danger');
+  searchAlert.classList.remove('alert-success', 'alert-danger');
   const { totalResults } = res;
   if (!totalResults) {
-    alert.textContent = res.Error;
-    alert.classList.add('alert-danger');
+    searchAlert.textContent = res.Error;
+    searchAlert.classList.add('alert-danger');
   } else {
-    alert.textContent = `${totalResults} movies found on request '${request}'`;
-    alert.classList.add('alert-success');
+    searchAlert.textContent = `${totalResults} movies found on request '${request}'`;
+    searchAlert.classList.add('alert-success');
   }
-  alert.classList.remove('visually-hidden');
+  searchAlert.classList.remove('visually-hidden');
 };
 
 export const onSearchButtonClick = () => {

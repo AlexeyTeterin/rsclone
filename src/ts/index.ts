@@ -6,24 +6,24 @@ import '../css/keyboard.css';
 
 import Swiper from 'swiper/bundle';
 import swiperParams from './swiperParams';
-import { onTabKeypress, runSettingsModalListeners, settingsButton } from './modal_settings';
+import { onTabKeypress, runSettingsModalListeners } from './modal_settings';
 import Storage from './Storage';
 import {
   applySystemTheme, isDarkMode, runHeaderAnimationListeners,
-  themeSwitch, onThemeSwitchClick,
+  onThemeSwitchClick,
 } from './theme';
-import { onLearnMoreClick } from './modal_movieInfo';
-import { top101, top101observer } from './tab_top101';
-import {
-  onSearchButtonClick, searchInput, onActiveIndexChange, searchBtn,
-} from './search';
-import { loadFavorites, favoritesWrapper, alertFavObserver } from './tab_favorites';
-import { onMenuElementClick, menu } from './nav';
+import onLearnMoreClick from './modal_movieInfo';
+import { top101observer } from './tab_top101';
+import { onSearchButtonClick, onActiveIndexChange } from './search';
+import { loadFavorites, favoritesObserver } from './tab_favorites';
+import onMenuElementClick from './nav';
 import Keyboard from '../js/keyboard';
-import {
-  createRatingBadge, createSlide, onRatingBadgeClick, onFavButtonClick,
-} from './movieSlide';
+import { onRatingBadgeClick, onFavButtonClick } from './movieSlide';
 import loadUpcomingMovies from './tab_movies';
+import {
+  keyboardButton, top101, settingsButton, menu, searchBtn,
+  searchInput, themeSwitch, favoritesWrapper,
+} from './dom_elements';
 
 const storage = new Storage();
 const state = {
@@ -36,7 +36,6 @@ const swiper = {
   favorites: new Swiper('.swiper-container.favorites', swiperParams),
 };
 const keyboard = new Keyboard();
-const keyboardButton = document.querySelector('.fa-keyboard')!;
 
 const wait = (ms: number) => new Promise((resolve: any) => setTimeout(() => resolve(), ms));
 
@@ -61,12 +60,6 @@ const init = () => {
   searchInput.focus();
 
   wait(1000).then(() => showControls());
-};
-
-export const createElement = (tag: string, ...classNames: Array<string>) => {
-  const element = document.createElement(tag);
-  classNames.forEach((className) => element.classList.add(className));
-  return element;
 };
 
 const onEnterKeypress = (event: KeyboardEvent) => {
@@ -113,10 +106,10 @@ document.querySelector('#enter')!.addEventListener('click', () => searchBtn.disp
 swiper.movies.on('activeIndexChange', onActiveIndexChange);
 
 // mutation observers
-alertFavObserver.observe(favoritesWrapper as Node, { childList: true });
+favoritesObserver.observe(favoritesWrapper as Node, { childList: true });
 top101observer.observe(top101 as Node, { childList: true, attributes: true });
 
 export {
   state, storage, swiper, settingsButton, onActiveIndexChange,
-  loadFavorites, wait, createSlide, createRatingBadge,
+  loadFavorites, wait,
 };

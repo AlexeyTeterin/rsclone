@@ -7,10 +7,9 @@ import {
 } from './index';
 import { applySystemTheme } from './theme';
 import { onActiveIndexChange } from './search';
+import { settingsButton, settingsModal } from './dom_elements';
 
-export const settingsButton = document.querySelector('#settings')!;
-export const settingsModal = document.querySelector('#settingsModal')!;
-const settingsModalBS = new bootstrap.Modal(settingsModal, {});
+const settingsBootstrapModal = new bootstrap.Modal(settingsModal, {});
 let pagination = swiperParams.pagination as PaginationOptions;
 
 export const onSettingsButtonClick = () => {
@@ -46,7 +45,7 @@ export const onSettingsButtonClick = () => {
   if (mouseControl) mouseControlToggle.checked = true;
   if (darkModeAuto) darkModeControlToggle.checked = true;
 
-  settingsModalBS.toggle();
+  settingsBootstrapModal.toggle();
 };
 
 export const updateMoviesSwiper = () => {
