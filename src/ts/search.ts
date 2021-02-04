@@ -1,6 +1,6 @@
 import {
   createSlide, swiper,
-  setAlertMessage, state, wait, addRatingToSlide, storage,
+  setAlertMessage, state, wait, createRatingBadge, storage,
 } from './index';
 import { getOMDBdata, searchMoviesOMDB, SearchResult } from './API';
 
@@ -13,7 +13,7 @@ export const loadFoundSlides = (res: any) => {
     const slide = createSlide(omdb);
     swiper.movies.appendSlide(slide);
     storage.saveMovie(omdb);
-    addRatingToSlide(slide, omdb);
+    createRatingBadge(slide, omdb);
   });
 };
 

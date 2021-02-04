@@ -242,6 +242,10 @@ main {
     &.active {
       opacity: 1;
     }
+    
+    @include max_400() {
+      visibility: hidden;
+    }
   }
 
   .search-button {

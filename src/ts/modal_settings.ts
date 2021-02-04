@@ -3,7 +3,7 @@ import Swiper, { SwiperOptions } from 'swiper/bundle';
 import { PaginationOptions } from 'swiper/types/components/pagination';
 import swiperParams from './swiperParams';
 import {
-  storage, swiper, reloadFavorites, handleNextSearchPageLoad,
+  storage, swiper, handleNextSearchPageLoad, loadFavorites,
 } from './index';
 import { applySystemTheme } from './theme';
 
@@ -70,7 +70,7 @@ export const toggleSwiperEffect = (event: Event) => {
 
   updateMoviesSwiper();
   updateFavoritesSwiper();
-  reloadFavorites();
+  loadFavorites();
 
   storage.effect = targetEffect!;
   storage.save();
@@ -107,6 +107,7 @@ export const toggleSwiperPaginationType = (event: Event) => {
 
 export const handleTabKeyress = (event: KeyboardEvent) => {
   if (event.key !== 'Tab') return;
+  if (!swiperParams.keyboard) return;
   const nav = document.querySelector('#nav')!.children;
   const activeTabIndex = [].findIndex.call(nav, (tab: HTMLElement) => tab.classList.contains('active'));
   const lastTabActive = nav.length - activeTabIndex === 1;
@@ -121,7 +122,7 @@ export const toggleKeyboardControl = (event: Event) => {
   swiperParams.keyboard = target.checked;
   updateMoviesSwiper();
   updateFavoritesSwiper();
-  reloadFavorites();
+  loadFavorites();
 
   if (target.checked) document.addEventListener('keydown', handleTabKeyress);
   if (!target.checked) document.removeEventListener('keydown', handleTabKeyress);
@@ -136,7 +137,7 @@ export const toggleMouseControl = (event: Event) => {
   swiperParams.mousewheel = target.checked;
   updateMoviesSwiper();
   updateFavoritesSwiper();
-  reloadFavorites();
+  loadFavorites();
 
   storage.mouseControl = target.checked;
   storage.save();
@@ -149,4 +150,13 @@ export const toggleDarkModeAuto = (event: Event) => {
   storage.save();
 
   if (target.checked) applySystemTheme();
+};
+
+export const runSettingsModalListeners = () => {
+  settingsButton.addEventListener('click', showSettingsModal);
+  settingsModal.querySelector('#effectSelect')!.addEventListener('change', toggleSwiperEffect);
+  settingsModal.querySelector('#paginationSelect')!.addEventListener('change', toggleSwiperPaginationType);
+  settingsModal.querySelector('#keyboardControl')!.addEventListener('change', toggleKeyboardControl);
+  settingsModal.querySelector('#mouseControl')!.addEventListener('change', toggleMouseControl);
+  settingsModal.querySelector('#darkModeControl')!.addEventListener('change', toggleDarkModeAuto);
 };

@@ -1,9 +1,8 @@
-import { createFavButton } from './tab_favorites';
-import { state, storage } from './index';
-import { createElement } from './creators';
+import { state, storage, createElement } from './index';
 import {
   getOMDBdata, getTMDBdata, getTopRatedTMDB, OMDBMovieData,
 } from './API';
+import { createFavButton } from './movieSlide';
 
 export const top101 = document.querySelector('#top101')!;
 

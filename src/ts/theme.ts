@@ -49,3 +49,8 @@ export const removeHeaderAnimation = () => {
     span.classList.remove('glitch');
   });
 };
+
+export const runHeaderAnimationListeners = () => {
+  document.querySelector('h1')!.addEventListener('mouseover', animateHeader);
+  document.querySelector('h1')!.addEventListener('mouseleave', removeHeaderAnimation);
+};
