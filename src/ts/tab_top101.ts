@@ -1,44 +1,8 @@
-import { state, storage } from './index';
+import { state } from './index';
 import {
-  getOMDBdata, getTMDBdata, getTopRatedTMDB, OMDBMovieData,
+  getTopRatedTMDB,
 } from './API';
-import { top101, createElement, createFavButton } from './dom_elements';
-
-export const createTop101Card = async (movie: any) => {
-  const rowsNumber = top101!.children.length;
-  if (rowsNumber === 101) return;
-
-  const row = createElement('div', 'top101-row');
-  const position = createElement('div', 'row__position');
-  const title = createElement('div', 'row__title');
-  const poster = createElement('div', 'row__poster');
-  const rating = createElement('div', 'row__rating', 'badge', 'bg-warning', 'text-dark');
-  const infoButton = createElement('button', 'row__info-button', 'btn', 'btn-warning');
-
-  position.textContent = `${top101?.children.length! + 1}`;
-  title.textContent = `${movie.title}`;
-  infoButton.textContent = 'Learn more';
-
-  row.append(position, poster, title, infoButton);
-  top101?.append(row);
-
-  const tmdbData = await getTMDBdata(movie.id);
-  const omdbData: OMDBMovieData = await getOMDBdata(tmdbData.imdb_id);
-  storage.saveMovie(omdbData);
-  const favButton = createFavButton(omdbData, 'row__fav');
-  poster.append(rating, favButton);
-  row.dataset.id = omdbData.imdbID;
-  row.dataset.rating = omdbData.imdbRating;
-  infoButton.dataset.id = omdbData.imdbID;
-  title.textContent += `, ${omdbData.Year}`;
-  rating.textContent = `${omdbData.imdbRating}`;
-  poster.style.setProperty('background-image', `url(${omdbData.Poster})`);
-
-  if (rowsNumber > 95) {
-    row.classList.add('ready');
-    top101.classList.add('ready');
-  }
-};
+import { top101, createTop101Card } from './dom_elements';
 
 export const sortTop101 = () => {
   const rows = Array.from(top101.children);
