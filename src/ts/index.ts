@@ -41,12 +41,12 @@ const keyboardButton = document.querySelector('.fa-keyboard')!;
 
 const wait = (ms: number) => new Promise((resolve: any) => setTimeout(() => resolve(), ms));
 
-const showControls = () => {
-  settingsButton.classList.add('visible');
-  themeSwitch.parentElement?.classList.add('visible');
-};
-
 const init = () => {
+  const showControls = () => {
+    settingsButton.classList.add('visible');
+    themeSwitch.parentElement?.classList.add('visible');
+  };
+
   if (!localStorage.VideoBox) storage.save();
   else storage.load();
 
