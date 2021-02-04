@@ -7,22 +7,22 @@ import '../css/keyboard.css';
 import Swiper from 'swiper/bundle';
 import swiperParams from './swiperParams';
 import { OMDBSearchResponce } from './API';
-import { handleTabKeyress, runSettingsModalListeners, settingsButton } from './modal_settings';
+import { onTabKeypress, runSettingsModalListeners, settingsButton } from './modal_settings';
 import Storage from './Storage';
 import {
   applySystemTheme, isDarkMode, runHeaderAnimationListeners,
-  themeSwitch, toggleTheme,
+  themeSwitch, onThemeSwitchClick,
 } from './theme';
-import { showMovieModal } from './modal_movieInfo';
+import { onLearnMoreClick } from './modal_movieInfo';
 import { top101, top101observer } from './tab_top101';
 import {
-  handleSearchClick, searchInput, handleNextSearchPageLoad, searchBtn,
+  onSearchButtonClick, searchInput, onActiveIndexChange, searchBtn,
 } from './search';
 import { loadFavorites, favoritesWrapper, alertFavObserver } from './tab_favorites';
-import { handleMenuClick, menu } from './nav';
+import { onMenuElementClick, menu } from './nav';
 import Keyboard from '../js/keyboard';
 import {
-  createRatingBadge, createSlide, handleRatingBadgeClick, handleSlideFavButtonClick,
+  createRatingBadge, createSlide, onRatingBadgeClick, onFavButtonClick,
 } from './movieSlide';
 import loadUpcomingMovies from './tab_movies';
 
@@ -57,7 +57,7 @@ const init = () => {
 
   if (storage.darkModeAuto && isDarkMode()) themeSwitch.checked = false;
   if ((!storage.darkModeAuto && storage.darkMode)) themeSwitch.checked = false;
-  toggleTheme();
+  onThemeSwitchClick();
 
   searchInput.focus();
 
@@ -85,14 +85,14 @@ const setAlertMessage = (res: OMDBSearchResponce) => {
   alert.classList.remove('visually-hidden');
 };
 
-const handleEnterPress = (event: KeyboardEvent) => {
+const onEnterKeypress = (event: KeyboardEvent) => {
   if (event.key !== 'Enter') return;
   searchBtn.dispatchEvent(new Event('click', { bubbles: true }));
 };
 
-const preventTabPress = (event: KeyboardEvent) => {
-  if (event.key !== 'Tab') return;
-  event?.preventDefault();
+const onKeyboardButtonClick = () => {
+  keyboardButton.classList.toggle('active');
+  keyboard.toggleKeyboard();
 };
 
 init();
@@ -111,34 +111,28 @@ window.addEventListener('resize', () => {
 });
 
 // document listeners with event delegation
-document.addEventListener('click', showMovieModal);
-document.addEventListener('click', handleSlideFavButtonClick);
-document.addEventListener('click', handleRatingBadgeClick);
-document.addEventListener('keydown', preventTabPress);
-document.addEventListener('keydown', handleTabKeyress);
+document.addEventListener('click', onLearnMoreClick);
+document.addEventListener('click', onFavButtonClick);
+document.addEventListener('click', onRatingBadgeClick);
+document.addEventListener('keydown', onTabKeypress);
 
 // element's listeners
-themeSwitch.addEventListener('click', toggleTheme);
-menu.addEventListener('click', handleMenuClick);
-searchInput.addEventListener('keypress', handleEnterPress);
-searchBtn.addEventListener('click', handleSearchClick);
+themeSwitch.addEventListener('click', onThemeSwitchClick);
+menu.addEventListener('click', onMenuElementClick);
+searchInput.addEventListener('keypress', onEnterKeypress);
+searchBtn.addEventListener('click', onSearchButtonClick);
 runSettingsModalListeners();
 runHeaderAnimationListeners();
-keyboardButton.addEventListener('click', () => {
-  keyboardButton.classList.toggle('active');
-  keyboard.toggleKeyboard();
-});
-document.querySelector('#off')!.addEventListener('click', () => {
-  keyboardButton.classList.remove('active');
-});
+keyboardButton.addEventListener('click', onKeyboardButtonClick);
+document.querySelector('#off')!.addEventListener('click', () => keyboardButton.classList.remove('active'));
 document.querySelector('#enter')!.addEventListener('click', () => searchBtn.dispatchEvent(new Event('click')));
-swiper.movies.on('activeIndexChange', handleNextSearchPageLoad);
+swiper.movies.on('activeIndexChange', onActiveIndexChange);
 
 // mutation observers
 alertFavObserver.observe(favoritesWrapper as Node, { childList: true });
 top101observer.observe(top101 as Node, { childList: true, attributes: true });
 
 export {
-  state, storage, swiper, settingsButton, handleNextSearchPageLoad,
+  state, storage, swiper, settingsButton, onActiveIndexChange,
   loadFavorites, wait, setAlertMessage, createSlide, createRatingBadge,
 };

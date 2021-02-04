@@ -60,7 +60,7 @@ export const toggleTop101CardIsFav = (id: string, isFav: boolean) => {
   targetCard?.querySelector('.row__fav')?.classList.toggle('isFav', isFav);
 };
 
-export const handleSlideFavButtonClick = (event: Event) => {
+export const onFavButtonClick = (event: Event) => {
   const target = event.target as HTMLElement;
   if (!target.classList.contains('card__fav') && !target.classList.contains('row__fav')) return;
 
@@ -88,7 +88,7 @@ export const createRatingBadge = (card: HTMLElement, data: OMDBMovieData) => {
   cardRating.textContent = imdbRating ? `${imdbRating.Value.slice(0, -3)}` : 'n/a';
 };
 
-export const handleRatingBadgeClick = (event: Event) => {
+export const onRatingBadgeClick = (event: Event) => {
   const target = event.target as HTMLLinkElement;
   let id: string;
   const openMovieOnIMDB = () => window.open(`https://www.imdb.com/title/${id}/`);

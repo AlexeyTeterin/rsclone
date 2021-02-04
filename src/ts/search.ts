@@ -17,7 +17,7 @@ export const loadFoundSlides = (res: any) => {
   });
 };
 
-export const handleSearchClick = () => {
+export const onSearchButtonClick = () => {
   const toggleSearchSpinner = () => {
     const spinner = document.querySelector('button>span.spinner-border');
     const searchText = document.querySelector('button>span.search-text');
@@ -56,7 +56,7 @@ export const loadNextSearchPage = () => {
     });
 };
 
-export const handleNextSearchPageLoad = () => {
+export const onActiveIndexChange = () => {
   const { activeIndex, slides } = swiper.movies;
   if (slides.length - activeIndex === 7 && state.request) {
     state.page += 1;

@@ -5,7 +5,7 @@ import { OMDBMovieData } from './API';
 export const movieModal = document.getElementById('modal')!;
 const movieModalBS = new bootstrap.Modal(movieModal, { keyboard: true });
 
-export const showMovieModal = (event: Event) => {
+export const onLearnMoreClick = (event: Event) => {
   const target = event.target as HTMLElement;
   const targetIsLearnMoreBtn = target.classList.contains('card__info-button') || target.classList.contains('row__info-button');
   if (!targetIsLearnMoreBtn) return;

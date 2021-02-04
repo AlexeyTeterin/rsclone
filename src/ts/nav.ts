@@ -12,7 +12,7 @@ const animateTabChange = (current: Element | undefined, target: Element | undefi
   wait(200).then(() => target?.classList.add('show'));
 };
 
-export const handleMenuClick = (event: Event) => {
+export const onMenuElementClick = (event: Event) => {
   const target = event.target! as HTMLElement;
   if (!target.classList.contains('nav-link')) return;
   const targetTab = tabs
