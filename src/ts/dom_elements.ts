@@ -1,7 +1,5 @@
 import { storage } from '.';
-import {
-  SearchResult, OMDBMovieData, Ratings, getTMDBdata,
-} from './API';
+import { SearchResult, OMDBMovieData, Ratings } from './API';
 
 const keyboardButton = document.querySelector('.fa-keyboard')!;
 const top101 = document.querySelector('#top101')!;
@@ -79,46 +77,9 @@ const createSlide = (data: SearchResult) => {
   return slide;
 };
 
-const createTop101Card = async (movie: any) => {
-  const rowsNumber = top101!.children.length;
-  if (rowsNumber === 101) return;
-
-  const row = createElement('div', 'top101-row');
-  const position = createElement('div', 'row__position');
-  const title = createElement('div', 'row__title');
-  const poster = createElement('div', 'row__poster');
-  const rating = createElement('div', 'row__rating', 'badge', 'bg-warning', 'text-dark');
-  const infoButton = createElement('button', 'row__info-button', 'btn', 'btn-warning');
-
-  position.textContent = `${top101?.children.length! + 1}`;
-  title.textContent = `${movie.title}`;
-  infoButton.textContent = 'Learn more';
-
-  row.append(position, poster, title, infoButton);
-  top101?.append(row);
-
-  const tmdbData = await getTMDBdata(movie.id);
-  const omdbData: OMDBMovieData = await getTMDBdata(tmdbData.imdb_id);
-  storage.saveMovie(omdbData);
-  const favButton = createFavButton(omdbData, 'row__fav');
-  poster.append(rating, favButton);
-  row.dataset.id = omdbData.imdbID;
-  row.dataset.rating = omdbData.imdbRating;
-  infoButton.dataset.id = omdbData.imdbID;
-  title.textContent += `, ${omdbData.Year}`;
-  rating.textContent = `${omdbData.imdbRating}`;
-  poster.style.setProperty('background-image', `url(${omdbData.Poster})`);
-
-  if (rowsNumber > 95) {
-    row.classList.add('ready');
-    top101.classList.add('ready');
-  }
-};
-
 export {
   keyboardButton, top101, settingsButton, settingsModal,
   menu, tabs, themeSwitch, headerTextSpans, searchBtn,
   searchInput, movieModal, searchAlert, favoritesAlert, favoritesWrapper,
-  createFavButton, createRatingBadge, createElement, createSlide,
-  toggleElementClasses, createTop101Card,
+  createFavButton, createRatingBadge, createElement, createSlide, toggleElementClasses,
 };
