@@ -1,8 +1,9 @@
 import {
-  storage, createSlide, addRatingToSlide, wait, swiper, createElement,
+  storage, createSlide, addRatingToSlide, wait, swiper,
 } from './index';
 import { SearchResult, OMDBMovieData } from './API';
 import { top101 } from './tab_top101';
+import { createElement } from './creators';
 
 export const favoritesWrapper = document.querySelector('.swiper-wrapper.favorites')!;
 export const alertFavorites = document.querySelector('.alert.favorites');

@@ -1,5 +1,6 @@
 import { createFavButton } from './tab_favorites';
-import { createElement, state, storage } from './index';
+import { state, storage } from './index';
+import { createElement } from './creators';
 import {
   getOMDBdata, getTMDBdata, getTopRatedTMDB, OMDBMovieData,
 } from './API';

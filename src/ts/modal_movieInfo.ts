@@ -1,6 +1,7 @@
 import * as bootstrap from 'bootstrap';
-import { storage, createElement } from './index';
+import { storage } from './index';
 import { OMDBMovieData } from './API';
+import { createElement } from './creators';
 
 export const movieModal = document.getElementById('modal')!;
 const movieModalBS = new bootstrap.Modal(movieModal, { keyboard: true });
