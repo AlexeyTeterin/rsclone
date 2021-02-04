@@ -1,9 +1,11 @@
 import 'normalize.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Swiper from 'swiper/bundle';
-import swiperParams from './swiperParams';
 import 'swiper/swiper-bundle.css';
 import '../css/style.css';
+import '../css/keyboard.css';
+
+import Swiper from 'swiper/bundle';
+import swiperParams from './swiperParams';
 import { OMDBSearchResponce } from './API';
 import { handleTabKeyress, runSettingsModalListeners, settingsButton } from './modal_settings';
 import Storage from './Storage';
@@ -19,7 +21,6 @@ import {
 import { loadFavorites, favoritesWrapper, alertFavObserver } from './tab_favorites';
 import { handleMenuClick, menu } from './nav';
 import Keyboard from '../js/keyboard';
-import '../css/keyboard.css';
 import {
   createRatingBadge, createSlide, handleRatingBadgeClick, handleSlideFavButtonClick,
 } from './movieSlide';
