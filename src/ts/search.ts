@@ -1,8 +1,10 @@
 import {
   createSlide, swiper,
-  setAlertMessage, state, wait, createRatingBadge, storage,
+  state, wait, createRatingBadge, storage,
 } from './index';
-import { getOMDBdata, searchMoviesOMDB, SearchResult } from './API';
+import {
+  getOMDBdata, OMDBSearchResponce, searchMoviesOMDB, SearchResult,
+} from './API';
 
 export const searchInput = <HTMLInputElement>document.querySelector('#movie-search');
 export const searchBtn = document.querySelector('.search-button')!;
@@ -15,6 +17,21 @@ export const loadFoundSlides = (res: any) => {
     storage.saveMovie(omdb);
     createRatingBadge(slide, omdb);
   });
+};
+
+const setAlertMessage = (res: OMDBSearchResponce) => {
+  const request = searchInput.value;
+  const alert = document.querySelector('#movies>.alert')!;
+  alert.classList.remove('alert-success', 'alert-danger');
+  const { totalResults } = res;
+  if (!totalResults) {
+    alert.textContent = res.Error;
+    alert.classList.add('alert-danger');
+  } else {
+    alert.textContent = `${totalResults} movies found on request '${request}'`;
+    alert.classList.add('alert-success');
+  }
+  alert.classList.remove('visually-hidden');
 };
 
 export const onSearchButtonClick = () => {

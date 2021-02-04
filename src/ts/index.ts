@@ -6,7 +6,6 @@ import '../css/keyboard.css';
 
 import Swiper from 'swiper/bundle';
 import swiperParams from './swiperParams';
-import { OMDBSearchResponce } from './API';
 import { onTabKeypress, runSettingsModalListeners, settingsButton } from './modal_settings';
 import Storage from './Storage';
 import {
@@ -70,21 +69,6 @@ export const createElement = (tag: string, ...classNames: Array<string>) => {
   return element;
 };
 
-const setAlertMessage = (res: OMDBSearchResponce) => {
-  const request = searchInput.value;
-  const alert = document.querySelector('#movies>.alert')!;
-  alert.classList.remove('alert-success', 'alert-danger');
-  const { totalResults } = res;
-  if (!totalResults) {
-    alert.textContent = res.Error;
-    alert.classList.add('alert-danger');
-  } else {
-    alert.textContent = `${totalResults} movies found on request '${request}'`;
-    alert.classList.add('alert-success');
-  }
-  alert.classList.remove('visually-hidden');
-};
-
 const onEnterKeypress = (event: KeyboardEvent) => {
   if (event.key !== 'Enter') return;
   searchBtn.dispatchEvent(new Event('click', { bubbles: true }));
@@ -134,5 +118,5 @@ top101observer.observe(top101 as Node, { childList: true, attributes: true });
 
 export {
   state, storage, swiper, settingsButton, onActiveIndexChange,
-  loadFavorites, wait, setAlertMessage, createSlide, createRatingBadge,
+  loadFavorites, wait, createSlide, createRatingBadge,
 };
