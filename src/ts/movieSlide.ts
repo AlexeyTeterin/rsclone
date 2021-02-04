@@ -1,6 +1,6 @@
-import { storage, swiper } from './index';
 import { updateFavorites } from './tab_favorites';
 import { top101 } from './dom_elements';
+import { storage, swiper } from './index';
 
 const toggleMovieCardIsFav = (id: string, isFav: boolean) => {
   const targetCard = Array.from(swiper.movies.slides)

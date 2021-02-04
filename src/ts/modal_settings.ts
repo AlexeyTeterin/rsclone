@@ -2,12 +2,10 @@ import * as bootstrap from 'bootstrap';
 import Swiper, { SwiperOptions } from 'swiper/bundle';
 import { PaginationOptions } from 'swiper/types/components/pagination';
 import swiperParams from './swiperParams';
-import {
-  storage, swiper, loadFavorites,
-} from './index';
 import { applySystemTheme } from './theme';
 import { onActiveIndexChange } from './search';
 import { settingsButton, settingsModal } from './dom_elements';
+import { storage, swiper, loadFavorites } from './index';
 
 const settingsBootstrapModal = new bootstrap.Modal(settingsModal, {});
 let pagination = swiperParams.pagination as PaginationOptions;

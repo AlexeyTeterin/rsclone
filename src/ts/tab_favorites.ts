@@ -1,6 +1,4 @@
-import {
-  storage, wait, swiper,
-} from './index';
+import { storage, wait, swiper } from './index';
 import { SearchResult, OMDBMovieData } from './API';
 import {
   createSlide, createRatingBadge, favoritesAlert, favoritesWrapper,

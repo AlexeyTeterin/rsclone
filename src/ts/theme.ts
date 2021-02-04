@@ -1,5 +1,5 @@
-import { headerTextSpans, themeSwitch, toggleElementClasses } from './dom_elements';
 import { storage } from './index';
+import { headerTextSpans, themeSwitch, toggleElementClasses } from './dom_elements';
 
 export const isDarkMode = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 

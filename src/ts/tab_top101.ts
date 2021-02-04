@@ -1,7 +1,5 @@
 import { state } from './index';
-import {
-  getTopRatedTMDB,
-} from './API';
+import { getTopRatedTMDB } from './API';
 import { top101, createTop101Card } from './dom_elements';
 
 export const sortTop101 = () => {

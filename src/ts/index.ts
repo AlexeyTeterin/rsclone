@@ -6,20 +6,19 @@ import '../css/keyboard.css';
 
 import Swiper from 'swiper/bundle';
 import swiperParams from './swiperParams';
-import { onTabKeypress, runSettingsModalListeners } from './modal_settings';
+import Keyboard from '../js/keyboard';
 import Storage from './Storage';
-import {
-  applySystemTheme, isDarkMode, runHeaderAnimationListeners,
-  onThemeSwitchClick,
-} from './theme';
+import loadUpcomingMovies from './tab_movies';
 import onLearnMoreClick from './modal_movieInfo';
+import onMenuElementClick from './menu';
 import { top101observer } from './tab_top101';
+import { onTabKeypress, runSettingsModalListeners } from './modal_settings';
 import { onSearchButtonClick, onActiveIndexChange } from './search';
 import { loadFavorites, favoritesObserver } from './tab_favorites';
-import onMenuElementClick from './menu';
-import Keyboard from '../js/keyboard';
 import { onRatingBadgeClick, onFavButtonClick } from './movieSlide';
-import loadUpcomingMovies from './tab_movies';
+import {
+  applySystemTheme, isDarkMode, runHeaderAnimationListeners, onThemeSwitchClick,
+} from './theme';
 import {
   keyboardButton, top101, settingsButton, menu, searchBtn,
   searchInput, themeSwitch, favoritesWrapper,
@@ -110,6 +109,6 @@ favoritesObserver.observe(favoritesWrapper as Node, { childList: true });
 top101observer.observe(top101 as Node, { childList: true, attributes: true });
 
 export {
-  state, storage, swiper, settingsButton, onActiveIndexChange,
-  loadFavorites, wait,
+  state, storage, swiper, settingsButton,
+  onActiveIndexChange, loadFavorites, wait,
 };
