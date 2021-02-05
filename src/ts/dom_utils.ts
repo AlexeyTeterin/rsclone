@@ -1,7 +1,8 @@
 import { updateFavorites } from './utils';
 import { storage, swiper, keyboard } from '.';
 import {
-  moviesTab, searchBtn, themeSwitch, top101Tab, keyboardIcon, keyboardOffButton,
+  moviesTab, searchBtn, themeSwitch, top101Tab, keyboardIcon,
+  keyboardOffButton, keyboardEnterButton,
 } from './dom_elements';
 import {
   SearchResult, OMDBMovieData, Ratings, getTMDBdata, getOMDBdata,
@@ -165,26 +166,24 @@ const onKeyboardOffClick = () => {
   keyboardOffButton().removeEventListener('click', onKeyboardOffClick);
 };
 
+const onKeyboardEnterClick = () => {
+  searchBtn.dispatchEvent(new Event('click'));
+};
+
 const onKeyboardIconClick = () => {
   const isKeyboardActive = keyboardIcon.classList.contains('active');
 
   if (isKeyboardActive) {
     keyboard.hideKeyboard();
     keyboardOffButton().removeEventListener('click', onKeyboardOffClick);
+    keyboardEnterButton().removeEventListener('click', onKeyboardEnterClick);
   } else {
     keyboard.showKeyboard();
     keyboardOffButton().addEventListener('click', onKeyboardOffClick);
+    keyboardEnterButton().addEventListener('click', onKeyboardEnterClick);
   }
 
   keyboardIcon.classList.toggle('active');
-};
-
-const onKeyboardEnterClick = (event: Event) => {
-  const targetEl = event.target as HTMLElement;
-
-  if (targetEl.id !== 'enter') return;
-
-  searchBtn.dispatchEvent(new Event('click'));
 };
 
 const onWindowResize = () => {

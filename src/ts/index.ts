@@ -23,7 +23,7 @@ import {
   searchInput, themeSwitch, favoritesWrapper, h1,
 } from './dom_elements';
 import {
-  onFavButtonClick, onKeyboardIconClick, onKeyboardEnterClick,
+  onFavButtonClick, onKeyboardIconClick,
   onRatingBadgeClick, onWindowResize, showMoviesTab,
 } from './dom_utils';
 
@@ -71,7 +71,6 @@ window.addEventListener('resize', onWindowResize);
 document.addEventListener('click', onLearnMoreClick);
 document.addEventListener('click', onFavButtonClick);
 document.addEventListener('click', onRatingBadgeClick);
-document.addEventListener('click', onKeyboardEnterClick);
 document.addEventListener('keydown', onTabKeypress);
 
 // element's listeners
