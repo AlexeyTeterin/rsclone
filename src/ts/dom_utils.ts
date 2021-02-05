@@ -1,7 +1,7 @@
 import { updateFavorites } from './utils';
 import { storage, swiper, keyboard } from '.';
 import {
-  keyboardButton, moviesTab, themeSwitch, top101Tab,
+  moviesTab, searchBtn, themeSwitch, top101Tab, keyboardIcon, keyboardOffButton,
 } from './dom_elements';
 import {
   SearchResult, OMDBMovieData, Ratings, getTMDBdata, getOMDBdata,
@@ -160,15 +160,37 @@ const onRatingBadgeClick = (event: Event) => {
   }
 };
 
-const onKeyboardButtonClick = () => {
-  keyboardButton.classList.toggle('active');
-  keyboard.toggleKeyboard();
+const onKeyboardOffClick = () => {
+  keyboardIcon.classList.remove('active');
+  keyboardOffButton().removeEventListener('click', onKeyboardOffClick);
+};
+
+const onKeyboardIconClick = () => {
+  const isKeyboardActive = keyboardIcon.classList.contains('active');
+
+  if (isKeyboardActive) {
+    keyboard.hideKeyboard();
+    keyboardOffButton().removeEventListener('click', onKeyboardOffClick);
+  } else {
+    keyboard.showKeyboard();
+    keyboardOffButton().addEventListener('click', onKeyboardOffClick);
+  }
+
+  keyboardIcon.classList.toggle('active');
+};
+
+const onKeyboardEnterClick = (event: Event) => {
+  const targetEl = event.target as HTMLElement;
+
+  if (targetEl.id !== 'enter') return;
+
+  searchBtn.dispatchEvent(new Event('click'));
 };
 
 const onWindowResize = () => {
   if (window.innerWidth < 400) {
     keyboard.hideKeyboard();
-    keyboardButton.classList.remove('active');
+    keyboardIcon.classList.remove('active');
   }
 };
 
@@ -176,6 +198,6 @@ export {
   showMoviesTab,
   createFavButton, createRatingBadge, createElement, createSlide, createTop101Card,
   toggleElementClasses, toggleMovieCardIsFav, toggleTop101CardIsFav,
-  onFavButtonClick, onRatingBadgeClick, onKeyboardButtonClick,
-  onWindowResize,
+  onFavButtonClick, onRatingBadgeClick, onKeyboardIconClick,
+  onKeyboardEnterClick, onWindowResize,
 };

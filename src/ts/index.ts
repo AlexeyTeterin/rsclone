@@ -16,14 +16,15 @@ import {
   loadFavorites, favoritesObserver, loadUpcomingMovies, top101observer, wait, showControls,
 } from './utils';
 import {
-  onSystemThemeChange, runHeaderAnimationListeners, onThemeSwitchClick, isAppDarkMode,
+  onSystemThemeChange, onThemeSwitchClick, isAppDarkMode, onHeaderMouseLeave, onHeaderMouseover,
 } from './theme';
 import {
-  keyboardButton, top101Tab, menu, searchBtn,
-  searchInput, themeSwitch, favoritesWrapper,
+  keyboardIcon, top101Tab, menu, searchBtn,
+  searchInput, themeSwitch, favoritesWrapper, h1,
 } from './dom_elements';
 import {
-  onFavButtonClick, onKeyboardButtonClick, onRatingBadgeClick, onWindowResize, showMoviesTab,
+  onFavButtonClick, onKeyboardIconClick, onKeyboardEnterClick,
+  onRatingBadgeClick, onWindowResize, showMoviesTab,
 } from './dom_utils';
 
 const storage = new Storage();
@@ -70,18 +71,18 @@ window.addEventListener('resize', onWindowResize);
 document.addEventListener('click', onLearnMoreClick);
 document.addEventListener('click', onFavButtonClick);
 document.addEventListener('click', onRatingBadgeClick);
+document.addEventListener('click', onKeyboardEnterClick);
 document.addEventListener('keydown', onTabKeypress);
 
 // element's listeners
+runSettingsModalListeners();
+h1.addEventListener('mouseover', onHeaderMouseover);
+h1.addEventListener('mouseleave', onHeaderMouseLeave);
 themeSwitch.addEventListener('click', onThemeSwitchClick);
 menu.addEventListener('click', onMenuElementClick);
 searchInput.addEventListener('keypress', onEnterKeypress);
 searchBtn.addEventListener('click', onSearchButtonClick);
-runSettingsModalListeners();
-runHeaderAnimationListeners();
-keyboardButton.addEventListener('click', onKeyboardButtonClick);
-document.querySelector('#off')!.addEventListener('click', () => keyboardButton.classList.remove('active'));
-document.querySelector('#enter')!.addEventListener('click', () => searchBtn.dispatchEvent(new Event('click')));
+keyboardIcon.addEventListener('click', onKeyboardIconClick);
 swiper.movies.on('activeIndexChange', onActiveIndexChange);
 
 // mutation observers

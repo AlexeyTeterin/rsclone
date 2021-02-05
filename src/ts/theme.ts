@@ -38,8 +38,3 @@ export const onHeaderMouseLeave = () => {
     span.classList.remove('glitch');
   });
 };
-
-export const runHeaderAnimationListeners = () => {
-  document.querySelector('h1')!.addEventListener('mouseover', onHeaderMouseover);
-  document.querySelector('h1')!.addEventListener('mouseleave', onHeaderMouseLeave);
-};
