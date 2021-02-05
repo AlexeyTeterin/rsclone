@@ -1,20 +1,15 @@
 import { storage } from './index';
-import { headerTextSpans, themeSwitch } from './dom_elements';
 import { toggleElementClasses } from './dom_utils';
+import { headerTextSpans, themeSwitch, themeSwithableElements } from './dom_elements';
 
 export const isSystemDarkMode = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
 export const isAppDarkMode = () => (storage.darkModeAuto ? isSystemDarkMode() : storage.darkMode);
 
 export const onThemeSwitchClick = () => {
-  toggleElementClasses('html', 'bg-dark');
-  toggleElementClasses('header', 'text-light');
-  toggleElementClasses('#modal .modal-content', 'dark', 'text-light');
-  toggleElementClasses('#settingsModal .modal-content', 'dark', 'text-light');
-  toggleElementClasses('#top101', 'text-light');
-  toggleElementClasses('.film', 'invert');
-  toggleElementClasses('footer', 'text-muted');
-  toggleElementClasses('.keyboard', 'bg-dark');
+  themeSwithableElements.forEach((element) => {
+    toggleElementClasses(element.selector, ...element.classes);
+  });
 
   storage.load();
   storage.darkMode = !themeSwitch.checked;

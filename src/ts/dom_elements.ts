@@ -16,9 +16,20 @@ const headerTextSpans = document.querySelectorAll('h1 span:not(:nth-child(2))');
 const searchInput = <HTMLInputElement>document.querySelector('#movie-search');
 const searchBtn = document.querySelector('.search-button')!;
 
+const themeSwithableElements = [
+  { selector: 'html', classes: ['bg-dark'] },
+  { selector: 'header', classes: ['text-light'] },
+  { selector: 'footer', classes: ['text-muted'] },
+  { selector: '#modal .modal-content', classes: ['dark', 'text-light'] },
+  { selector: '#settingsModal .modal-content', classes: ['dark', 'text-light'] },
+  { selector: '#top101', classes: ['text-light'] },
+  { selector: '.film', classes: ['invert'] },
+  { selector: '.keyboard', classes: ['bg-dark'] },
+];
+
 export {
   keyboardButton, moviesTab, top101Tab, settingsButton, settingsModal,
   menu, tabs, themeSwitch, headerTextSpans, searchBtn,
   searchInput, movieModal, movieModalTitle, movieModalBody,
-  searchAlert, favoritesAlert, favoritesWrapper,
+  searchAlert, favoritesAlert, favoritesWrapper, themeSwithableElements,
 };
