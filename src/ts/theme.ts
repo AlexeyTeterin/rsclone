@@ -2,7 +2,9 @@ import { storage } from './index';
 import { headerTextSpans, themeSwitch } from './dom_elements';
 import { toggleElementClasses } from './dom_utils';
 
-export const isDarkMode = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+export const isSystemDarkMode = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+export const isAppDarkMode = () => (storage.darkModeAuto ? isSystemDarkMode() : storage.darkMode);
 
 export const onThemeSwitchClick = () => {
   toggleElementClasses('html', 'bg-dark');
@@ -19,9 +21,9 @@ export const onThemeSwitchClick = () => {
   storage.save();
 };
 
-export const applySystemTheme = () => {
+export const onSystemThemeChange = () => {
   if (!storage.darkModeAuto) return;
-  if (isDarkMode() !== storage.darkMode) {
+  if (isSystemDarkMode() !== storage.darkMode) {
     themeSwitch.checked = !themeSwitch.checked;
     onThemeSwitchClick();
   }

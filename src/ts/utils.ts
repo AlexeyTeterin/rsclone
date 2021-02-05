@@ -3,10 +3,17 @@ import {
   SearchResult, OMDBMovieData,
   getOMDBdata, getTMDBdata, getUpcomingTMDB, getTopRatedTMDB,
 } from './API';
-import { favoritesAlert, favoritesWrapper, top101Tab } from './dom_elements';
+import {
+  favoritesAlert, favoritesWrapper, settingsButton, themeSwitch, top101Tab,
+} from './dom_elements';
 import { createSlide, createRatingBadge, createTop101Card } from './dom_utils';
 
 const wait = (ms: number) => new Promise((resolve: any) => setTimeout(() => resolve(), ms));
+
+const showControls = () => {
+  settingsButton.classList.add('visible');
+  themeSwitch.parentElement?.classList.add('visible');
+};
 
 const loadFavorites = () => {
   storage.load();
@@ -27,20 +34,6 @@ const updateFavorites = (target: HTMLElement) => {
     wait(500).then(() => loadFavorites());
   } else loadFavorites();
 };
-
-const favoritesObserver = new MutationObserver((mutationRecords) => {
-  mutationRecords.forEach((record) => {
-    if (record.target.hasChildNodes()) {
-      const favCount = favoritesWrapper.children.length;
-      favoritesAlert!.innerHTML = `You have <b>${favCount}</b> favorite movies:`;
-      if (favCount === 1) favoritesAlert!.innerHTML = favoritesAlert!.innerHTML.replace('movies', 'movie');
-      favoritesAlert?.classList.add('top');
-    } else {
-      favoritesAlert!.innerHTML = 'Your favorite movies will be shown here';
-      favoritesAlert?.classList.remove('top');
-    }
-  });
-});
 
 const loadUpcomingMovies = async () => {
   getUpcomingTMDB()
@@ -85,6 +78,20 @@ const appendTop101NextPage = async () => {
   movies.forEach((movie) => createTop101Card(movie));
 };
 
+const favoritesObserver = new MutationObserver((mutationRecords) => {
+  mutationRecords.forEach((record) => {
+    if (record.target.hasChildNodes()) {
+      const favCount = favoritesWrapper.children.length;
+      favoritesAlert!.innerHTML = `You have <b>${favCount}</b> favorite movies:`;
+      if (favCount === 1) favoritesAlert!.innerHTML = favoritesAlert!.innerHTML.replace('movies', 'movie');
+      favoritesAlert?.classList.add('top');
+    } else {
+      favoritesAlert!.innerHTML = 'Your favorite movies will be shown here';
+      favoritesAlert?.classList.remove('top');
+    }
+  });
+});
+
 const top101observer = new MutationObserver(() => {
   const rows = Array.from(top101Tab.children);
 
@@ -98,6 +105,7 @@ const top101observer = new MutationObserver(() => {
 });
 
 export {
-  wait, loadFavorites, updateFavorites, favoritesObserver,
-  loadUpcomingMovies, sortTop101, appendTop101NextPage, top101observer,
+  showControls, wait, loadFavorites, updateFavorites,
+  loadUpcomingMovies, sortTop101, appendTop101NextPage,
+  favoritesObserver, top101observer,
 };

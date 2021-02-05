@@ -13,51 +13,46 @@ import onMenuElementClick from './menu';
 import { onTabKeypress, runSettingsModalListeners } from './settingsModal';
 import { onSearchButtonClick, onActiveIndexChange, onEnterKeypress } from './search';
 import {
-  loadFavorites, favoritesObserver, loadUpcomingMovies, top101observer, wait,
+  loadFavorites, favoritesObserver, loadUpcomingMovies, top101observer, wait, showControls,
 } from './utils';
 import {
-  applySystemTheme, isDarkMode, runHeaderAnimationListeners, onThemeSwitchClick,
+  onSystemThemeChange, runHeaderAnimationListeners, onThemeSwitchClick, isAppDarkMode,
 } from './theme';
 import {
-  keyboardButton, top101Tab, settingsButton, menu, searchBtn,
+  keyboardButton, top101Tab, menu, searchBtn,
   searchInput, themeSwitch, favoritesWrapper,
 } from './dom_elements';
 import {
-  onFavButtonClick, onKeyboardButtonClick, onRatingBadgeClick, showMoviesTab,
+  onFavButtonClick, onKeyboardButtonClick, onRatingBadgeClick, onWindowResize, showMoviesTab,
 } from './dom_utils';
 
 const storage = new Storage();
+const keyboard = new Keyboard();
+const swiper = {
+  movies: new Swiper('.swiper-container.movies', swiperParams),
+  favorites: new Swiper('.swiper-container.favorites', swiperParams),
+};
 const state = {
   page: 0,
   request: '',
   top101page: 1,
 };
-const swiper = {
-  movies: new Swiper('.swiper-container.movies', swiperParams),
-  favorites: new Swiper('.swiper-container.favorites', swiperParams),
-};
-const keyboard = new Keyboard();
 
 const init = () => {
-  const showControls = () => {
-    settingsButton.classList.add('visible');
-    themeSwitch.parentElement?.classList.add('visible');
-  };
-
-  if (!localStorage.VideoBox) storage.save();
-  else storage.load();
-
-  if (window.innerWidth < 400) {
-    keyboardButton.classList.add('hidden');
-  }
   keyboard.init();
-
-  if (storage.darkModeAuto && isDarkMode()) themeSwitch.checked = false;
-  if ((!storage.darkModeAuto && storage.darkMode)) themeSwitch.checked = false;
-  onThemeSwitchClick();
-
   searchInput.focus();
 
+  if (!localStorage.VideoBox) {
+    storage.save();
+  } else {
+    storage.load();
+  }
+
+  if (isAppDarkMode()) {
+    themeSwitch.checked = false;
+  }
+
+  onThemeSwitchClick();
   wait(1000).then(() => showControls());
 };
 
@@ -68,13 +63,8 @@ loadUpcomingMovies()
   .then(() => loadFavorites());
 
 // window listeners
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applySystemTheme);
-window.addEventListener('resize', () => {
-  if (window.innerWidth < 400) {
-    keyboard.hideKeyboard();
-    keyboardButton.classList.remove('active');
-  }
-});
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', onSystemThemeChange);
+window.addEventListener('resize', onWindowResize);
 
 // document listeners with event delegation
 document.addEventListener('click', onLearnMoreClick);

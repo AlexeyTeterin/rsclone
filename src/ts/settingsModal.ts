@@ -2,7 +2,7 @@ import * as bootstrap from 'bootstrap';
 import Swiper, { SwiperOptions } from 'swiper/bundle';
 import { PaginationOptions } from 'swiper/types/components/pagination';
 import swiperParams from './swiperParams';
-import { applySystemTheme } from './theme';
+import { onSystemThemeChange } from './theme';
 import { onActiveIndexChange } from './search';
 import { settingsButton, settingsModal } from './dom_elements';
 import { storage, swiper } from './index';
@@ -150,7 +150,7 @@ export const onDarkModeControlChange = (event: Event) => {
   storage.darkModeAuto = target.checked;
   storage.save();
 
-  if (target.checked) applySystemTheme();
+  if (target.checked) onSystemThemeChange();
 };
 
 export const runSettingsModalListeners = () => {

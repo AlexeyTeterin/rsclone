@@ -165,9 +165,17 @@ const onKeyboardButtonClick = () => {
   keyboard.toggleKeyboard();
 };
 
+const onWindowResize = () => {
+  if (window.innerWidth < 400) {
+    keyboard.hideKeyboard();
+    keyboardButton.classList.remove('active');
+  }
+};
+
 export {
   showMoviesTab,
   createFavButton, createRatingBadge, createElement, createSlide, createTop101Card,
   toggleElementClasses, toggleMovieCardIsFav, toggleTop101CardIsFav,
   onFavButtonClick, onRatingBadgeClick, onKeyboardButtonClick,
+  onWindowResize,
 };
