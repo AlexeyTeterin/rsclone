@@ -8,21 +8,23 @@ import Swiper from 'swiper/bundle';
 import swiperParams from './swiperParams';
 import Keyboard from '../js/keyboard';
 import Storage from './Storage';
-import loadUpcomingMovies from './tab_movies';
-import onLearnMoreClick from './modal_movieInfo';
+import onLearnMoreClick from './movieModal';
 import onMenuElementClick from './menu';
-import { top101observer } from './tab_top101';
-import { onTabKeypress, runSettingsModalListeners } from './modal_settings';
-import { onSearchButtonClick, onActiveIndexChange } from './search';
-import { loadFavorites, favoritesObserver } from './tab_favorites';
-import { onRatingBadgeClick, onFavButtonClick } from './movieSlide';
+import { onTabKeypress, runSettingsModalListeners } from './settingsModal';
+import { onSearchButtonClick, onActiveIndexChange, onEnterKeypress } from './search';
+import {
+  loadFavorites, favoritesObserver, loadUpcomingMovies, top101observer,
+} from './utils';
 import {
   applySystemTheme, isDarkMode, runHeaderAnimationListeners, onThemeSwitchClick,
 } from './theme';
 import {
-  keyboardButton, top101, settingsButton, menu, searchBtn,
-  searchInput, themeSwitch, favoritesWrapper,
+  keyboardButton, top101Tab, settingsButton, menu, searchBtn,
+  searchInput, themeSwitch, favoritesWrapper, moviesTab,
 } from './dom_elements';
+import {
+  onFavButtonClick, onKeyboardButtonClick, onRatingBadgeClick,
+} from './dom_utils';
 
 const storage = new Storage();
 const state = {
@@ -61,20 +63,10 @@ const init = () => {
   wait(1000).then(() => showControls());
 };
 
-const onEnterKeypress = (event: KeyboardEvent) => {
-  if (event.key !== 'Enter') return;
-  searchBtn.dispatchEvent(new Event('click', { bubbles: true }));
-};
-
-const onKeyboardButtonClick = () => {
-  keyboardButton.classList.toggle('active');
-  keyboard.toggleKeyboard();
-};
-
 init();
 loadUpcomingMovies()
   .then(() => wait(150))
-  .then(() => document.querySelector('#movies')!.classList.add('show'))
+  .then(() => moviesTab.classList.add('show'))
   .then(() => loadFavorites());
 
 // window listeners
@@ -106,9 +98,9 @@ swiper.movies.on('activeIndexChange', onActiveIndexChange);
 
 // mutation observers
 favoritesObserver.observe(favoritesWrapper as Node, { childList: true });
-top101observer.observe(top101 as Node, { childList: true, attributes: true });
+top101observer.observe(top101Tab as Node, { childList: true, attributes: true });
 
 export {
-  state, storage, swiper, settingsButton,
+  state, storage, swiper, settingsButton, keyboard,
   onActiveIndexChange, loadFavorites, wait,
 };

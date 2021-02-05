@@ -1,7 +1,8 @@
 import * as bootstrap from 'bootstrap';
 import { storage } from './index';
 import { OMDBMovieData } from './API';
-import { createElement, movieModal } from './dom_elements';
+import { createElement } from './dom_utils';
+import { movieModal, movieModalBody, movieModalTitle } from './dom_elements';
 
 const movieBootstrapModal = new bootstrap.Modal(movieModal, { keyboard: true });
 
@@ -13,7 +14,6 @@ const onLearnMoreClick = (event: Event) => {
   storage.load();
   const { id } = target.dataset;
   const data: OMDBMovieData = storage.Movies[id!];
-  const modalBody = movieModal.querySelector('.modal-body')! as HTMLElement;
   const poster = createElement('img', 'modal-poster', 'rounded', 'mx-auto', 'd-block') as HTMLImageElement;
   const releaseDate = createElement('p');
   const country = createElement('p');
@@ -26,8 +26,8 @@ const onLearnMoreClick = (event: Event) => {
   const awards = createElement('p');
   const boxOffice = createElement('p');
 
-  movieModal.querySelector('#modalTitle')!.textContent = `${data.Title}, ${data.Year}`;
-  modalBody.innerHTML = '';
+  movieModalTitle.textContent = `${data.Title}, ${data.Year}`;
+  movieModalBody.innerHTML = '';
   poster.src = data.Poster;
   releaseDate.innerHTML = `<b>Release date:</b> ${data.Released}`;
   country.innerHTML = `<b>Country:</b> ${data.Country}`;
@@ -41,7 +41,7 @@ const onLearnMoreClick = (event: Event) => {
   imdbRating.innerHTML = `<b>IMDB Rating:</b> <span class="badge bg-warning text-dark modal-rating">${data.imdbRating}</span> (${data.imdbVotes} votes)`;
   runtime.innerHTML = `<b>Runtime:</b> ${data.Runtime}`;
 
-  modalBody.append(poster, plot, releaseDate, country,
+  movieModalBody.append(poster, plot, releaseDate, country,
     genre, director, actors, imdbRating, runtime, awards, boxOffice);
   movieBootstrapModal.toggle();
 };

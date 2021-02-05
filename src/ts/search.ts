@@ -1,22 +1,11 @@
+import { searchInput, searchAlert, searchBtn } from './dom_elements';
+import { createSlide, createRatingBadge } from './dom_utils';
 import {
   swiper, state, wait, storage,
 } from './index';
 import {
   getOMDBdata, OMDBSearchResponce, searchMoviesOMDB, SearchResult,
 } from './API';
-import {
-  createRatingBadge, createSlide, searchInput, searchAlert,
-} from './dom_elements';
-
-export const loadFoundSlides = (res: any) => {
-  res.Search.forEach(async (movie: SearchResult) => {
-    const omdb = await getOMDBdata(movie.imdbID);
-    const slide = createSlide(omdb);
-    swiper.movies.appendSlide(slide);
-    storage.saveMovie(omdb);
-    createRatingBadge(slide, omdb);
-  });
-};
 
 const setAlertMessage = (res: OMDBSearchResponce) => {
   const request = searchInput.value;
@@ -32,7 +21,28 @@ const setAlertMessage = (res: OMDBSearchResponce) => {
   searchAlert.classList.remove('visually-hidden');
 };
 
-export const onSearchButtonClick = () => {
+const loadFoundSlides = (res: any) => {
+  res.Search.forEach(async (movie: SearchResult) => {
+    const omdb = await getOMDBdata(movie.imdbID);
+    const slide = createSlide(omdb);
+    swiper.movies.appendSlide(slide);
+    storage.saveMovie(omdb);
+    createRatingBadge(slide, omdb);
+  });
+};
+
+const loadNextSearchPage = () => {
+  searchMoviesOMDB(state.request, state.page)
+    .then((res) => {
+      if (res.Error) {
+        setAlertMessage(res);
+        return;
+      }
+      loadFoundSlides(res);
+    });
+};
+
+const onSearchButtonClick = () => {
   const toggleSearchSpinner = () => {
     const spinner = document.querySelector('button>span.spinner-border');
     const searchText = document.querySelector('button>span.search-text');
@@ -60,21 +70,20 @@ export const onSearchButtonClick = () => {
     .then(toggleSearchSpinner);
 };
 
-export const loadNextSearchPage = () => {
-  searchMoviesOMDB(state.request, state.page)
-    .then((res) => {
-      if (res.Error) {
-        setAlertMessage(res);
-        return;
-      }
-      loadFoundSlides(res);
-    });
-};
-
-export const onActiveIndexChange = () => {
+const onActiveIndexChange = () => {
   const { activeIndex, slides } = swiper.movies;
   if (slides.length - activeIndex === 7 && state.request) {
     state.page += 1;
     loadNextSearchPage();
   }
+};
+
+const onEnterKeypress = (event: KeyboardEvent) => {
+  if (event.key !== 'Enter') return;
+  searchBtn.dispatchEvent(new Event('click', { bubbles: true }));
+};
+
+export {
+  loadFoundSlides, loadNextSearchPage,
+  onSearchButtonClick, onActiveIndexChange, onEnterKeypress,
 };
