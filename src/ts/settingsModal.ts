@@ -5,7 +5,8 @@ import swiperParams from './swiperParams';
 import { applySystemTheme } from './theme';
 import { onActiveIndexChange } from './search';
 import { settingsButton, settingsModal } from './dom_elements';
-import { storage, swiper, loadFavorites } from './index';
+import { storage, swiper } from './index';
+import { loadFavorites } from './utils';
 
 const settingsBootstrapModal = new bootstrap.Modal(settingsModal, {});
 let pagination = swiperParams.pagination as PaginationOptions;

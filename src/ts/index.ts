@@ -101,6 +101,5 @@ favoritesObserver.observe(favoritesWrapper as Node, { childList: true });
 top101observer.observe(top101Tab as Node, { childList: true, attributes: true });
 
 export {
-  state, storage, swiper, settingsButton, keyboard,
-  onActiveIndexChange, loadFavorites, wait,
+  state, storage, swiper, keyboard, wait,
 };
