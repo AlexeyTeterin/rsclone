@@ -59,7 +59,6 @@ const init = () => {
 
 init();
 loadUpcomingMovies()
-  .then(() => wait(150))
   .then(() => showMoviesTab())
   .then(() => loadFavorites());
 
