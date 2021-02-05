@@ -1,11 +1,10 @@
 import { searchInput, searchAlert, searchBtn } from './dom_elements';
 import { createSlide, createRatingBadge } from './dom_utils';
-import {
-  swiper, state, wait, storage,
-} from './index';
+import { swiper, state, storage } from './index';
 import {
   getOMDBdata, OMDBSearchResponce, searchMoviesOMDB, SearchResult,
 } from './API';
+import { wait } from './utils';
 
 const setAlertMessage = (res: OMDBSearchResponce) => {
   const request = searchInput.value;

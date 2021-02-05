@@ -1,12 +1,12 @@
-import {
-  storage, wait, swiper, state,
-} from './index';
+import { storage, swiper, state } from './index';
 import {
   SearchResult, OMDBMovieData,
   getOMDBdata, getTMDBdata, getUpcomingTMDB, getTopRatedTMDB,
 } from './API';
 import { favoritesAlert, favoritesWrapper, top101Tab } from './dom_elements';
 import { createSlide, createRatingBadge, createTop101Card } from './dom_utils';
+
+const wait = (ms: number) => new Promise((resolve: any) => setTimeout(() => resolve(), ms));
 
 const loadFavorites = () => {
   storage.load();
@@ -98,6 +98,6 @@ const top101observer = new MutationObserver(() => {
 });
 
 export {
-  loadFavorites, updateFavorites, favoritesObserver,
+  wait, loadFavorites, updateFavorites, favoritesObserver,
   loadUpcomingMovies, sortTop101, appendTop101NextPage, top101observer,
 };

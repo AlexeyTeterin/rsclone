@@ -1,9 +1,13 @@
 import { updateFavorites } from './utils';
 import { storage, swiper, keyboard } from '.';
-import { keyboardButton, themeSwitch, top101Tab } from './dom_elements';
+import {
+  keyboardButton, moviesTab, themeSwitch, top101Tab,
+} from './dom_elements';
 import {
   SearchResult, OMDBMovieData, Ratings, getTMDBdata, getOMDBdata,
 } from './API';
+
+const showMoviesTab = () => moviesTab.classList.add('show');
 
 const createElement = (tag: string, ...classNames: Array<string>) => {
   const element = document.createElement(tag);
@@ -162,8 +166,8 @@ const onKeyboardButtonClick = () => {
 };
 
 export {
-  createFavButton, createRatingBadge, createElement, createSlide,
-  toggleElementClasses, createTop101Card, toggleMovieCardIsFav, toggleTop101CardIsFav,
-  onFavButtonClick, onRatingBadgeClick,
-  onKeyboardButtonClick,
+  showMoviesTab,
+  createFavButton, createRatingBadge, createElement, createSlide, createTop101Card,
+  toggleElementClasses, toggleMovieCardIsFav, toggleTop101CardIsFav,
+  onFavButtonClick, onRatingBadgeClick, onKeyboardButtonClick,
 };

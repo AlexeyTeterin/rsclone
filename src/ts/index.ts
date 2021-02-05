@@ -13,17 +13,17 @@ import onMenuElementClick from './menu';
 import { onTabKeypress, runSettingsModalListeners } from './settingsModal';
 import { onSearchButtonClick, onActiveIndexChange, onEnterKeypress } from './search';
 import {
-  loadFavorites, favoritesObserver, loadUpcomingMovies, top101observer,
+  loadFavorites, favoritesObserver, loadUpcomingMovies, top101observer, wait,
 } from './utils';
 import {
   applySystemTheme, isDarkMode, runHeaderAnimationListeners, onThemeSwitchClick,
 } from './theme';
 import {
   keyboardButton, top101Tab, settingsButton, menu, searchBtn,
-  searchInput, themeSwitch, favoritesWrapper, moviesTab,
+  searchInput, themeSwitch, favoritesWrapper,
 } from './dom_elements';
 import {
-  onFavButtonClick, onKeyboardButtonClick, onRatingBadgeClick,
+  onFavButtonClick, onKeyboardButtonClick, onRatingBadgeClick, showMoviesTab,
 } from './dom_utils';
 
 const storage = new Storage();
@@ -37,8 +37,6 @@ const swiper = {
   favorites: new Swiper('.swiper-container.favorites', swiperParams),
 };
 const keyboard = new Keyboard();
-
-const wait = (ms: number) => new Promise((resolve: any) => setTimeout(() => resolve(), ms));
 
 const init = () => {
   const showControls = () => {
@@ -66,7 +64,7 @@ const init = () => {
 init();
 loadUpcomingMovies()
   .then(() => wait(150))
-  .then(() => moviesTab.classList.add('show'))
+  .then(() => showMoviesTab())
   .then(() => loadFavorites());
 
 // window listeners
