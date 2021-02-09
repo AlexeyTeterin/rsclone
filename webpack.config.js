@@ -41,6 +41,11 @@ const config = {
         exclude: /node_modules/,
       },
       {
+        test: /\.js(x)?$/,
+        loader: 'ts-loader',
+        exclude: /node_modules/,
+      },
+      {
         test: /\.svg$/,
         use: 'url-loader',
       },

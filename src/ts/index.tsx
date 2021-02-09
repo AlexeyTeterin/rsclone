@@ -28,7 +28,7 @@ import {
   onFavButtonClick, onKeyboardIconClick,
   onRatingBadgeClick, onWindowResize, showMoviesTab,
 } from './dom_utils';
-import footer from './footer';
+import Footer from './Footer';
 
 const storage = new Storage();
 const keyboard = new Keyboard();
@@ -65,6 +65,8 @@ loadUpcomingMovies()
   .then(() => showMoviesTab())
   .then(() => loadFavorites());
 
+ReactDom.render(<Footer year={2021} />, footerEl);
+
 // window listeners
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', onSystemThemeChange);
 window.addEventListener('resize', onWindowResize);
@@ -89,8 +91,6 @@ swiper.movies.on('activeIndexChange', onActiveIndexChange);
 // mutation observers
 favoritesObserver.observe(favoritesWrapper as Node, { childList: true });
 top101observer.observe(top101Tab as Node, { childList: true, attributes: true });
-
-ReactDom.render(footer(), footerEl);
 
 export {
   state, storage, swiper, keyboard, wait,
