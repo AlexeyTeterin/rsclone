@@ -7,7 +7,7 @@ const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const config = {
-  entry: './src/ts/index.ts',
+  entry: './src/ts/index.tsx',
   mode: 'development',
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -75,6 +75,7 @@ const config = {
     extensions: [
       '.tsx',
       '.ts',
+      '.jsx',
       '.js',
     ],
   },

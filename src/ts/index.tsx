@@ -4,6 +4,8 @@ import 'swiper/swiper-bundle.css';
 import '../css/style.css';
 import '../css/keyboard.css';
 
+import React from 'react';
+import ReactDom from 'react-dom';
 import Swiper from 'swiper/bundle';
 import swiperParams from './swiperParams';
 import Keyboard from '../js/keyboard';
@@ -20,12 +22,13 @@ import {
 } from './theme';
 import {
   keyboardIcon, top101Tab, menu, searchBtn,
-  searchInput, themeSwitch, favoritesWrapper, h1,
+  searchInput, themeSwitch, favoritesWrapper, h1, footerEl,
 } from './dom_elements';
 import {
   onFavButtonClick, onKeyboardIconClick,
   onRatingBadgeClick, onWindowResize, showMoviesTab,
 } from './dom_utils';
+import footer from './footer';
 
 const storage = new Storage();
 const keyboard = new Keyboard();
@@ -86,6 +89,8 @@ swiper.movies.on('activeIndexChange', onActiveIndexChange);
 // mutation observers
 favoritesObserver.observe(favoritesWrapper as Node, { childList: true });
 top101observer.observe(top101Tab as Node, { childList: true, attributes: true });
+
+ReactDom.render(footer(), footerEl);
 
 export {
   state, storage, swiper, keyboard, wait,

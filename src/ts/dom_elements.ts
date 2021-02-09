@@ -16,6 +16,7 @@ const themeSwitch = document.querySelector('#themeSwitch') as HTMLInputElement;
 const headerTextSpans = document.querySelectorAll('h1 span:not(:nth-child(2))');
 const searchInput = <HTMLInputElement>document.querySelector('#movie-search');
 const searchBtn = document.querySelector('.search-button')!;
+const footerEl = document.querySelector('footer');
 const keyboardOffButton = () => document.querySelector('#off')!;
 const keyboardEnterButton = () => document.querySelector('#enter')!;
 
@@ -35,5 +36,5 @@ export {
   menu, tabs, themeSwitch, headerTextSpans, searchBtn,
   searchInput, movieModal, movieModalTitle, movieModalBody,
   searchAlert, favoritesAlert, favoritesWrapper, themeSwithableElements,
-  keyboardOffButton, keyboardEnterButton, h1,
+  keyboardOffButton, keyboardEnterButton, h1, footerEl,
 };
