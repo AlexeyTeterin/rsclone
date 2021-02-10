@@ -521,7 +521,7 @@ main {
   }
 }
 
-#modal {
+#movieModal {
 
   .modal-poster {
     max-width: 100%;
@@ -534,9 +534,9 @@ main {
   }
 }
 
-.modal-content.dark {
+.modal-dialog.dark .modal-content {
   background-color: #4D5154 !important;
-
+  
   option {
     background-color: #4D5154 !important;
   }
