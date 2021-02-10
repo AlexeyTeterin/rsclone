@@ -4,6 +4,7 @@ const top101Tab = document.querySelector('#top101')!;
 const settingsButton = document.querySelector('#settings')!;
 const settingsModal = document.querySelector('#settingsModal')!;
 const movieModal = document.querySelector('#movieModal')!;
+const movieModalDialog = document.querySelector('#movieModal .modal-dialog')!;
 const movieModalTitle = movieModal.querySelector('#modalTitle')!;
 const movieModalBody = movieModal.querySelector('#movieModal .modal-body')! as HTMLElement;
 const menu = document.querySelector('div.nav')!;
@@ -34,7 +35,7 @@ const themeSwithableElements = [
 export {
   keyboardIcon, moviesTab, top101Tab, settingsButton, settingsModal,
   menu, tabs, themeSwitch, headerTextSpans, searchBtn,
-  searchInput, movieModal, movieModalTitle, movieModalBody,
+  searchInput, movieModal, movieModalTitle, movieModalBody, movieModalDialog,
   searchAlert, favoritesAlert, favoritesWrapper, themeSwithableElements,
   keyboardOffButton, keyboardEnterButton, h1, footerEl,
 };
