@@ -23,7 +23,7 @@ const themeSwithableElements = [
   { selector: 'html', classes: ['bg-dark'] },
   { selector: 'header', classes: ['text-light'] },
   { selector: 'footer', classes: ['text-muted'] },
-  { selector: '#modal .modal-content', classes: ['dark', 'text-light'] },
+  { selector: '#movieModal .modal-content', classes: ['dark', 'text-light'] },
   { selector: '#settingsModal .modal-content', classes: ['dark', 'text-light'] },
   { selector: '#top101', classes: ['text-light'] },
   { selector: '.film', classes: ['invert'] },
