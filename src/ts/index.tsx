@@ -10,7 +10,6 @@ import Swiper from 'swiper/bundle';
 import swiperParams from './swiperParams';
 import Keyboard from '../js/keyboard';
 import Storage from './Storage';
-import onLearnMoreClick from './movieModal';
 import onMenuElementClick from './menu';
 import { onTabKeypress, runSettingsModalListeners } from './settingsModal';
 import { onSearchButtonClick, onActiveIndexChange, onEnterKeypress } from './search';
@@ -26,6 +25,7 @@ import {
 } from './dom_elements';
 import {
   onFavButtonClick, onKeyboardIconClick,
+  onLearnMoreClick,
   onRatingBadgeClick, onWindowResize, showMoviesTab,
 } from './dom_utils';
 import Footer from './Footer';

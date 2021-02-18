@@ -1,28 +1,31 @@
+import ReactDOM from 'react-dom';
+import React from 'react';
 import { updateFavorites } from './utils';
 import { storage, swiper, keyboard } from '.';
 import {
   moviesTab, searchBtn, themeSwitch, top101Tab, keyboardIcon,
-  keyboardOffButton, keyboardEnterButton,
+  keyboardOffButton, keyboardEnterButton, movieModalDialog,
 } from './dom_elements';
 import {
   SearchResult, OMDBMovieData, Ratings, getTMDBdata, getOMDBdata,
 } from './API';
+import MovieModal from './MovieModal';
 
-const showMoviesTab = () => moviesTab.classList.add('show');
+export const showMoviesTab = () => moviesTab.classList.add('show');
 
-const createElement = (tag: string, ...classNames: Array<string>) => {
+export const createElement = (tag: string, ...classNames: Array<string>) => {
   const element = document.createElement(tag);
   classNames.forEach((className) => element.classList.add(className));
   return element;
 };
 
-const toggleElementClasses = (selectorName: string, ...classNames: Array<string>) => {
+export const toggleElementClasses = (selectorName: string, ...classNames: Array<string>) => {
   classNames
     .forEach((className) => document.querySelector(selectorName)?.classList
       .toggle(className, !themeSwitch.checked));
 };
 
-const createFavButton = (movie: SearchResult, className: string) => {
+export const createFavButton = (movie: SearchResult, className: string) => {
   storage.load();
   const favButton = createElement('button', className);
   const isFav = Object.keys(storage.Favorites)
@@ -31,14 +34,14 @@ const createFavButton = (movie: SearchResult, className: string) => {
   return favButton;
 };
 
-const createRatingBadge = (card: HTMLElement, data: OMDBMovieData) => {
+export const createRatingBadge = (card: HTMLElement, data: OMDBMovieData) => {
   const imdbRating = data.Ratings
     .find((r: Ratings) => r.Source === 'Internet Movie Database');
   const cardRating = card.querySelector('.card__rating')!;
   cardRating.textContent = imdbRating ? `${imdbRating.Value.slice(0, -3)}` : 'n/a';
 };
 
-const createSlide = (data: SearchResult) => {
+export const createSlide = (data: SearchResult) => {
   const slide = createElement('div', 'swiper-slide');
   const card = createElement('div', 'card');
   const cardTitle = createElement('div', 'card__title');
@@ -71,7 +74,7 @@ const createSlide = (data: SearchResult) => {
   return slide;
 };
 
-const createTop101Card = async (movie: any) => {
+export const createTop101Card = async (movie: any) => {
   const rowsNumber = top101Tab!.children.length;
   if (rowsNumber === 101) return;
 
@@ -107,13 +110,13 @@ const createTop101Card = async (movie: any) => {
   }
 };
 
-const toggleMovieCardIsFav = (id: string, isFav: boolean) => {
+export const toggleMovieCardIsFav = (id: string, isFav: boolean) => {
   const targetCard = Array.from(swiper.movies.slides)
     .find((el) => el.querySelector('.card')?.id === id);
   targetCard?.querySelector('.card__fav')!.classList.toggle('isFav', isFav);
 };
 
-const toggleTop101CardIsFav = (id: string, isFav: boolean) => {
+export const toggleTop101CardIsFav = (id: string, isFav: boolean) => {
   const targetCard = Array.from(top101Tab.children)
     .find((el) => {
       const card = el as HTMLElement;
@@ -122,7 +125,7 @@ const toggleTop101CardIsFav = (id: string, isFav: boolean) => {
   targetCard?.querySelector('.row__fav')?.classList.toggle('isFav', isFav);
 };
 
-const onFavButtonClick = (event: Event) => {
+export const onFavButtonClick = (event: Event) => {
   const target = event.target as HTMLElement;
   if (!target.classList.contains('card__fav') && !target.classList.contains('row__fav')) return;
 
@@ -143,7 +146,7 @@ const onFavButtonClick = (event: Event) => {
   updateFavorites(target);
 };
 
-const onRatingBadgeClick = (event: Event) => {
+export const onRatingBadgeClick = (event: Event) => {
   const target = event.target as HTMLLinkElement;
   let id: string;
   const openMovieOnIMDB = () => window.open(`https://www.imdb.com/title/${id}/`);
@@ -161,16 +164,16 @@ const onRatingBadgeClick = (event: Event) => {
   }
 };
 
-const onKeyboardOffClick = () => {
+export const onKeyboardOffClick = () => {
   keyboardIcon.classList.remove('active');
   keyboardOffButton().removeEventListener('click', onKeyboardOffClick);
 };
 
-const onKeyboardEnterClick = () => {
+export const onKeyboardEnterClick = () => {
   searchBtn.dispatchEvent(new Event('click'));
 };
 
-const onKeyboardIconClick = () => {
+export const onKeyboardIconClick = () => {
   const isKeyboardActive = keyboardIcon.classList.contains('active');
 
   if (isKeyboardActive) {
@@ -186,17 +189,23 @@ const onKeyboardIconClick = () => {
   keyboardIcon.classList.toggle('active');
 };
 
-const onWindowResize = () => {
+export const onWindowResize = () => {
   if (window.innerWidth < 400) {
     keyboard.hideKeyboard();
     keyboardIcon.classList.remove('active');
   }
 };
 
-export {
-  showMoviesTab,
-  createFavButton, createRatingBadge, createElement, createSlide, createTop101Card,
-  toggleElementClasses, toggleMovieCardIsFav, toggleTop101CardIsFav,
-  onFavButtonClick, onRatingBadgeClick, onKeyboardIconClick,
-  onKeyboardEnterClick, onWindowResize,
+export const onLearnMoreClick = (event: Event) => {
+  const target = event.target as HTMLElement;
+  const isLearnMoreBtnClick = target.classList.contains('card__info-button') || target.classList.contains('row__info-button');
+
+  if (!isLearnMoreBtnClick) return;
+
+  storage.load();
+  const { id } = target.dataset;
+  const data: OMDBMovieData = storage.Movies[id!];
+
+  ReactDOM.unmountComponentAtNode(movieModalDialog);
+  ReactDOM.render(<MovieModal movie={data} />, movieModalDialog);
 };

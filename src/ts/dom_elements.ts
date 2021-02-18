@@ -1,27 +1,27 @@
-const keyboardIcon = document.querySelector('.fa-keyboard')!;
-const moviesTab = document.querySelector('#movies')!;
-const top101Tab = document.querySelector('#top101')!;
-const settingsButton = document.querySelector('#settings')!;
-const settingsModal = document.querySelector('#settingsModal')!;
-const movieModal = document.querySelector('#movieModal')!;
-const movieModalDialog = document.querySelector('#movieModal .modal-dialog')!;
-const movieModalTitle = movieModal.querySelector('#modalTitle')!;
-const movieModalBody = movieModal.querySelector('#movieModal .modal-body')! as HTMLElement;
-const menu = document.querySelector('div.nav')!;
-const h1 = document.querySelector('h1')!;
-const tabs = Array.from(document.querySelectorAll('.tab-pane'));
-const searchAlert = document.querySelector('#movies>.alert')!;
-const favoritesWrapper = document.querySelector('.swiper-wrapper.favorites')!;
-const favoritesAlert = document.querySelector('.alert.favorites')!;
-const themeSwitch = document.querySelector('#themeSwitch') as HTMLInputElement;
-const headerTextSpans = document.querySelectorAll('h1 span:not(:nth-child(2))');
-const searchInput = <HTMLInputElement>document.querySelector('#movie-search');
-const searchBtn = document.querySelector('.search-button')!;
-const footerEl = document.querySelector('footer');
-const keyboardOffButton = () => document.querySelector('#off')!;
-const keyboardEnterButton = () => document.querySelector('#enter')!;
+export const keyboardIcon = document.querySelector('.fa-keyboard')!;
+export const moviesTab = document.querySelector('#movies')!;
+export const top101Tab = document.querySelector('#top101')!;
+export const settingsButton = document.querySelector('#settings')!;
+export const settingsModal = document.querySelector('#settingsModal')!;
+export const movieModal = document.querySelector('#movieModal')!;
+export const movieModalDialog = document.querySelector('#movieModal .modal-dialog')!;
+export const movieModalTitle = movieModal.querySelector('#modalTitle')!;
+export const movieModalBody = movieModal.querySelector('#movieModal .modal-body')! as HTMLElement;
+export const menu = document.querySelector('div.nav')!;
+export const h1 = document.querySelector('h1')!;
+export const tabs = Array.from(document.querySelectorAll('.tab-pane'));
+export const searchAlert = document.querySelector('#movies>.alert')!;
+export const favoritesWrapper = document.querySelector('.swiper-wrapper.favorites')!;
+export const favoritesAlert = document.querySelector('.alert.favorites')!;
+export const themeSwitch = document.querySelector('#themeSwitch') as HTMLInputElement;
+export const headerTextSpans = document.querySelectorAll('h1 span:not(:nth-child(2))');
+export const searchInput = <HTMLInputElement>document.querySelector('#movie-search');
+export const searchBtn = document.querySelector('.search-button')!;
+export const footerEl = document.querySelector('footer');
+export const keyboardOffButton = () => document.querySelector('#off')!;
+export const keyboardEnterButton = () => document.querySelector('#enter')!;
 
-const themeSwithableElements = [
+export const themeSwithableElements = [
   { selector: 'html', classes: ['bg-dark'] },
   { selector: 'header', classes: ['text-light'] },
   { selector: 'footer', classes: ['text-muted'] },
@@ -31,11 +31,3 @@ const themeSwithableElements = [
   { selector: '.film', classes: ['invert'] },
   { selector: '.keyboard', classes: ['bg-dark'] },
 ];
-
-export {
-  keyboardIcon, moviesTab, top101Tab, settingsButton, settingsModal,
-  menu, tabs, themeSwitch, headerTextSpans, searchBtn,
-  searchInput, movieModal, movieModalTitle, movieModalBody, movieModalDialog,
-  searchAlert, favoritesAlert, favoritesWrapper, themeSwithableElements,
-  keyboardOffButton, keyboardEnterButton, h1, footerEl,
-};
