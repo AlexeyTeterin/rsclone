@@ -271,7 +271,6 @@ main {
   width: 240px;
   height: 390px;
   margin-top: 1rem;
-  transition: box-shadow 0.2s;
   overflow: hidden;
   opacity: 0;
   transition: opacity 0.5s, box-shadow 0.25s;
@@ -536,7 +535,7 @@ main {
 
 .modal-dialog.dark .modal-content {
   background-color: #4D5154 !important;
-  
+
   option {
     background-color: #4D5154 !important;
   }
