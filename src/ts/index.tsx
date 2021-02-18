@@ -67,17 +67,14 @@ loadUpcomingMovies()
 
 ReactDom.render(<Footer year={2021} />, footerEl);
 
-// window listeners
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', onSystemThemeChange);
 window.addEventListener('resize', onWindowResize);
 
-// document listeners with event delegation
 document.addEventListener('click', onLearnMoreClick);
 document.addEventListener('click', onFavButtonClick);
 document.addEventListener('click', onRatingBadgeClick);
 document.addEventListener('keydown', onTabKeypress);
 
-// element's listeners
 runSettingsModalListeners();
 h1.addEventListener('mouseover', onHeaderMouseover);
 h1.addEventListener('mouseleave', onHeaderMouseLeave);
@@ -88,7 +85,6 @@ searchBtn.addEventListener('click', onSearchButtonClick);
 keyboardIcon.addEventListener('click', onKeyboardIconClick);
 swiper.movies.on('activeIndexChange', onActiveIndexChange);
 
-// mutation observers
 favoritesObserver.observe(favoritesWrapper as Node, { childList: true });
 top101observer.observe(top101Tab as Node, { childList: true, attributes: true });
 
