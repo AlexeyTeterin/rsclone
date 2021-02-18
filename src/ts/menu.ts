@@ -1,29 +1,32 @@
-import { tabs, menu } from './dom_elements';
-import { wait } from './index';
+import { tabs } from './dom_elements';
+import { wait } from './utils';
 
-const animateTabChange = (current: Element | undefined, target: Element | undefined) => {
+const animateTabChange = (current: Element, target: Element) => {
   current?.classList.remove('show');
   wait(150).then(() => {
     current?.classList.remove('active');
     target?.classList.add('active');
   });
   wait(200).then(() => target?.classList.add('show'));
+
+  if (current?.id === 'top101') current?.classList.add('visually-hidden');
+  if (target?.id === 'top101') target?.classList.remove('visually-hidden');
 };
 
-const onMenuElementClick = (event: Event) => {
+const onNavLinkClick = (event: Event) => {
   const target = event.target! as HTMLElement;
-  if (!target.classList.contains('nav-link')) return;
+  const isNavLinkClick = target.classList.contains('nav-link');
+  const currentTab = tabs.find((tab) => tab.classList.contains('active'))!;
   const targetTab = tabs
-    .find((tab) => tab instanceof HTMLElement && target.id.indexOf(tab.dataset.id!) >= 0);
-  const currentTab = tabs
-    .find((tab) => tab instanceof HTMLElement && tab.classList.contains('active'));
+    .find((elem) => {
+      const tab = elem as HTMLElement;
+      const isTargetTab = target.id.indexOf(tab.dataset.id!) >= 0;
+      return isTargetTab ? tab : null;
+    })!;
 
-  Array.from(menu.children).forEach((link) => link.classList.remove('disabled'));
-  target.classList.add('disabled');
+  if (!isNavLinkClick) return;
+
   animateTabChange(currentTab, targetTab);
-
-  if (currentTab?.id === 'top101') currentTab?.classList.add('visually-hidden');
-  if (targetTab?.id === 'top101') targetTab?.classList.remove('visually-hidden');
 };
 
-export default onMenuElementClick;
+export default onNavLinkClick;

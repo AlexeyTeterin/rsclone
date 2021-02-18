@@ -10,7 +10,7 @@ import Swiper from 'swiper/bundle';
 import swiperParams from './swiperParams';
 import Keyboard from '../js/keyboard';
 import Storage from './Storage';
-import onMenuElementClick from './menu';
+import onNavLinkClick from './menu';
 import { onTabKeypress, runSettingsModalListeners } from './settingsModal';
 import { onSearchButtonClick, onActiveIndexChange, onEnterKeypress } from './search';
 import {
@@ -56,6 +56,7 @@ const init = () => {
     themeSwitch.checked = false;
   }
 
+  ReactDom.render(<Footer year={2021} />, footerEl);
   onThemeSwitchClick();
   wait(1000).then(() => showControls());
 };
@@ -64,8 +65,6 @@ init();
 loadUpcomingMovies()
   .then(() => showMoviesTab())
   .then(() => loadFavorites());
-
-ReactDom.render(<Footer year={2021} />, footerEl);
 
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', onSystemThemeChange);
 window.addEventListener('resize', onWindowResize);
@@ -79,7 +78,7 @@ runSettingsModalListeners();
 h1.addEventListener('mouseover', onHeaderMouseover);
 h1.addEventListener('mouseleave', onHeaderMouseLeave);
 themeSwitch.addEventListener('click', onThemeSwitchClick);
-menu.addEventListener('click', onMenuElementClick);
+menu.addEventListener('click', onNavLinkClick);
 searchInput.addEventListener('keypress', onEnterKeypress);
 searchBtn.addEventListener('click', onSearchButtonClick);
 keyboardIcon.addEventListener('click', onKeyboardIconClick);
@@ -89,5 +88,5 @@ favoritesObserver.observe(favoritesWrapper as Node, { childList: true });
 top101observer.observe(top101Tab as Node, { childList: true, attributes: true });
 
 export {
-  state, storage, swiper, keyboard, wait,
+  state, storage, swiper, keyboard,
 };
